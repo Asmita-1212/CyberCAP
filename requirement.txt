@@ -1,0 +1,23 @@
+# Web Frameworks
+fastapi
+uvicorn[standard]
+flask
+
+# Database & Security
+pymongo
+bcrypt
+python-multipart
+email-validator
+
+# Templates
+jinja2
+
+# Machine Learning / NLP
+scikit-learn
+pandas
+numpy
+joblib
+nltk
+
+# Extra Utilities
+deep-translator
