@@ -1,18 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard - CyberCAP</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Dashboard - CyberCAP</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #3e64ff, #5edfff);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      max-width: 500px;
+      width: 90%;
+      color: #333;
+      position: relative;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      color: #1f3b73;
+    }
+
+    #logoutBtn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: #ff4b5c;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #logoutBtn:hover {
+      background-color: #d93c4b;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <button id="logoutBtn">Logout</button>
     <h2>Welcome to Your Dashboard</h2>
     <p id="welcomeMessage"></p>
+  </div>
 
-    <script>
-        // Optionally, store username/email in localStorage after login
-        const username = localStorage.getItem("username");
-        document.getElementById("welcomeMessage").innerText = "Hello, " + username + "!";
-    </script>
+  <script>
+    // Check if user is logged in
+    const username = localStorage.getItem("username");
+
+    if (!username) {
+      // Not logged in — redirect to login page
+      window.location.href = "login.html";
+    } else {
+      // Show username
+      document.getElementById("welcomeMessage").innerText = "Hello, " + username + "!";
+    }
+
+    // Logout handler
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.clear();  // or remove specific items
+      window.location.href = "login.html";
+    });
+  </script>
 </body>
 </html>
