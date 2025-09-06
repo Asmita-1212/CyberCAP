@@ -88,26 +88,33 @@
       transition: background-color 0.3s, transform 0.2s;
     }
 
-    button:hover {
+    button:hover:not(:disabled) {
       background-color: #2b4ae0;
     }
 
-    button:active {
+    button:active:not(:disabled) {
       transform: scale(0.97);
+    }
+
+    button:disabled {
+      background-color: #7a93f0;
+      cursor: not-allowed;
     }
 
     #statusMessage {
       text-align: center;
       margin-top: 18px;
       font-size: 15px;
-      font-weight: 500;
-      display: none;
+      font-weight: 600;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      opacity: 0;
+      transition: opacity 0.5s ease;
     }
 
-    .loading::after {
-      content: "⏳ Submitting...";
-      color: #333;
-      font-style: italic;
+    #statusMessage.show {
+      opacity: 1;
     }
 
     @media (max-width: 600px) {
@@ -146,22 +153,47 @@
       charCount.textContent = `${len} / 1000`;
     });
 
+    // Utility function to show messages with fade-in and auto-hide
+    function showMessage(text, type) {
+      const icons = {
+        success: "✅",
+        error: "❌",
+        warning: "⚠️"
+      };
+      statusMessage.innerText = `${icons[type] || ""} ${text}`;
+      statusMessage.style.color = {
+        success: "green",
+        error: "red",
+        warning: "orange"
+      }[type] || "black";
+      statusMessage.classList.add("show");
+
+      // Auto-hide message after 4 seconds
+      setTimeout(() => {
+        statusMessage.classList.remove("show");
+      }, 4000);
+
+      // Scroll message into view
+      statusMessage.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
     // Form Submit Handler
     document.getElementById("complaintForm").addEventListener("submit", async function (event) {
       event.preventDefault();
 
+      // Clear previous message immediately
+      statusMessage.classList.remove("show");
+      statusMessage.innerText = "";
+
       const text = complaintText.value.trim();
 
       if (text.length < 20) {
-        statusMessage.style.color = "red";
-        statusMessage.innerText = "⚠️ Please provide a more detailed complaint (at least 20 characters).";
-        statusMessage.style.display = "block";
+        showMessage("Please provide a more detailed complaint (at least 20 characters).", "warning");
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.classList.add("loading");
-      statusMessage.style.display = "none";
+      submitBtn.innerText = "Submitting...";
 
       try {
         const response = await fetch("http://127.0.0.1:8000/complaints", {
@@ -173,22 +205,18 @@
         const data = await response.json();
 
         if (response.ok) {
-          statusMessage.style.color = "green";
-          statusMessage.innerText = "✅ Complaint submitted successfully!";
+          showMessage("Complaint submitted successfully!", "success");
           complaintText.value = "";
           charCount.textContent = "0 / 1000";
         } else {
-          statusMessage.style.color = "red";
-          statusMessage.innerText = data.detail || "❌ Submission failed.";
+          showMessage(data.detail || "Submission failed.", "error");
         }
       } catch (err) {
-        statusMessage.style.color = "red";
-        statusMessage.innerText = "⚠️ Failed to connect to the server.";
+        showMessage("Failed to connect to the server.", "error");
       }
 
-      statusMessage.style.display = "block";
       submitBtn.disabled = false;
-      submitBtn.classList.remove("loading");
+      submitBtn.innerText = "Submit Complaint";
     });
   </script>
 </body>
