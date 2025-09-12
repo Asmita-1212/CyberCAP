@@ -1,223 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Submit Cyber Complaint - CyberCAP</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <title>Cybercrime Complaint Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    /* Reset some default styles */
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
     body {
-      background: linear-gradient(135deg, #3e64ff, #5edfff);
-      font-family: 'Poppins', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #639dd8;
       padding: 20px;
+      color: #333;
     }
 
-    .complaint-container {
-      background: #fff;
-      padding: 40px 30px;
-      border-radius: 16px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-      max-width: 650px;
-      width: 100%;
-      animation: fadeIn 1s ease forwards;
-      opacity: 0;
-      transform: translateY(-20px);
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     }
 
-    @keyframes fadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    h2 {
+    header {
       text-align: center;
-      margin-bottom: 25px;
-      color: #1f3b73;
-      font-size: 26px;
+      margin-bottom: 30px;
     }
 
+    header h1 {
+      font-size: 28px;
+      color: #2c3e50;
+    }
+
+    form fieldset {
+      border: 1px solid #d3dce6;
+      padding: 25px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      background-color: #f9fbfd;
+    }
+
+    legend {
+      font-weight: bold;
+      padding: 0 10px;
+      color: #007bff;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="time"],
+    select,
     textarea {
       width: 100%;
-      height: 180px;
-      padding: 14px;
+      padding: 12px;
+      margin-top: 8px;
+      border: 1px solid #ccd6e0;
+      border-radius: 6px;
       font-size: 15px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      resize: vertical;
       transition: border 0.3s;
     }
 
-    textarea:focus {
-      border-color: #3e64ff;
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #007bff;
       outline: none;
-      box-shadow: 0 0 6px rgba(62, 100, 255, 0.2);
     }
 
-    .char-counter {
-      text-align: right;
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 15px;
+    textarea {
+      resize: vertical;
     }
 
-    button {
-      width: 100%;
-      padding: 14px;
-      font-size: 16px;
-      background-color: #3e64ff;
+    input[type="file"] {
+      margin-top: 10px;
+    }
+
+    button[type="submit"] {
+      background-color: #007bff;
       color: white;
+      padding: 14px 30px;
       border: none;
-      border-radius: 10px;
+      border-radius: 6px;
+      font-size: 16px;
       cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
+      transition: background 0.3s;
     }
 
-    button:hover:not(:disabled) {
-      background-color: #2b4ae0;
-    }
-
-    button:active:not(:disabled) {
-      transform: scale(0.97);
-    }
-
-    button:disabled {
-      background-color: #7a93f0;
-      cursor: not-allowed;
-    }
-
-    #statusMessage {
-      text-align: center;
-      margin-top: 18px;
-      font-size: 15px;
-      font-weight: 600;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-
-    #statusMessage.show {
-      opacity: 1;
+    button[type="submit"]:hover {
+      background-color: #0056b3;
     }
 
     @media (max-width: 600px) {
-      .complaint-container {
-        padding: 30px 20px;
+      .container {
+        padding: 20px;
       }
 
-      textarea {
-        font-size: 14px;
+      header h1 {
+        font-size: 22px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="complaint-container">
-    <h2>Submit a Cyber Complaint</h2>
 
-    <form id="complaintForm">
-      <textarea id="complaintText" placeholder="Clearly describe your issue..." required maxlength="1000"></textarea>
-      <div class="char-counter" id="charCount">0 / 1000</div>
-      <button type="submit" id="submitBtn">Submit Complaint</button>
+  <div class="container">
+    <header>
+      <!-- Placeholder for a logo -->
+      <!-- <img src="logo.png" alt="Logo" style="height: 50px; margin-bottom: 10px;"> -->
+      <h1>Cybercrime Complaint Form</h1>
+    </header>
+
+    <form id="complaintForm" enctype="multipart/form-data">
+
+      <!-- Incident Details -->
+      <fieldset>
+        <legend>Incident Details</legend>
+
+        <label>Type of Cybercrime:</label>
+        <select required>
+          <option value="">-- Select --</option>
+          <option>Financial Fraud</option>
+          <option>Social Media Harassment</option>
+          <option>Phishing</option>
+          <option>Online Stalking</option>
+          <option>Hacking</option>
+          <option>Other</option>
+        </select>
+
+        <label>Date of Incident:</label>
+        <input type="date" required>
+
+        <label>Time of Incident:</label>
+        <input type="time">
+
+        <label>Platform Involved:</label>
+        <input type="text" placeholder="e.g. WhatsApp, Facebook, Email" required>
+
+        <label>Description of Incident:</label>
+        <textarea rows="5" required></textarea>
+      </fieldset>
+
+      <!-- Suspect Details -->
+      <fieldset>
+        <legend>Suspect Details (if known)</legend>
+
+        <label>Phone Number:</label>
+        <input type="tel">
+
+        <label>Email ID:</label>
+        <input type="email">
+
+        <label>Social Media Handle:</label>
+        <input type="text">
+
+        <label>Bank Account Details:</label>
+        <input type="text">
+      </fieldset>
+
+      <!-- Victim Details -->
+      <fieldset>
+        <legend>Victim Details</legend>
+
+        <label>Full Name:</label>
+        <input type="text" required>
+
+        <label>Gender:</label>
+        <select required>
+          <option value="">-- Select --</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+
+        <label>Date of Birth:</label>
+        <input type="date" required>
+
+        <label>Address:</label>
+        <textarea rows="3" required></textarea>
+
+        <label>State:</label>
+        <input type="text" required>
+
+        <label>District:</label>
+        <input type="text" required>
+
+        <label>Email ID:</label>
+        <input type="email" required>
+
+        <label>Mobile Number:</label>
+        <input type="tel" required>
+      </fieldset>
+
+      <!-- Attachments -->
+      <fieldset>
+        <legend>Attachments (Max 5MB each)</legend>
+
+        <label>Upload Evidence:</label>
+        <input type="file" accept=".jpg,.jpeg,.png,.pdf" multiple>
+      </fieldset>
+
+      <button type="submit">Submit Complaint</button>
     </form>
-
-    <p id="statusMessage"></p>
   </div>
 
-  <script>
-    const complaintText = document.getElementById("complaintText");
-    const charCount = document.getElementById("charCount");
-    const statusMessage = document.getElementById("statusMessage");
-    const submitBtn = document.getElementById("submitBtn");
-
-    // Character Counter
-    complaintText.addEventListener("input", () => {
-      const len = complaintText.value.length;
-      charCount.textContent = `${len} / 1000`;
-    });
-
-    // Utility function to show messages with fade-in and auto-hide
-    function showMessage(text, type) {
-      const icons = {
-        success: "✅",
-        error: "❌",
-        warning: "⚠️"
-      };
-      statusMessage.innerText = `${icons[type] || ""} ${text}`;
-      statusMessage.style.color = {
-        success: "green",
-        error: "red",
-        warning: "orange"
-      }[type] || "black";
-      statusMessage.classList.add("show");
-
-      // Auto-hide message after 4 seconds
-      setTimeout(() => {
-        statusMessage.classList.remove("show");
-      }, 4000);
-
-      // Scroll message into view
-      statusMessage.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-
-    // Form Submit Handler
-    document.getElementById("complaintForm").addEventListener("submit", async function (event) {
-      event.preventDefault();
-
-      // Clear previous message immediately
-      statusMessage.classList.remove("show");
-      statusMessage.innerText = "";
-
-      const text = complaintText.value.trim();
-
-      if (text.length < 20) {
-        showMessage("Please provide a more detailed complaint (at least 20 characters).", "warning");
-        return;
-      }
-
-      submitBtn.disabled = true;
-      submitBtn.innerText = "Submitting...";
-
-      try {
-        const response = await fetch("http://127.0.0.1:8000/complaints", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          showMessage("Complaint submitted successfully!", "success");
-          complaintText.value = "";
-          charCount.textContent = "0 / 1000";
-        } else {
-          showMessage(data.detail || "Submission failed.", "error");
-        }
-      } catch (err) {
-        showMessage("Failed to connect to the server.", "error");
-      }
-
-      submitBtn.disabled = false;
-      submitBtn.innerText = "Submit Complaint";
-    });
-  </script>
 </body>
 </html>

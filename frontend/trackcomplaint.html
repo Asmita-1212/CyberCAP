@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Track Your Cybercrime Complaint</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f4f8;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 35px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    button[type="submit"] {
+      margin-top: 30px;
+      width: 100%;
+      background-color: #007bff;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    #result {
+      margin-top: 30px;
+      display: none;
+      background-color: #e9f7ef;
+      border: 1px solid #c3e6cb;
+      padding: 18px;
+      border-radius: 6px;
+      color: #155724;
+      transition: all 0.3s ease;
+    }
+
+    .loading {
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+      }
+
+      input, button {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>🔍 Track Your Complaint</h2>
+
+    <form id="trackForm">
+      <label for="complaintId">Complaint ID:</label>
+      <input type="text" id="complaintId" name="complaintId" required placeholder="Enter your Complaint ID">
+
+      <label for="mobile">Registered Mobile Number:</label>
+      <input type="tel" id="mobile" name="mobile" required placeholder="Enter your mobile number">
+
+      <button type="submit">Track Complaint</button>
+    </form>
+
+    <div class="loading" id="loading">Fetching your complaint status...</div>
+
+    <div id="result">
+      <strong>Status:</strong> Your complaint is being processed. Please check back later.
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('trackForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Hide previous result (if any)
+      document.getElementById('result').style.display = 'none';
+
+      // Show loading
+      const loading = document.getElementById('loading');
+      loading.style.display = 'block';
+
+      // Simulate delay
+      setTimeout(function () {
+        loading.style.display = 'none';
+        document.getElementById('result').style.display = 'block';
+      }, 1500); // 1.5 seconds
+    });
+  </script>
+
+</body>
+</html>

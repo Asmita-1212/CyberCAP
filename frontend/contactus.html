@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us - Cybercrime Support</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f4f8;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    p.description {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    section h2 {
+      color: #007bff;
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    form label {
+      display: block;
+      margin-top: 18px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button[type="submit"] {
+      margin-top: 25px;
+      background-color: #007bff;
+      color: white;
+      padding: 14px 25px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      section h2 {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Contact Us</h1>
+    <p class="description">Need help or want to report something directly? We’re here for you.</p>
+
+    <!-- Helpline Details -->
+    <section>
+      <h2>📞 Helpline Details</h2>
+      <p><strong>Cybercrime Helpline:</strong> <span style="color: green;">1930</span> (Available 24x7)</p>
+      <p><strong>Email:</strong> <a href="mailto:cybercrime-support@gov.in">cybercrime-support@gov.in</a></p>
+      <p><strong>Website:</strong> <a href="https://cybercrime.gov.in" target="_blank">https://cybercrime.gov.in</a></p>
+    </section>
+
+    <!-- Contact Form -->
+    <section>
+      <h2>📬 Send Us a Message</h2>
+      <form>
+        <label>Your Name:</label>
+        <input type="text" required placeholder="Enter your full name">
+
+        <label>Email Address:</label>
+        <input type="email" required placeholder="your@example.com">
+
+        <label>Subject:</label>
+        <input type="text" >
+
+        <label>Message:</label>
+        <textarea rows="3" required placeholder="Write your message here..."></textarea>
+
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+  </div>
+
+</body>
+</html>
