@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberCAP</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    /* Navbar */
+    .navbar {
+      background-color: black;
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      min-height: 100px;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 30px; /* space between logo and menu */
+    }
+
+    .navbar .logo {
+      color: white;
+      font-weight: bold;
+      font-size: 28px;
+      text-decoration: none;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar ul li {
+      margin-left: 0;
+      margin-right: 30px; /* spacing between menu items */
+      position: relative;
+    }
+
+    .navbar ul li:last-child {
+      margin-right: 0; /* no extra space on last item */
+    }
+
+    .navbar ul li a,
+    .dropbtn {
+      color: white;
+      text-decoration: underline;
+      font-weight: 1000;
+      font-size: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Dropdown Styles */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: rgb(95, 236, 218);
+      min-width: 160px;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 99;
+      border-radius: 4px;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #9b1515;
+    }
+
+    /* Show dropdown on hover */
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    /* Slider */
+    .slider {
+      position: relative;
+      width: 98%;
+      height: 600px;
+    }
+
+    .slides {
+      display: flex;
+      width: 300%;
+      animation: slide 25s infinite;
+    }
+
+    .slides img {
+      width: 100%;
+      height: 600px;
+      object-fit: cover;
+    }
+
+    @keyframes slide {
+      0% { margin-left: 0; }
+      33% { margin-left: -100%; }
+      66% { margin-left: -200%; }
+      100% { margin-left: 0; }
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2%;
+    }
+
+    .crime-card {
+      background: white;
+      margin: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+      width: 450px;
+    }
+
+    .crime-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 15px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 14px;
+      margin-left: 25px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .btn-register {
+      background-color: #0d6efd;
+    }
+
+    .btn-track {
+      background-color: #198754;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <a href="#" class="logo">CyberCAP</a>
+    <ul>
+      <li><a href="complaint.html">Register a Complaint</a></li>
+      <li><a href="trackcomplaint.html">Track Complaint</a></li>
+      <li><a href="#">Report Suspect</a></li>
+      <li><a href="#">Cyber Volunteers</a></li>
+      <li><a href="learncorner.html">Learning corner</a></li>
+      <li><a href="contactus.html">Contact Us</a></li>
+      <li class="dropdown">
+        <button class="dropbtn">Login</button>
+        <div class="dropdown-content">
+          <a href="login.html">User Login</a>
+          <a href="#">Admin Login</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Slider -->
+<div class="slider">
+  <div class="slides">
+    <img src="https://files.scmagazine.com/wp-content/uploads/2024/03/Cybercrime_AdobeStockImages_cropped-scaled.jpg" alt="Slide 1">
+    <img src="https://lawtrend.in/wp-content/uploads/2024/06/cyber-crime-digital-arrest.jpg" alt="Slide 2">
+    <img src="https://st4.depositphotos.com/22162388/23954/i/450/depositphotos_239549088-stock-photo-cyber-security-data-protection-information.jpg" alt="Slide 3">
+  </div>
+</div>
+
+<!-- Crime Sections -->
+<h1 style="text-align: center; background-color: black; color: #f5f5f5;">Register your Complaint</h1>
+<div class="container">
+  <div class="crime-card">
+    <img src="https://th.bing.com/th/id/OIP.zotBTFa7twaNlayc36Er7gHaEK?w=257&h=180&c=7&r=0&o=5&pid=1.7" alt="Women Related Crime">
+    <div class="card-body">
+      <h5 class="card-title">Women Related Crime</h5>
+      <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
+      <a href="trackcomplaint.html" class="btn btn-track">File & Track</a>
+    </div>
+  </div>
+
+  <div class="crime-card">
+    <img src="https://tse3.mm.bing.net/th/id/OIP.RjefmPoPUb_7oIYeAiRpPAHaGu?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Phishing Fraud">
+    <div class="card-body">
+      <h5 class="card-title">Phishing Fraud</h5>
+      <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
+      <a href="trackcomplaint.html" class="btn btn-track">File & Track</a>
+    </div>
+  </div>
+
+  <div class="crime-card">
+    <img src="https://tse2.mm.bing.net/th/id/OIP.VQzhJhO5zJgH9_T_SqWMHgHaEc?pid=ImgDet&w=191&h=114&c=7&o=7&rm=3" alt="Hacking Crime">
+    <div class="card-body">
+      <h5 class="card-title">Hacking Crime</h5>
+      <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
+      <a href="trackcomplaint.html" class="btn btn-track">File & Track</a>
+    </div>
+  </div>
+
+  <div class="crime-card">
+    <img src="https://tse1.mm.bing.net/th/id/OIP.O3EyGKcKcs3FZpwcIb8DggHaEP?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Malware Crime">
+    <div class="card-body">
+      <h5 class="card-title">Malware Crime</h5>
+      <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
+      <a href="trackcomplaint.html" class="btn btn-track">File & Track</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

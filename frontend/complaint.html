@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cybercrime Complaint Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #639dd8; padding: 20px; color: #333; }
+    .container { max-width: 900px; margin: auto; background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+    header { text-align: center; margin-bottom: 30px; }
+    header h1 { font-size: 28px; color: #2c3e50; }
+    form fieldset { border: 1px solid #d3dce6; padding: 25px; margin-bottom: 30px; border-radius: 8px; background-color: #f9fbfd; }
+    legend { font-weight: bold; padding: 0 10px; color: #007bff; }
+    label { display: block; margin-top: 20px; font-weight: 600; color: #444; }
+    input, select, textarea { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ccd6e0; border-radius: 6px; font-size: 15px; transition: border 0.3s; }
+    input:focus, textarea:focus, select:focus { border-color: #007bff; outline: none; }
+    textarea { resize: vertical; }
+    input[type="file"] { margin-top: 10px; }
+    button[type="submit"] { background-color: #007bff; color: white; padding: 14px 30px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: background 0.3s; }
+    button[type="submit"]:hover { background-color: #0056b3; }
+    @media (max-width: 600px) { .container { padding: 20px; } header h1 { font-size: 22px; } }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Cybercrime Complaint Form</h1>
+  </header>
+
+  <form id="complaintForm" enctype="multipart/form-data">
+
+    <!-- Incident Details -->
+    <fieldset>
+      <legend>Incident Details</legend>
+      <label>Type of Cybercrime:</label>
+      <select name="incident_type" required>
+        <option value="">-- Select --</option>
+        <option value="Financial Fraud">Financial Fraud</option>
+        <option value="Social Media Harassment">Social Media Harassment</option>
+        <option value="Phishing">Phishing</option>
+        <option value="Online Stalking">Online Stalking</option>
+        <option value="Hacking">Hacking</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Date of Incident:</label>
+      <input type="date" name="incident_date" required>
+
+      <label>Time of Incident:</label>
+      <input type="time" name="incident_time">
+
+      <label>Platform Involved:</label>
+      <input type="text" name="platform" placeholder="e.g. WhatsApp, Facebook, Email" required>
+
+      <label>Description of Incident:</label>
+      <textarea name="description" rows="5" required></textarea>
+    </fieldset>
+
+    <!-- Suspect Details -->
+    <fieldset>
+      <legend>Suspect Details (if known)</legend>
+      <label>Phone Number:</label>
+      <input type="tel" name="suspect_phone">
+
+      <label>Email ID:</label>
+      <input type="email" name="suspect_email">
+
+      <label>Social Media Handle:</label>
+      <input type="text" name="suspect_handle">
+
+      <label>Bank Account Details:</label>
+      <input type="text" name="suspect_bank">
+    </fieldset>
+
+    <!-- Victim Details -->
+    <fieldset>
+      <legend>Victim Details</legend>
+      <label>Full Name:</label>
+      <input type="text" name="victim_name" required>
+
+      <label>Gender:</label>
+      <select name="victim_gender" required>
+        <option value="">-- Select --</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Date of Birth:</label>
+      <input type="date" name="victim_dob" required>
+
+      <label>Address:</label>
+      <textarea name="victim_address" rows="3" required></textarea>
+
+      <label>State:</label>
+      <input type="text" name="victim_state" required>
+
+      <label>District:</label>
+      <input type="text" name="victim_district" required>
+
+      <label>Email ID:</label>
+      <input type="email" name="victim_email" required>
+
+      <label>Mobile Number:</label>
+      <input type="tel" name="victim_mobile" required>
+    </fieldset>
+
+    <!-- Attachments -->
+    <fieldset>
+      <legend>Attachments (Max 5MB each)</legend>
+      <label>Upload Evidence:</label>
+      <input type="file" name="attachments" accept=".jpg,.jpeg,.png,.pdf" multiple>
+    </fieldset>
+
+    <button type="submit">Submit Complaint</button>
+  </form>
+</div>
+
+<script>
+document.getElementById("complaintForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  // Convert formData to JSON object
+  const data = {};
+  formData.forEach((value, key) => {
+    if(key === "attachments") {
+      if(!data[key]) data[key] = [];
+      data[key].push(value.name); // store file names (later implement real upload)
+    } else {
+      data[key] = value;
+    }
+  });
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/complaint", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    if(res.ok){
+      alert(result.message);
+      form.reset();
+    } else {
+      alert(result.detail || "Something went wrong!");
+    }
+  } catch(err){
+    console.error(err);
+    alert("Error submitting complaint. Try again.");
+  }
+});
+</script>
+
+</body>
+</html>
