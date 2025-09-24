@@ -1,56 +1,56 @@
 # Backend/app.py
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
 from datetime import datetime
-from bson.objectid import ObjectId
-import pyotp
-from werkzeug.security import check_password_hash
 from passlib.hash import bcrypt
-from Backend.database import users_collection, complaints_collection, admins_collection
+from bson.objectid import ObjectId
+from pymongo import ReturnDocument
+from werkzeug.security import check_password_hash
+import pyotp
+
+from Backend.models import User, LoginUser, Complaint, AdminLogin, AdminMFA
+from Backend.forgot_password_api import send_otp
+from Backend.database import users_collection, complaints_collection, admins_collection, password_resets
+
+from fastapi import Body
 
 # ---------------- FastAPI App ----------------
 app = FastAPI(title="CyberCAP Backend")
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from Backend.database import complaints_collection
 
-# Enable CORS (for testing)
+# ---------------- Track Complaint Model ----------------
+class TrackRequest(BaseModel):
+    complaintId: str
+    mobile: str
+
+# Enable CORS (for frontend communication)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ---------------- OTP Stores ----------------
+# ---------------- Counter for complaint IDs ----------------
+counters = password_resets.database["counters"]  # Using same DB
+if counters.find_one({"_id": "complaintid"}) is None:
+    counters.insert_one({"_id": "complaintid", "sequence_value": 0})
+
+def get_next_sequence(name: str):
+    counter = counters.find_one_and_update(
+        {"_id": name},
+        {"$inc": {"sequence_value": 1}},
+        return_document=ReturnDocument.AFTER
+    )
+    return counter["sequence_value"]
+
+# ---------------- OTP Store for Admin MFA ----------------
 admin_otp_store = {}  # stores pending MFA sessions
-otp_store = {}        # for password reset emails (if used)
 
-# ---------------- Models ----------------
-class User(BaseModel):
-    username: str
-    email: str
-    password: str
-
-class LoginUser(BaseModel):
-    email: str
-    password: str
-
-class Complaint(BaseModel):
-    user_id: str
-    complaint_text: str
-    attachment: list = []  # optional list of file URLs/paths
-
-class AdminLogin(BaseModel):
-    username: str
-    password: str
-
-class AdminMFA(BaseModel):
-    username: str
-    otp: str
-
-# ---------------- Helpers ----------------
+# ---------------- Helper Functions ----------------
 def user_helper(user) -> dict:
     return {
         "id": str(user["_id"]),
@@ -61,9 +61,18 @@ def user_helper(user) -> dict:
 def complaint_helper(complaint) -> dict:
     return {
         "id": str(complaint["_id"]),
-        "user_id": complaint["user_id"],
-        "complaint_text": complaint["complaint_text"],
-        "attachment": complaint.get("attachment"),
+        "complaint_id": complaint.get("complaint_id"),
+        "incident_type": complaint["incident_type"],
+        "incident_date": complaint["incident_date"],
+        "incident_time": complaint.get("incident_time"),
+        "platform": complaint["platform"],
+        "description": complaint["description"],
+        "suspect": complaint.get("suspect"),
+        "victim": complaint["victim"],
+        "attachments": complaint.get("attachments", []),
+        "status": complaint.get("status", "Pending"),
+        "priority": complaint.get("priority"),
+        "category": complaint.get("category"),
         "created_at": complaint.get("created_at")
     }
 
@@ -93,8 +102,17 @@ def login(user: LoginUser):
 def create_complaint(complaint: Complaint):
     complaint_data = complaint.dict()
     complaint_data["created_at"] = datetime.utcnow().isoformat()
+
+    next_id = get_next_sequence("complaintid")
+    complaint_data["complaint_id"] = f"CC-{next_id:05d}"
+    complaint_data["status"] = "Pending"
+
     result = complaints_collection.insert_one(complaint_data)
-    return {"id": str(result.inserted_id), "message": "Complaint submitted successfully"}
+    return {
+        "id": str(result.inserted_id),
+        "complaint_id": complaint_data["complaint_id"],
+        "message": "Complaint submitted successfully"
+    }
 
 @app.get("/complaints")
 def get_complaints():
@@ -130,3 +148,71 @@ def admin_mfa(mfa: AdminMFA):
         return {"message": "Admin login successful"}
     else:
         raise HTTPException(status_code=401, detail="Invalid OTP")
+
+# ---------------- Password Reset Endpoints ----------------
+from pydantic import BaseModel
+
+class ForgotPasswordSchema(BaseModel):
+    email: str
+
+class ResetPasswordSchema(BaseModel):
+    email: str
+    otp: str
+    new_password: str
+
+@app.post("/send-otp")
+def send_otp_endpoint(data: ForgotPasswordSchema):
+    user = users_collection.find_one({"email": data.email})
+    if not user:
+        raise HTTPException(status_code=404, detail="Email not registered")
+
+    otp_code = send_otp(data.email)
+    if otp_code:
+        password_resets.update_one(
+            {"email": data.email},
+            {"$set": {"otp": otp_code, "created_at": datetime.utcnow()}},
+            upsert=True
+        )
+        return {"message": "OTP sent successfully"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to send OTP")
+
+@app.post("/reset-password")
+def reset_password(data: ResetPasswordSchema):
+    record = password_resets.find_one({"email": data.email})
+    if not record or record["otp"] != data.otp:
+        raise HTTPException(status_code=400, detail="Invalid OTP")
+
+    hashed_pw = bcrypt.hash(data.new_password)
+    users_collection.update_one(
+        {"email": data.email},
+        {"$set": {"password": hashed_pw}}
+    )
+
+    password_resets.delete_one({"email": data.email})
+
+    return {"message": "Password reset successful"}
+
+#complaint tracking
+@app.post("/track_complaint")
+def track_complaint(data: dict = Body(...)):
+    complaint_id = data.get("complaintId")
+    mobile = data.get("mobile")
+
+    # Search in complaints collection
+    complaint = complaints_collection.find_one({
+        "complaint_id": complaint_id,
+        "victim.mobile": mobile
+    })
+
+    if not complaint:
+        return {"error": "Complaint not found"}
+
+    return {
+        "complaint_id": complaint["complaint_id"],
+        "status": complaint.get("status", "Pending"),
+        "incident_type": complaint.get("incident_type"),
+        "incident_date": complaint.get("incident_date"),
+        "platform": complaint.get("platform"),
+        "description": complaint.get("description", "")
+    }

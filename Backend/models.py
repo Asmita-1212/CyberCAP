@@ -9,12 +9,13 @@ class LoginUser(BaseModel):
     email: str
     password: str
 
-from pydantic import BaseModel
-from typing import List, Optional
+
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional,List
 
 class Suspect(BaseModel):
-    phone: Optional[str]
-    email: Optional[str]
+    phone: Optional[str] = Field(None, pattern=r'^\d{10}$')
+    email: Optional[EmailStr] = None
     social_handle: Optional[str]
     bank_account: Optional[str]
 
@@ -25,8 +26,8 @@ class Victim(BaseModel):
     address: str
     state: str
     district: str
-    email: str
-    mobile: str
+    email: EmailStr
+    mobile: str = Field(..., pattern=r'^\d{10}$')
 
 class Complaint(BaseModel):
     incident_type: str
@@ -39,6 +40,7 @@ class Complaint(BaseModel):
     attachments: Optional[List[str]] = []
     priority: Optional[str] = None
     category: Optional[str] = None
+
 
 
 from pydantic import BaseModel

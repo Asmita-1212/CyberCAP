@@ -4,7 +4,6 @@ from passlib.context import CryptContext
 import jwt
 from datetime import datetime, timedelta
 
-
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = "yoursecretkey"
