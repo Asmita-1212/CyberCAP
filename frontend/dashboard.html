@@ -2,121 +2,114 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CyberCAP</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body {
       margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #f5f5f5;
+      font-family: Arial, sans-serif;
+      background-color: #fff8f8;
     }
 
     /* Navbar */
     .navbar {
-      background-color: black;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: linear-gradient(90deg, #000000, #131212);
       display: flex;
       align-items: center;
-      padding: 12px 20px;
-      min-height: 100px;
-    }
-
-    .navbar-left {
-      display: flex;
-      align-items: center;
-      gap: 30px; /* space between logo and menu */
+      justify-content: space-between;
+      padding: 12px 30px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     }
 
     .navbar .logo {
-      color: white;
+      color: #ecf3f5;
+      font-size: 30px;
       font-weight: bold;
-      font-size: 28px;
       text-decoration: none;
+      letter-spacing: 1px;
     }
 
     .navbar ul {
       list-style: none;
       display: flex;
+      gap: 25px;
       margin: 0;
       padding: 0;
     }
 
     .navbar ul li {
-      margin-left: 0;
-      margin-right: 30px; /* spacing between menu items */
       position: relative;
-    }
-
-    .navbar ul li:last-child {
-      margin-right: 0; /* no extra space on last item */
     }
 
     .navbar ul li a,
     .dropbtn {
-      color: white;
-      text-decoration: underline;
-      font-weight: 1000;
+      color: #f5f0f0;
       font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      
       background: none;
       border: none;
       cursor: pointer;
     }
 
-    /* Dropdown Styles */
+    .navbar ul li a:hover,
+    .dropbtn:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
     .dropdown-content {
       display: none;
       position: absolute;
-      top: 100%;
+      top: 40px;
       left: 0;
-      background-color: rgb(95, 236, 218);
+      background-color: #545dda;
       min-width: 160px;
-      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-      z-index: 99;
-      border-radius: 4px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      border-radius: 6px;
+      overflow: hidden;
     }
 
     .dropdown-content a {
-      color: black;
+      color: #000;
       padding: 12px 16px;
       text-decoration: none;
       display: block;
+      
     }
 
     .dropdown-content a:hover {
-      background-color: #9b1515;
+      background-color: #e06deb;
+      color: #b9d43c;
     }
 
-    /* Show dropdown on hover */
     .dropdown:hover .dropdown-content {
       display: block;
     }
 
     /* Slider */
     .slider {
-      position: relative;
-      width: 98%;
-      height: 600px;
+      width: 100%;
+      overflow: hidden;
     }
 
-    .slides {
-      display: flex;
-      width: 300%;
-      animation: slide 25s infinite;
-    }
+    
 
     .slides img {
       width: 100%;
-      height: 600px;
+      height: 400px;
       object-fit: cover;
     }
 
-    @keyframes slide {
-      0% { margin-left: 0; }
-      33% { margin-left: -100%; }
-      66% { margin-left: -200%; }
-      100% { margin-left: 0; }
-    }
+    
 
+    /* Crime Cards */
     .container {
       display: flex;
       flex-wrap: wrap;
@@ -157,7 +150,7 @@
       text-decoration: none;
       font-size: 14px;
       font-weight: bold;
-      color: white;
+      color: #fff;
     }
 
     .btn-register {
@@ -167,46 +160,57 @@
     .btn-track {
       background-color: #198754;
     }
+
+    h1.section-title {
+      text-align: center;
+      background-color: black;
+      color: #ee6666;
+      padding: 20px;
+      margin: 0;
+    }
+
+    @media (max-width: 768px) {
+      .slides img {
+        height: 300px;
+      }
+      .crime-card {
+        width: 90%;
+      }
+    }
   </style>
 </head>
 <body>
 
 <!-- Navbar -->
 <nav class="navbar">
-  <div class="navbar-left">
-    <a href="#" class="logo">CyberCAP</a>
-    <ul>
-      <li><a href="complaint.html">Register a Complaint</a></li>
-      <li><a href="trackcomplaint.html">Track Complaint</a></li>
-      <li><a href="reportsuspect.html">Report Suspect</a></li>
-      <li><a href="cybervoluteer.html">Cyber Volunteers</a></li>
-      <li><a href="learncorner.html">Learning corner</a></li>
-      <li><a href="contactus.html">Contact Us</a></li>
-      <li class="dropdown">
-        <button class="dropbtn">Login</button>
-        <div class="dropdown-content">
-          <a href="login.html">User Login</a>
-          <a href="#">Admin Login</a>
-        </div>
-      </li>
-    </ul>
-  </div>
+  <a href="#" class="logo">CyberCAP</a>
+  <ul>
+    <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Cyber Volunteers</a></li>
+    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning Corner</a></li>
+    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
+    <li class="dropdown">
+      <button class="dropbtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+      <div class="dropdown-content">
+        <a href="login.html">User Login</a>
+        <a href="admin_login.html">Admin Login</a>
+      </div>
+    </li>
+  </ul>
 </nav>
 
 <!-- Slider -->
 <div class="slider">
   <div class="slides">
-    <img src="https://files.scmagazine.com/wp-content/uploads/2024/03/Cybercrime_AdobeStockImages_cropped-scaled.jpg" alt="Slide 1">
-    <img src="https://lawtrend.in/wp-content/uploads/2024/06/cyber-crime-digital-arrest.jpg" alt="Slide 2">
-    <img src="https://st4.depositphotos.com/22162388/23954/i/450/depositphotos_239549088-stock-photo-cyber-security-data-protection-information.jpg" alt="Slide 3">
+    <img src="https://allaboutvanuatu.com/wp-content/uploads/2023/02/CyberSecurity1.png" alt="Cyber Security Awareness">
   </div>
 </div>
 
+<!-- Section Title -->
+
 <!-- Crime Sections -->
-<h1 style="text-align: center; background-color: black; color: #f5f5f5;">Register your Complaint</h1>
 <div class="container">
   <div class="crime-card">
-    <img src="https://th.bing.com/th/id/OIP.zotBTFa7twaNlayc36Er7gHaEK?w=257&h=180&c=7&r=0&o=5&pid=1.7" alt="Women Related Crime">
+    <img src="https://cdn.tatlerasia.com/tatlerasia/i/2022/03/09152924-gettyimages-1375105095_cover_1500x854.jpg" alt="Women Related Crime">
     <div class="card-body">
       <h5 class="card-title">Women Related Crime</h5>
       <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
