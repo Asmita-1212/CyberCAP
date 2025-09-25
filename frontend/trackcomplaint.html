@@ -107,29 +107,56 @@
 
     <div class="loading" id="loading">Fetching your complaint status...</div>
 
-    <div id="result">
-      <strong>Status:</strong> Your complaint is being processed. Please check back later.
-    </div>
+    <div id="result"></div>
   </div>
 
   <script>
-    document.getElementById('trackForm').addEventListener('submit', function (e) {
-      e.preventDefault();
+  document.getElementById('trackForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
 
-      // Hide previous result (if any)
-      document.getElementById('result').style.display = 'none';
+  document.getElementById('result').style.display = 'none';
+  const loading = document.getElementById('loading');
+  loading.style.display = 'block';
 
-      // Show loading
-      const loading = document.getElementById('loading');
-      loading.style.display = 'block';
+  const complaintId = document.getElementById('complaintId').value;
+  const mobile = document.getElementById('mobile').value;
 
-      // Simulate delay
-      setTimeout(function () {
-        loading.style.display = 'none';
-        document.getElementById('result').style.display = 'block';
-      }, 1500); // 1.5 seconds
+  try {
+    const response = await fetch("http://127.0.0.1:8000/track_complaint", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ complaintId, mobile })
     });
-  </script>
+
+    loading.style.display = 'none';
+
+    if (!response.ok) {
+      const error = await response.json();
+      document.getElementById('result').innerHTML = `<strong>Error:</strong> ${error.detail}`;
+      document.getElementById('result').style.display = 'block';
+      return;
+    }
+
+    const data = await response.json();
+    document.getElementById('result').innerHTML = `
+      <strong>Status:</strong> ${data.status}<br>
+      <strong>Complaint ID:</strong> ${data.complaint_id}<br>
+      <strong>Incident Type:</strong> ${data.incident_type}<br>
+      <strong>Date:</strong> ${data.incident_date}<br>
+      <strong>Platform:</strong> ${data.platform}<br>
+      <strong>Description:</strong> ${data.description}
+    `;
+    document.getElementById('result').style.display = 'block';
+
+  } catch (err) {
+    loading.style.display = 'none';
+    document.getElementById('result').innerHTML = `<strong>Error connecting to server:</strong> ${err.message}`;
+    document.getElementById('result').style.display = 'block';
+  }
+});
+
+</script>
+
 
 </body>
 </html>
