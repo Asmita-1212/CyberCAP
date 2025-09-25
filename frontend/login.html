@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - CyberCAP</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #3e64ff, #5edfff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .login-box {
+      background-color: #ffffff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      animation: fadeSlideDown 1s ease forwards;
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+
+    @keyframes fadeSlideDown {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #1f3b73;
+      animation: fadeIn 1.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus {
+      border-color: #3e64ff;
+      box-shadow: 0 0 8px rgba(62, 100, 255, 0.3);
+      outline: none;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #3e64ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.1s;
+    }
+
+    button:hover {
+      background-color: #2b4ae0;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    a {
+      text-align: center;
+      margin-top: 15px;
+      color: #3e64ff;
+      font-size: 14px;
+      text-decoration: none;
+      opacity: 0;
+      animation: fadeIn 1.8s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    #loginMessage {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 14px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Login to CyberCAP</h2>
+
+    <p id="loginMessage"></p>
+
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required placeholder="Enter your email"/>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required placeholder="Enter your password"/>
+
+      <button type="submit">Login</button>
+      <a href="forgot_password.html">Forgot Password?</a>
+      <!-- Add this after the "Forgot Password?" link -->
+      <a href="register.html">New user? Register here</a>
+
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const messageEl = document.getElementById("loginMessage");
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          messageEl.style.color = "green";
+          messageEl.innerText = "✅ Login successful!";
+          messageEl.style.display = "block";
+
+          localStorage.setItem("username", data.user.username);
+          localStorage.setItem("email", data.user.email);
+
+          setTimeout(() => {
+            window.location.href = "after_login.html";
+          }, 1000);
+        } else {
+          messageEl.style.color = "red";
+          messageEl.innerText = data.detail || "Invalid credentials";
+          messageEl.style.display = "block";
+        }
+      } catch (error) {
+        messageEl.style.color = "red";
+        messageEl.innerText = "⚠️ Error connecting to server.";
+        messageEl.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>

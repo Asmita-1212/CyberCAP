@@ -1,0 +1,196 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register - CyberCAP</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #3e64ff, #5edfff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .register-container {
+      background-color: #ffffff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 450px;
+      animation: fadeSlideIn 1s ease forwards;
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+
+    @keyframes fadeSlideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .register-container h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #1f3b73;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      width: 100%;
+    }
+
+    input:focus {
+      border-color: #3e64ff;
+      box-shadow: 0 0 8px rgba(62, 100, 255, 0.3);
+      outline: none;
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 30%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 18px;
+      color: #666;
+      user-select: none;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #3e64ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #2b4ae0;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    #message {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      display: none;
+    }
+
+    @media (max-width: 500px) {
+      .register-container {
+        padding: 30px 20px;
+      }
+
+      input,
+      button {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <h2>Create a New Account</h2>
+
+    <form id="registerForm">
+      <label for="username">Full Name</label>
+      <input type="text" id="username" name="username" required placeholder="Enter your full name" />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required placeholder="Enter your email" />
+
+      <label for="password">Password</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" name="password" required placeholder="Create a password" />
+        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+      </div>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p id="message"></p>
+  </div>
+
+  <script>
+    // Toggle password visibility
+    function togglePassword() {
+      const passInput = document.getElementById("password");
+      passInput.type = passInput.type === "password" ? "text" : "password";
+    }
+
+    document.getElementById("registerForm").addEventListener("submit", async function (event) {
+      event.preventDefault();  // prevent default form submission
+
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const messageEl = document.getElementById("message");
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          messageEl.style.color = "green";
+          messageEl.innerText = "✅ Registration successful!";
+        } else {
+          messageEl.style.color = "red";
+          messageEl.innerText = "❌ " + (data.detail || "Registration failed");
+        }
+
+        messageEl.style.display = "block";
+      } catch (error) {
+        messageEl.style.color = "red";
+        messageEl.innerText = "⚠️ Error connecting to server.";
+        messageEl.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
+
+

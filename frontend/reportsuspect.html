@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Report Suspect - Cybercrime</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Reset and Base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #5dbaf0);
+      padding: 30px 15px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: auto;
+      background: white;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-3px);
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 5px;
+      font-size: 28px;
+    }
+
+    h1::before {
+      content: '🚨';
+      margin-right: 10px;
+    }
+
+    p {
+      text-align: center;
+      color: #555;
+      font-size: 15px;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      font-weight: 600;
+      color: #333;
+      font-size: 15px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #888;
+      margin-top: 5px;
+      display: block;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 30px;
+      background: linear-gradient(to right, #007bff, #0056b3);
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #0056b3, #004494);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Report Suspect</h1>
+    <p>Help us fight cybercrime by reporting suspicious online activities.</p>
+
+    <form id="suspectForm">
+      <!-- State -->
+      <label for="state">State/UT:</label>
+      <input type="text" id="state" name="state" required placeholder="Enter your State or UT">
+
+      <!-- Type of Suspect -->
+      <label for="suspectType">Type of Suspect Identifier:</label>
+      <select id="suspectType" name="suspectType" required>
+        <option value="">-- Select --</option>
+        <option value="email">Email ID</option>
+        <option value="phone">Phone Number</option>
+        <option value="social">Social Media Handle</option>
+        <option value="url">Website/Link</option>
+        <option value="sms">SMS Header</option>
+        <option value="other">Other</option>
+      </select>
+
+      <!-- Platform -->
+      <label for="platform">Platform Involved:</label>
+      <input type="text" id="platform" name="platform" placeholder="e.g., Facebook, WhatsApp, Instagram">
+
+      <!-- Identifier -->
+      <label for="identifier">Suspect Identifier:</label>
+      <input type="text" id="identifier" name="identifier" required placeholder="Enter email/number/link/etc.">
+
+      <!-- Evidence Upload -->
+      <label for="evidence">Upload Evidence (Max 5MB, JPG/PNG/PDF):</label>
+      <input type="file" id="evidence" name="evidence" accept=".jpg,.jpeg,.png,.pdf">
+      <span class="note">Optional but recommended</span>
+
+      <!-- Description -->
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" rows="3" ></textarea>
+
+      <!-- Submit Button -->
+      <button type="submit">Submit Report</button>
+    </form>
+  </div>
+
+</body>
+</html>
+nahi or naku
