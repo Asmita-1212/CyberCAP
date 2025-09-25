@@ -1,39 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin OTP Verification</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin OTP Verification - CyberCAP</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #3e64ff, #5edfff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .otp-box {
+      background-color: #ffffff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      animation: fadeSlideDown 1s ease forwards;
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+
+    @keyframes fadeSlideDown {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #1f3b73;
+      animation: fadeIn 1.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus {
+      border-color: #3e64ff;
+      box-shadow: 0 0 8px rgba(62, 100, 255, 0.3);
+      outline: none;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #3e64ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.1s;
+    }
+
+    button:hover {
+      background-color: #2b4ae0;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    #otpMessage {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 14px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <h2>Enter OTP</h2>
-  <form id="otpForm">
-    <label>OTP:</label>
-    <input type="text" id="otp" required><br><br>
+  <div class="otp-box">
+    <h2>Enter OTP</h2>
 
-    <button type="submit">Verify OTP</button>
-  </form>
+    <p id="otpMessage"></p>
 
-  <p id="response"></p>
+    <form id="otpForm">
+      <label for="otp">One-Time Password</label>
+      <input type="text" id="otp" name="otp" required placeholder="Enter the OTP sent to you"/>
+
+      <button type="submit">Verify OTP</button>
+    </form>
+  </div>
 
   <script>
-    document.getElementById("otpForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
+    document.getElementById("otpForm").addEventListener("submit", async function (event) {
+      event.preventDefault();
 
-      const username = localStorage.getItem("adminUser");
       const otp = document.getElementById("otp").value;
+      const messageEl = document.getElementById("otpMessage");
+      const username = localStorage.getItem("adminUsername"); // Presumed stored after login
 
-      const res = await fetch("http://127.0.0.1:8000/admin-mfa", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, otp })
-      });
+      if (!username) {
+        messageEl.style.color = "red";
+        messageEl.innerText = "⚠️ Username not found. Please login again.";
+        messageEl.style.display = "block";
+        return;
+      }
 
-      const data = await res.json();
-      document.getElementById("response").innerText = data.message;
+      try {
+        const response = await fetch("http://127.0.0.1:8000/admin/verify-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, otp }),
+        });
 
-      if (data.message.includes("successful")) {
-        // Redirect to dashboard
-        window.location.href = "admin_dashboard.html";
+        const data = await response.json();
+
+        if (response.ok) {
+          messageEl.style.color = "green";
+          messageEl.innerText = "✅ OTP verified successfully!";
+          messageEl.style.display = "block";
+
+          setTimeout(() => {
+            window.location.href = "admin_dashboard.html";
+          }, 1000);
+        } else {
+          messageEl.style.color = "red";
+          messageEl.innerText = data.detail || "Invalid OTP. Try again.";
+          messageEl.style.display = "block";
+        }
+      } catch (error) {
+        messageEl.style.color = "red";
+        messageEl.innerText = "⚠️ Error connecting to server.";
+        messageEl.style.display = "block";
       }
     });
   </script>
