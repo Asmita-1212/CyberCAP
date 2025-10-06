@@ -2,22 +2,69 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Cyber Volunteer Registration</title>
+  <title>Cyber Volunteer Registration | CyberCAP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* Base Styling */
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right,  #56c5f8);
-      padding: 30px 15px;
+      background: linear-gradient(to right, #56c5f8, #71afec);
+      padding-top: 70px; /* for fixed navbar */
+      color: #333;
     }
 
+    /* ===== Navbar Styling ===== */
+    nav {
+      background: linear-gradient(90deg, #000000, #111111);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 40px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    nav .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #1e90ff;
+    }
+
+    /* ===== Form Container ===== */
     .container {
       max-width: 750px;
       margin: auto;
@@ -32,6 +79,7 @@
       font-size: 28px;
       color: #2c3e50;
       margin-bottom: 10px;
+      font-weight: 700;
     }
 
     h1::before {
@@ -96,7 +144,21 @@
       margin-top: 5px;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 25px;
+      }
+
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        margin-top: 10px;
+        gap: 15px;
+      }
+
       .container {
         padding: 25px 20px;
       }
@@ -109,6 +171,17 @@
 </head>
 <body>
 
+  <!-- Navbar (matches the black one from your image) -->
+  <nav>
+    <div class="logo">CyberCAP</div>
+    <ul>
+      <li><a href="#" class="active"><i class="fa-solid fa-users"></i> Cyber Volunteers</a></li>
+      <li><a href="learncorner.html"><i class="fa-solid fa-book"></i> Learning Corner</a></li>
+      <li><a href="contactus.html"><i class="fa-solid fa-envelope"></i> Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
   <div class="container">
     <h1>Cyber Volunteer Registration</h1>
     <p>Join hands with the Government to identify harmful and unlawful content online.</p>

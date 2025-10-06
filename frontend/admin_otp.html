@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin OTP Verification - CyberCAP</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -13,14 +14,66 @@
     }
 
     body {
-      height: 100vh;
+      min-height: 100vh;
       background: linear-gradient(135deg, #3e64ff, #5edfff);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      overflow: hidden;
     }
 
+    /* ✅ Navbar Styles (same as admin & user login) */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: linear-gradient(90deg, #000000, #131212);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 30px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      width: 100%;
+    }
+
+    .navbar .logo {
+      color: #ecf3f5;
+      font-size: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar ul li {
+      position: relative;
+    }
+
+    .navbar ul li a,
+    .dropbtn {
+      color: #f5f0f0;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .navbar ul li a:hover,
+    .dropbtn:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* ✅ OTP Box Styling */
     .otp-box {
       background-color: #ffffff;
       padding: 40px 30px;
@@ -31,6 +84,7 @@
       animation: fadeSlideDown 1s ease forwards;
       opacity: 0;
       transform: translateY(-30px);
+      margin-top: 60px; /* space below navbar */
     }
 
     @keyframes fadeSlideDown {
@@ -102,65 +156,90 @@
       font-size: 14px;
       display: none;
     }
+
+    /* Responsive navbar */
+    @media (max-width: 768px) {
+      .navbar ul {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+      }
+      .navbar {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="otp-box">
-    <h2>Enter OTP</h2>
 
-    <p id="otpMessage"></p>
+<!-- ✅ CyberCAP Navbar -->
+<nav class="navbar">
+  <a href="#" class="logo">CyberCAP</a>
+  <ul>
+    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Cyber Volunteers</a></li>
+    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning Corner</a></li>
+    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
+  </ul>
+</nav>
 
-    <form id="otpForm">
-      <label for="otp">One-Time Password</label>
-      <input type="text" id="otp" name="otp" required placeholder="Enter the OTP sent to you"/>
+<!-- ✅ OTP Verification Box -->
+<div class="otp-box">
+  <h2>Enter OTP</h2>
 
-      <button type="submit">Verify OTP</button>
-    </form>
-  </div>
+  <p id="otpMessage"></p>
 
-  <script>
-    document.getElementById("otpForm").addEventListener("submit", async function (event) {
-      event.preventDefault();
+  <form id="otpForm">
+    <label for="otp">One-Time Password</label>
+    <input type="text" id="otp" name="otp" required placeholder="Enter the OTP sent to you"/>
 
-      const otp = document.getElementById("otp").value;
-      const messageEl = document.getElementById("otpMessage");
-      const username = localStorage.getItem("adminUsername"); // Presumed stored after login
+    <button type="submit">Verify OTP</button>
+  </form>
+</div>
 
-      if (!username) {
-        messageEl.style.color = "red";
-        messageEl.innerText = "⚠️ Username not found. Please login again.";
+<script>
+  document.getElementById("otpForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const otp = document.getElementById("otp").value;
+    const messageEl = document.getElementById("otpMessage");
+    const username = localStorage.getItem("adminUsername");
+
+    if (!username) {
+      messageEl.style.color = "red";
+      messageEl.innerText = "⚠️ Username not found. Please login again.";
+      messageEl.style.display = "block";
+      return;
+    }
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/admin/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, otp }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        messageEl.style.color = "green";
+        messageEl.innerText = "✅ OTP verified successfully!";
         messageEl.style.display = "block";
-        return;
-      }
 
-      try {
-        const response = await fetch("http://127.0.0.1:8000/admin/verify-otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, otp }),
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          messageEl.style.color = "green";
-          messageEl.innerText = "✅ OTP verified successfully!";
-          messageEl.style.display = "block";
-
-          setTimeout(() => {
-            window.location.href = "admin_dashboard.html";
-          }, 1000);
-        } else {
-          messageEl.style.color = "red";
-          messageEl.innerText = data.detail || "Invalid OTP. Try again.";
-          messageEl.style.display = "block";
-        }
-      } catch (error) {
+        setTimeout(() => {
+          window.location.href = "admin_dashboard.html";
+        }, 1000);
+      } else {
         messageEl.style.color = "red";
-        messageEl.innerText = "⚠️ Error connecting to server.";
+        messageEl.innerText = data.detail || "Invalid OTP. Try again.";
         messageEl.style.display = "block";
       }
-    });
-  </script>
+    } catch (error) {
+      messageEl.style.color = "red";
+      messageEl.innerText = "⚠️ Error connecting to server.";
+      messageEl.style.display = "block";
+    }
+  });
+</script>
 </body>
 </html>
