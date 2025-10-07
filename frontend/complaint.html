@@ -18,7 +18,6 @@
       padding-top: 70px;
     }
 
-    /* ✅ Navbar */
     .navbar {
       position: fixed;
       top: 0;
@@ -64,7 +63,6 @@
       border-bottom: 2px solid #56c5f8;
     }
 
-    /* ✅ Complaint Form */
     .container {
       max-width: 900px;
       margin: 40px auto;
@@ -145,7 +143,6 @@
       .container { padding: 25px; }
     }
 
-    /* Mark required fields visually */
     label.required::after {
       content: " *";
       color: red;
@@ -189,7 +186,7 @@
       </select>
 
       <label class="required">Date of Incident:</label>
-      <input type="date" name="incident_date" required>
+      <input type="date" name="incident_date" id="incident_date" required>
 
       <label>Time of Incident:</label>
       <input type="time" name="incident_time">
@@ -235,6 +232,10 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+  // ✅ Prevent future dates
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("incident_date").setAttribute("max", today);
+
   const form = document.getElementById("complaintForm");
 
   form.addEventListener("submit", async function(e) {
