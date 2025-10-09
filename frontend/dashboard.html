@@ -8,7 +8,7 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
       background-color: #fff8f8;
     }
 
@@ -41,116 +41,95 @@
       padding: 0;
     }
 
-    .navbar ul li {
-      position: relative;
-    }
-
-    .navbar ul li a,
-    .dropbtn {
+    .navbar ul li a {
       color: #f5f0f0;
       font-size: 16px;
       font-weight: 600;
       text-decoration: none;
       padding: 8px 12px;
       border-radius: 6px;
-      
-      background: none;
-      border: none;
-      cursor: pointer;
+      transition: background 0.3s;
     }
 
-    .navbar ul li a:hover,
-    .dropbtn:hover {
+    .navbar ul li a:hover {
       background-color: rgba(255, 255, 255, 0.2);
     }
 
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      top: 40px;
-      left: 0;
-      background-color: #545dda;
-      min-width: 160px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .dropdown-content a {
-      color: #000;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-      
-    }
-
-    .dropdown-content a:hover {
-      background-color: #e06deb;
-      color: #b9d43c;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    /* Slider */
-    .slider {
+    /* Image Carousel */
+    .carousel {
+      position: relative;
       width: 100%;
+      height: 400px;
       overflow: hidden;
     }
 
-    
-
-    .slides img {
+    .carousel img {
       width: 100%;
       height: 400px;
       object-fit: cover;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
     }
 
-    
+    .carousel img.active {
+      opacity: 1;
+    }
 
-    /* Crime Cards */
+    /* Cards */
     .container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 2%;
+      margin: 40px auto;
+      max-width: 1200px;
+      padding: 0 20px;
+      gap: 20px;
     }
 
     .crime-card {
       background: white;
-      margin: 20px;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
-      width: 450px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+      width: 280px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .crime-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
     }
 
     .crime-card img {
       width: 100%;
-      height: 220px;
+      height: 180px;
       object-fit: cover;
     }
 
     .card-body {
       padding: 15px;
+      text-align: center;
     }
 
     .card-title {
       font-size: 18px;
+      font-weight: 600;
+      color: #222;
       margin-bottom: 10px;
-      text-align: center;
     }
 
     .btn {
       display: inline-block;
       padding: 10px 14px;
-      margin-left: 25px;
+      margin: 5px;
       border-radius: 6px;
       text-decoration: none;
       font-size: 14px;
       font-weight: bold;
       color: #fff;
+      transition: background 0.3s;
     }
 
     .btn-register {
@@ -161,6 +140,14 @@
       background-color: #198754;
     }
 
+    .btn-register:hover {
+      background-color: #0848c1;
+    }
+
+    .btn-track:hover {
+      background-color: #11663b;
+    }
+
     h1.section-title {
       text-align: center;
       background-color: black;
@@ -169,12 +156,109 @@
       margin: 0;
     }
 
-    @media (max-width: 768px) {
-      .slides img {
-        height: 300px;
+    /* Footer */
+    footer {
+      background: #000;
+      color: #eee;
+      padding: 40px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 30px;
+    }
+
+    .footer-section {
+      flex: 1 1 250px;
+    }
+
+    .footer-section h3 {
+      color: #56c5f8;
+      margin-bottom: 15px;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 8px;
+    }
+
+    .footer-section ul li a {
+      text-decoration: none;
+      color: #ccc;
+      transition: color 0.3s;
+    }
+
+    .footer-section ul li a:hover {
+      color: #56c5f8;
+    }
+
+    .social-icons a {
+      color: #ccc;
+      font-size: 18px;
+      margin-right: 15px;
+      transition: color 0.3s;
+    }
+
+    .social-icons a:hover {
+      color: #56c5f8;
+    }
+
+    .footer-bottom {
+      width: 100%;
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid #333;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .container {
+        justify-content: center;
       }
+    }
+
+    @media (max-width: 768px) {
+      .navbar ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .carousel img {
+        height: 280px;
+      }
+
       .crime-card {
         width: 90%;
+      }
+
+      footer {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-section {
+        flex: 1 1 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar .logo {
+        font-size: 22px;
+      }
+
+      .btn {
+        font-size: 13px;
+        padding: 8px 12px;
+      }
+
+      .card-title {
+        font-size: 16px;
       }
     }
   </style>
@@ -187,32 +271,29 @@
   <ul>
     <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Cyber Volunteers</a></li>
     <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning Corner</a></li>
-    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
-   <li><a href="user_login.html"><i class="fas fa-sign-in-alt"></i>Register</button>
-    
-     
-      </div>
-    </li>
+   
+    <li><a href="user_login.html"><i class="fas fa-sign-in-alt"></i> Register</a></li>
   </ul>
 </nav>
 
-<!-- Slider -->
-<div class="slider">
-  <div class="slides">
-    <img src="https://allaboutvanuatu.com/wp-content/uploads/2023/02/CyberSecurity1.png" alt="Cyber Security Awareness">
-  </div>
+<!-- Auto-Sliding Image Carousel -->
+<div class="carousel">
+  <img src="https://allaboutvanuatu.com/wp-content/uploads/2023/02/CyberSecurity1.png" class="active" alt="Cyber Security Awareness">
+  <img src="https://thumbs.dreamstime.com/b/cyber-security-data-protection-business-technology-privacy-concept-cyber-crime-cyber-security-data-protection-business-technology-209688540.jpg" alt="Protect Your Data">
+  <img src="https://miro.medium.com/v2/resize:fit:1200/1*PsHpjm0lKx_sxr6yt4PaAg.jpeg" alt="Online Safety Awareness">
 </div>
 
 <!-- Section Title -->
+<h1 class="section-title">Cybercrime Awareness & Reporting</h1>
 
-<!-- Crime Sections -->
+<!-- Crime Cards -->
 <div class="container">
   <div class="crime-card">
     <img src="https://cdn.tatlerasia.com/tatlerasia/i/2022/03/09152924-gettyimages-1375105095_cover_1500x854.jpg" alt="Women Related Crime">
     <div class="card-body">
       <h5 class="card-title">Women Related Crime</h5>
       <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
-      <a href="trackcomplaint.html" class="btn btn-track">File & Track</a>
+      <a href="trackcomplaint.html" class="btn btn-track">Track</a>
     </div>
   </div>
 
@@ -221,7 +302,7 @@
     <div class="card-body">
       <h5 class="card-title">Phishing Fraud</h5>
       <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
-      <a href="trackcomplaint.html" class="btn btn-track">File & Track</a>
+      <a href="trackcomplaint.html" class="btn btn-track">Track</a>
     </div>
   </div>
 
@@ -230,7 +311,7 @@
     <div class="card-body">
       <h5 class="card-title">Hacking Crime</h5>
       <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
-      <a href="trackcomplaint.html" class="btn btn-track">File & Track</a>
+      <a href="trackcomplaint.html" class="btn btn-track">Track</a>
     </div>
   </div>
 
@@ -239,10 +320,56 @@
     <div class="card-body">
       <h5 class="card-title">Malware Crime</h5>
       <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
-      <a href="trackcomplaint.html" class="btn btn-track">File & Track</a>
+      <a href="trackcomplaint.html" class="btn btn-track">Track</a>
     </div>
   </div>
 </div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-section">
+    <h3>About CyberCAP</h3>
+    <p>CyberCAP is a cybersecurity awareness and reporting platform helping citizens fight against cybercrimes through education and quick reporting.</p>
+  </div>
+
+  <div class="footer-section">
+    <h3>Quick Links</h3>
+    <ul>
+      <li><a href="cybervoluteer.html">Cyber Volunteers</a></li>
+      <li><a href="learncorner.html">Learning Corner</a></li>
+      <li><a href="contactus.html">Contact Us</a></li>
+      <li><a href="user_login.html">Register</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-section">
+    <h3>Contact Info</h3>
+    <p><i class="fas fa-envelope"></i> support@cybercap.gov.in</p>
+    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    © 2025 CyberCAP | All Rights Reserved
+  </div>
+</footer>
+
+<script>
+  // Auto-slide carousel
+  const images = document.querySelectorAll('.carousel img');
+  let index = 0;
+
+  setInterval(() => {
+    images[index].classList.remove('active');
+    index = (index + 1) % images.length;
+    images[index].classList.add('active');
+  }, 3000);
+</script>
 
 </body>
 </html>
