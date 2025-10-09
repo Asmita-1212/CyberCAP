@@ -20,8 +20,7 @@
 
     .navbar {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       background: #000;
       display: flex;
@@ -122,20 +121,33 @@
 
     input[type="file"] { margin-top: 10px; }
 
-    button[type="submit"] {
+    button[type="submit"], .toggle-btn {
       background-color: #3e64ff;
       color: white;
-      padding: 14px 30px;
+      padding: 12px 25px;
       border: none;
       border-radius: 6px;
-      font-size: 16px;
+      font-size: 15px;
       cursor: pointer;
       transition: background 0.3s;
       display: block;
-      margin: 0 auto;
+      margin: 15px auto;
     }
 
-    button[type="submit"]:hover { background-color: #2b4ae0; }
+    button[type="submit"]:hover, .toggle-btn:hover { background-color: #2b4ae0; }
+
+    .toggle-btn {
+      background-color: #56c5f8;
+      font-weight: 600;
+    }
+
+    .toggle-btn:hover {
+      background-color: #34a2da;
+    }
+
+    .hidden {
+      display: none;
+    }
 
     @media (max-width: 700px) {
       .navbar { flex-direction: column; padding: 10px 20px; }
@@ -219,6 +231,28 @@
       <input type="tel" name="victim_mobile" pattern="[0-9]{10}" maxlength="10" required>
     </fieldset>
 
+    <!-- ✅ Collapsible Suspect Section -->
+    <button type="button" class="toggle-btn" id="toggleSuspectBtn">➕ Add Suspect Details</button>
+
+    <fieldset id="suspectSection" class="hidden">
+      <legend>Suspect Details (Optional)</legend>
+
+      <label>Suspect Name:</label>
+      <input type="text" name="suspect_name" placeholder="Enter suspect name">
+
+      <label>Suspect Email:</label>
+      <input type="email" name="suspect_email" placeholder="Enter suspect email">
+
+      <label>Suspect Phone:</label>
+      <input type="tel" name="suspect_phone" pattern="[0-9]{10}" maxlength="10" placeholder="Enter 10-digit number">
+
+      <label>Social Media Handle / Username:</label>
+      <input type="text" name="suspect_handle" placeholder="@username / Profile Link">
+
+      <label>Address (if known):</label>
+      <textarea name="suspect_address" rows="3" placeholder="Enter suspect’s address"></textarea>
+    </fieldset>
+
     <!-- Attachments -->
     <fieldset>
       <legend>Attachments (Optional)</legend>
@@ -232,11 +266,19 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  // ✅ Prevent future dates
   const today = new Date().toISOString().split("T")[0];
   document.getElementById("incident_date").setAttribute("max", today);
 
   const form = document.getElementById("complaintForm");
+  const toggleBtn = document.getElementById("toggleSuspectBtn");
+  const suspectSection = document.getElementById("suspectSection");
+
+  toggleBtn.addEventListener("click", function() {
+    suspectSection.classList.toggle("hidden");
+    toggleBtn.innerText = suspectSection.classList.contains("hidden")
+      ? "➕ Add Suspect Details"
+      : "➖ Hide Suspect Details";
+  });
 
   form.addEventListener("submit", async function(e) {
     e.preventDefault();
@@ -256,6 +298,13 @@ document.addEventListener("DOMContentLoaded", function() {
         email: form.victim_email.value,
         mobile: form.victim_mobile.value
       },
+      suspect: {
+        name: form.suspect_name.value,
+        email: form.suspect_email.value,
+        phone: form.suspect_phone.value,
+        handle: form.suspect_handle.value,
+        address: form.suspect_address.value
+      },
       attachments: attachments
     };
 
@@ -271,6 +320,8 @@ document.addEventListener("DOMContentLoaded", function() {
       if (res.ok) {
         alert(`✅ ${result.message}\nComplaint ID: ${result.complaint_id || "N/A"}`);
         form.reset();
+        suspectSection.classList.add("hidden");
+        toggleBtn.innerText = "➕ Add Suspect Details";
       } else {
         alert(result.detail || "❌ Something went wrong!");
       }
