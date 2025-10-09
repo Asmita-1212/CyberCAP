@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+<<<<<<< HEAD
   <title>Contact Us - Cybercrime Support</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
@@ -16,6 +17,75 @@
       max-width: 800px;
       margin: auto;
       background: rgb(251, 251, 252);
+=======
+  <title>Contact Us - Cybercrime Support | CyberCAP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Icon library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #71afec;
+      color: #333;
+      padding-top: 70px; /* space for fixed navbar */
+    }
+
+    /* Navbar */
+    nav {
+      background: linear-gradient(90deg, #000000, #111111);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 40px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    nav .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #1e90ff;
+    }
+
+    /* Main container */
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       padding: 40px;
       border-radius: 12px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
@@ -23,14 +93,26 @@
 
     h1 {
       text-align: center;
+<<<<<<< HEAD
       color: #2c3e50;
       margin-bottom: 10px;
+=======
+      color: #1f3b73;
+      margin-bottom: 10px;
+      font-weight: 700;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     }
 
     p.description {
       text-align: center;
+<<<<<<< HEAD
       color: #666;
       margin-bottom: 30px;
+=======
+      color: #555;
+      margin-bottom: 30px;
+      font-size: 15px;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     }
 
     section {
@@ -56,6 +138,10 @@
       display: block;
       margin-top: 18px;
       font-weight: 600;
+<<<<<<< HEAD
+=======
+      color: #333;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     }
 
     input[type="text"],
@@ -65,8 +151,21 @@
       padding: 12px;
       margin-top: 6px;
       border: 1px solid #ccc;
+<<<<<<< HEAD
       border-radius: 6px;
       font-size: 15px;
+=======
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border 0.3s;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #3e64ff;
+      box-shadow: 0 0 6px rgba(62, 100, 255, 0.2);
+      outline: none;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     }
 
     textarea {
@@ -75,6 +174,7 @@
 
     button[type="submit"] {
       margin-top: 25px;
+<<<<<<< HEAD
       background-color: #007bff;
       color: white;
       padding: 14px 25px;
@@ -90,6 +190,42 @@
     }
 
     @media (max-width: 600px) {
+=======
+      background-color: #3e64ff;
+      color: white;
+      padding: 14px 25px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s ease, transform 0.1s;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #2b4ae0;
+    }
+
+    button[type="submit"]:active {
+      transform: scale(0.98);
+    }
+
+    @media (max-width: 700px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 25px;
+      }
+
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        margin-top: 10px;
+        gap: 15px;
+      }
+
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       .container {
         padding: 25px;
       }
@@ -106,6 +242,22 @@
 </head>
 <body>
 
+<<<<<<< HEAD
+=======
+  <!-- Navbar (matches screenshot) -->
+  <nav>
+    <div class="logo">CyberCAP</div>
+    <ul>
+      <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="user_login.html"><i class="fas fa-sign-in-alt"></i>Register</button>
+      <li><a href="cybervoluteer.html"><i class="fa-solid fa-users"></i> Cyber Volunteers</a></li>
+      <li><a href="learncorner.html"><i class="fa-solid fa-book"></i> Learning Corner</a></li>
+      <li><a href="contactus.html" class="active"><i class="fa-solid fa-envelope"></i> Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page Content -->
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
   <div class="container">
     <h1>Contact Us</h1>
     <p class="description">Need help or want to report something directly? We’re here for you.</p>
@@ -129,7 +281,11 @@
         <input type="email" required placeholder="your@example.com">
 
         <label>Subject:</label>
+<<<<<<< HEAD
         <input type="text" >
+=======
+        <input type="text" placeholder="Subject of your message">
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
 
         <label>Message:</label>
         <textarea rows="3" required placeholder="Write your message here..."></textarea>
