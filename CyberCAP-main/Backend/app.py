@@ -98,39 +98,21 @@ def login(user: LoginUser):
     return {"message": "Login successful", "user": user_helper(db_user)}
 
 # ---------------- Complaint Endpoints ----------------
-from googletrans import Translator
-translator = Translator()
 @app.post("/complaint")
 def create_complaint(complaint: Complaint):
     complaint_data = complaint.dict()
     complaint_data["created_at"] = datetime.utcnow().isoformat()
 
-    # Auto-detect source and translate to English
-    try:
-        translated = translator.translate(complaint_data["description"], dest="en")
-        complaint_data["description_translated"] = translated.text
-        complaint_data["description_original"] = complaint_data["description"]
-    except Exception as e:
-        print("Translation error:", e)
-        # fallback
-        complaint_data["description_translated"] = complaint_data["description"]
-        complaint_data["description_original"] = complaint_data["description"]
-
-    # Continue with existing logic
     next_id = get_next_sequence("complaintid")
     complaint_data["complaint_id"] = f"CC-{next_id:05d}"
     complaint_data["status"] = "Pending"
 
     result = complaints_collection.insert_one(complaint_data)
-
     return {
         "id": str(result.inserted_id),
         "complaint_id": complaint_data["complaint_id"],
-        "message": "Complaint submitted successfully",
-        "translated": complaint_data["description_translated"]
-    }
-
-
+        "message": "Complaint submitted successfully"
+}
 @app.get("/complaints")
 def get_complaints():
     complaints = []
