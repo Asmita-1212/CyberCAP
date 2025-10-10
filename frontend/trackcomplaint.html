@@ -2,6 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+<<<<<<< HEAD
+  <title>Track Your Cybercrime Complaint</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #5fa8f1;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+=======
   <title>Track Your Cybercrime Complaint - CyberCAP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
@@ -63,6 +77,7 @@
     .container {
       max-width: 500px;
       margin: 80px auto;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       background: white;
       padding: 35px;
       border-radius: 10px;
@@ -71,8 +86,13 @@
 
     h2 {
       text-align: center;
+<<<<<<< HEAD
+      color: #2c3e50;
+      margin-bottom: 10px;
+=======
       color: #1f3b73;
       margin-bottom: 20px;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     }
 
     label {
@@ -95,7 +115,11 @@
     button[type="submit"] {
       margin-top: 30px;
       width: 100%;
+<<<<<<< HEAD
+      background-color: #007bff;
+=======
       background-color: #3e64ff;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       color: white;
       padding: 14px;
       border: none;
@@ -106,7 +130,11 @@
     }
 
     button[type="submit"]:hover {
+<<<<<<< HEAD
+      background-color: #0056b3;
+=======
       background-color: #2b4ae0;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     }
 
     #result {
@@ -124,11 +152,19 @@
       text-align: center;
       margin-top: 20px;
       display: none;
+<<<<<<< HEAD
+      color: #007bff;
+=======
       color: #3e64ff;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       font-weight: bold;
     }
 
     @media (max-width: 600px) {
+<<<<<<< HEAD
+      .container {
+        padding: 25px;
+=======
       nav {
         flex-direction: column;
         text-align: center;
@@ -143,6 +179,7 @@
       .container {
         padding: 25px;
         margin: 40px 15px;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       }
 
       input, button {
@@ -153,6 +190,8 @@
 </head>
 <body>
 
+<<<<<<< HEAD
+=======
   <!-- Navbar -->
   <nav>
     <div class="logo">CyberCAP</div>
@@ -166,6 +205,7 @@
   </nav>
 
   <!-- Main Content -->
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
   <div class="container">
     <h2>🔍 Track Your Complaint</h2>
 
@@ -174,7 +214,11 @@
       <input type="text" id="complaintId" name="complaintId" required placeholder="Enter your Complaint ID">
 
       <label for="mobile">Registered Mobile Number:</label>
+<<<<<<< HEAD
+      <input type="tel" id="mobile" name="mobile" required placeholder="Enter your mobile number">
+=======
       <input type="tel" id="mobile" name="mobile" required placeholder="Enter your mobile number" pattern="[0-9]{10}" maxlength="10">
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
 
       <button type="submit">Track Complaint</button>
     </form>
@@ -185,6 +229,54 @@
   </div>
 
   <script>
+<<<<<<< HEAD
+  document.getElementById('trackForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  document.getElementById('result').style.display = 'none';
+  const loading = document.getElementById('loading');
+  loading.style.display = 'block';
+
+  const complaintId = document.getElementById('complaintId').value;
+  const mobile = document.getElementById('mobile').value;
+
+  try {
+    const response = await fetch("http://127.0.0.1:8000/track_complaint", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ complaintId, mobile })
+    });
+
+    loading.style.display = 'none';
+
+    if (!response.ok) {
+      const error = await response.json();
+      document.getElementById('result').innerHTML = `<strong>Error:</strong> ${error.detail}`;
+      document.getElementById('result').style.display = 'block';
+      return;
+    }
+
+    const data = await response.json();
+    document.getElementById('result').innerHTML = `
+      <strong>Status:</strong> ${data.status}<br>
+      <strong>Complaint ID:</strong> ${data.complaint_id}<br>
+      <strong>Incident Type:</strong> ${data.incident_type}<br>
+      <strong>Date:</strong> ${data.incident_date}<br>
+      <strong>Platform:</strong> ${data.platform}<br>
+      <strong>Description:</strong> ${data.description}
+    `;
+    document.getElementById('result').style.display = 'block';
+
+  } catch (err) {
+    loading.style.display = 'none';
+    document.getElementById('result').innerHTML = `<strong>Error connecting to server:</strong> ${err.message}`;
+    document.getElementById('result').style.display = 'block';
+  }
+});
+
+</script>
+
+=======
     // ✅ Track Complaint Logic
     document.getElementById('trackForm').addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -236,6 +328,7 @@
       window.location.href = "user_dashboard.html";
     }
   </script>
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
 
 </body>
 </html>

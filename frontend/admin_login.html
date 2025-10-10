@@ -4,7 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Login - CyberCAP</title>
+<<<<<<< HEAD
+=======
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
   <style>
     * {
       margin: 0;
@@ -14,6 +17,16 @@
     }
 
     body {
+<<<<<<< HEAD
+      height: 100vh;
+      background: linear-gradient(135deg, #3e64ff, #5edfff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+=======
       min-height: 100vh;
       background: linear-gradient(135deg, #3e64ff, #5edfff);
       display: flex;
@@ -74,6 +87,7 @@
     }
 
     /* Login box styling */
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     .login-box {
       background-color: #ffffff;
       padding: 40px 30px;
@@ -84,7 +98,10 @@
       animation: fadeSlideDown 1s ease forwards;
       opacity: 0;
       transform: translateY(-30px);
+<<<<<<< HEAD
+=======
       margin-top: 60px;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     }
 
     @keyframes fadeSlideDown {
@@ -151,6 +168,8 @@
       transform: scale(0.97);
     }
 
+<<<<<<< HEAD
+=======
     a {
       text-align: center;
       margin-top: 15px;
@@ -166,12 +185,74 @@
       text-decoration: underline;
     }
 
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     #loginMessage {
       text-align: center;
       margin-bottom: 15px;
       font-size: 14px;
       display: none;
     }
+<<<<<<< HEAD
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Admin Login</h2>
+
+    <p id="loginMessage"></p>
+
+    <form id="loginForm">
+      <label>Username</label>
+      <input type="text" id="username" required placeholder="Enter your username"/>
+
+      <label>Password</label>
+      <input type="password" id="password" required placeholder="Enter your password"/>
+
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const messageEl = document.getElementById("loginMessage");
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/admin-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (res.status === 200 && data.message.includes("Password verified")) {
+          messageEl.style.color = "green";
+          messageEl.innerText = "✅ Login successful! Redirecting...";
+          messageEl.style.display = "block";
+
+          // ✅ Store username and redirect to OTP page
+          localStorage.setItem("adminUser", username);
+          setTimeout(() => {
+            window.location.href = "admin_otp.html";
+          }, 1000);
+        } else {
+          messageEl.style.color = "red";
+          messageEl.innerText = "❌ Invalid Username or Password!";
+          messageEl.style.display = "block";
+        }
+      } catch (err) {
+        console.error(err);
+        messageEl.style.color = "red";
+        messageEl.innerText = "⚠️ Something went wrong! Try again.";
+        messageEl.style.display = "block";
+      }
+    });
+  </script>
+=======
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
@@ -257,5 +338,6 @@
     }
   });
 </script>
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
 </body>
 </html>
