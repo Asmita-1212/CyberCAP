@@ -1,8 +1,14 @@
-from libretranslatepy import LibreTranslateAPI
+from deep_translator import GoogleTranslator
 
-lt = LibreTranslateAPI("https://translate.argosopentech.com/")
+def translate_to_english(text: str) -> str:
+    try:
+        return GoogleTranslator(source='auto', target='en').translate(text)
+    except Exception as e:
+        print("Translation error:", e)
+        return text
 
-text = "मुझे धोखा दिया गया ऑनलाइन"
-translated = lt.translate(text, "hi", "en")
-
-print("Translated:", translated)
+if __name__ == "__main__":
+    text = "मेरे बैंक खाते से धोखाधड़ी के कारण 5000 रुपये खो गए हैं।"
+    print("Original:", text)
+    translated = translate_to_english(text)
+    print("Translated:", translated)

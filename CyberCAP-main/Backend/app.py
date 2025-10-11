@@ -13,7 +13,18 @@ from Backend.forgot_password_api import send_otp
 from Backend.database import users_collection, complaints_collection, admins_collection, password_resets,volunteers
 
 from fastapi import Body
-
+from deep_translator import GoogleTranslator
+#translate helper function
+def translate_to_english(text: str) -> str:
+    """
+    Translates any text to English using deep-translator.
+    Returns translated text; if translation fails, returns original text.
+    """
+    try:
+        return GoogleTranslator(source='auto', target='en').translate(text)
+    except Exception as e:
+        print("Translation error:", e)
+        return text
 # ---------------- FastAPI App ----------------
 app = FastAPI(title="CyberCAP Backend")
 from fastapi import FastAPI, HTTPException
@@ -103,14 +114,27 @@ def create_complaint(complaint: Complaint):
     complaint_data = complaint.dict()
     complaint_data["created_at"] = datetime.utcnow().isoformat()
 
+    # ------------------ TRANSLATE DESCRIPTION ------------------
+    original_description = complaint_data.get("description", "")
+    translated_description = translate_to_english(original_description)
+
+# Save both
+    complaint_data["description"] = translated_description       # translated
+    complaint_data["original_description"] = original_description # original
+
+    # -----------------------------------------------------------
+
+    # Generate complaint ID
     next_id = get_next_sequence("complaintid")
     complaint_data["complaint_id"] = f"CC-{next_id:05d}"
     complaint_data["status"] = "Pending"
 
-    # ✅ Add this line to link complaint to logged-in user
+    # Link complaint to logged-in user
     complaint_data["registered_by"] = complaint_data.get("victim", {}).get("email")
 
+    # Insert into MongoDB
     result = complaints_collection.insert_one(complaint_data)
+    
     return {
         "id": str(result.inserted_id),
         "complaint_id": complaint_data["complaint_id"],
@@ -256,3 +280,5 @@ def register_volunteer(
 
     volunteers.insert_one(volunteer_data)
     return {"message": "✅ Registration successful! Thank you for joining CyberCAP."}
+
+
