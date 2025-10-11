@@ -29,21 +29,20 @@ class Victim(BaseModel):
     email: EmailStr
     mobile: str = Field(..., pattern=r'^\d{10}$')
 
+
 class Complaint(BaseModel):
     incident_type: str
     incident_date: str
-    incident_time: Optional[str]
+    incident_time: Optional[str] = None
     platform: str
     description: str
-    suspect: Optional[Suspect]
-    victim: Victim
     attachments: Optional[List[str]] = []
+    victim: Victim         # <-- Nested Victim object
+    suspect: Optional[Suspect] = None
+    status: Optional[str] = "Pending"
     priority: Optional[str] = None
     category: Optional[str] = None
-
-
-
-from pydantic import BaseModel
+    created_at: Optional[str] = None
 
 class AdminLogin(BaseModel):
     username: str

@@ -107,16 +107,27 @@ def create_complaint(complaint: Complaint):
     complaint_data["complaint_id"] = f"CC-{next_id:05d}"
     complaint_data["status"] = "Pending"
 
+    # ✅ Add this line to link complaint to logged-in user
+    complaint_data["registered_by"] = complaint_data.get("victim", {}).get("email")
+
     result = complaints_collection.insert_one(complaint_data)
     return {
         "id": str(result.inserted_id),
         "complaint_id": complaint_data["complaint_id"],
         "message": "Complaint submitted successfully"
-}
+    }
+
 @app.get("/complaints")
 def get_complaints():
     complaints = []
     for c in complaints_collection.find():
+        complaints.append(complaint_helper(c))
+    return complaints
+
+@app.get("/user_complaints/{email}")
+def get_user_complaints(email: str):
+    complaints = []
+    for c in complaints_collection.find({"registered_by": email}):
         complaints.append(complaint_helper(c))
     return complaints
 
