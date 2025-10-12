@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CyberCAP Admin Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -181,7 +182,15 @@
     <h3 id="adminName">Admin Name</h3>
     <p id="adminEmail">Email: admin@cybercap.com</p>
     <p id="adminPhone">Phone: +91 9876543210</p>
+   
+    <hr style="width:100%; border-color:#45a29e; margin:15px 0;">
+    <h3 style="font-size:16px; margin-top:10px;">Complaint Analysis</h3>
+    <button onclick="showAllComplaints()" style="width:90%; margin-bottom:8px;">All Complaints</button>
+    <button onclick="showWeeklyChart()" style="width:90%; margin-bottom:8px;">Weekly Analysis</button>
+    <button onclick="showMonthlyChart()" style="width:90%;">Monthly Analysis</button>
     <button class="logout" id="logoutSidebar"><i class="fas fa-sign-out-alt"></i> Logout</button>
+
+    
   </div>
 
   <!-- Navbar -->
@@ -233,6 +242,11 @@
         <!-- Complaints will be dynamically added here -->
       </tbody>
     </table>
+<div id="chartContainer" style="display:none; margin-top:40px;">
+  <h2>Weekly Complaint Analysis</h2>
+  <canvas id="complaintsChart" width="300" height="130"></canvas>
+</div>
+      
   </div>
 
   <script>
@@ -398,6 +412,189 @@ fetchAdminInfo();
     }
     document.getElementById("logoutNavbar").addEventListener("click", logoutAdmin);
     document.getElementById("logoutSidebar").addEventListener("click", logoutAdmin);
+
+
+    async function renderComplaintChart() {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/complaints`);
+    const complaints = await res.json();
+
+    // Prepare daily counts for last 7 days
+    const dailyCounts = {};
+    const today = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const key = d.toISOString().split("T")[0]; // YYYY-MM-DD
+      dailyCounts[key] = 0;
+    }
+
+    complaints.forEach(c => {
+      const dateKey = c.created_at?.split("T")[0];
+      if (dailyCounts[dateKey] !== undefined) dailyCounts[dateKey]++;
+    });
+
+    const labels = Object.keys(dailyCounts);
+    const values = Object.values(dailyCounts);
+
+    const ctx = document.getElementById("complaintsChart").getContext("2d");
+
+    // Destroy previous chart instance if exists
+    if (window.complaintChartInstance) window.complaintChartInstance.destroy();
+
+    window.complaintChartInstance = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "Complaints per Day",
+          data: values,
+          backgroundColor: "#45a29e",
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: { display: true, text: "Complaints Registered This Week" }
+        },
+        scales: {
+          x: { grid: { display: false } },
+          y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+      }
+    });
+
+  } catch (err) {
+    console.error("Error fetching complaints:", err);
+  }
+}
+const btnAnalysis = document.getElementById("btnComplaintAnalysis");
+const complaintTable = document.getElementById("complaintTable");
+const chartContainer = document.getElementById("chartContainer");
+
+btnAnalysis.addEventListener("click", () => {
+  // Toggle table and chart
+  const showChart = chartContainer.style.display === "none";
+  chartContainer.style.display = showChart ? "block" : "none";
+  complaintTable.style.display = showChart ? "none" : "";
+
+  // Render chart only when showing it
+  if (showChart) renderComplaintChart();
+});
+
+async function renderMonthlyComplaintChart() {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/complaints`);
+    const complaints = await res.json();
+
+    // Get current month info
+    const today = new Date();
+    const currentMonth = today.getMonth(); // 0-11
+    const currentYear = today.getFullYear();
+
+    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const monthLabel = `${monthNames[currentMonth]} ${currentYear}`;
+
+    // Initialize counts for each day of the month
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const dailyCounts = {};
+    for (let i = 1; i <= daysInMonth; i++) {
+      dailyCounts[i] = 0; // key = day number
+    }
+
+    // Count complaints per day
+    complaints.forEach(c => {
+      const date = new Date(c.created_at);
+      if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+        dailyCounts[date.getDate()]++;
+      }
+    });
+
+    const labels = Object.keys(dailyCounts); // [1,2,3,...]
+    const values = Object.values(dailyCounts);
+
+    const ctx = document.getElementById("complaintsChart").getContext("2d");
+
+    // Destroy previous chart instance if exists
+    if (window.complaintChartInstance) window.complaintChartInstance.destroy();
+
+    window.complaintChartInstance = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "Complaints per Day",
+          data: values,
+          borderColor: "#45a29e",
+          backgroundColor: "#66fcf1",
+          tension: 0.3,
+          fill: true,
+          pointRadius: 4,
+          pointBackgroundColor: "#45a29e",
+          pointBorderColor: "#fff"
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: { display: true, text: monthLabel, font: { size: 18 } } // month-year on top
+        },
+        scales: {
+          x: { 
+            title: { display: true, text: 'Day of Month' },
+            grid: { display: false }
+          },
+          y: { 
+            beginAtZero: true,
+            ticks: { stepSize: 1 },
+            title: { display: true, text: 'Complaints' }
+          }
+        }
+      }
+    });
+
+  } catch (err) {
+    console.error("Error fetching complaints:", err);
+  }
+}
+
+
+function showWeeklyChart() {
+    const complaintTable = document.getElementById("complaintTable");
+    const chartContainer = document.getElementById("chartContainer");
+
+    // Hide table, show chart
+    complaintTable.style.display = "none";
+    chartContainer.style.display = "block";
+
+    // Change chart title
+    document.querySelector("#chartContainer h2").textContent = "Weekly Complaint Analysis";
+
+    // Render weekly chart
+    renderComplaintChart();
+}
+
+function showMonthlyChart() {
+    const complaintTable = document.getElementById("complaintTable");
+    const chartContainer = document.getElementById("chartContainer");
+
+    // Hide table, show chart
+    complaintTable.style.display = "none";
+    chartContainer.style.display = "block";
+
+    // Change chart title
+    document.querySelector("#chartContainer h2").textContent = "Monthly Complaint Analysis";
+
+    // Render monthly chart
+    renderMonthlyComplaintChart();
+}
+function showAllComplaints() {
+    document.getElementById("chartContainer").style.display = "none";
+    document.getElementById("complaintTable").style.display = "table";
+}
   </script>
 </body>
 </html>

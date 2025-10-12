@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - Test Chart</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body { font-family: 'Poppins', sans-serif; background: #f5f6fa; color: #333; padding: 30px; }
+  h2 { color: #1f2833; margin-bottom: 15px; }
+  canvas { background: #fff; border-radius: 10px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+</style>
+</head>
+<body>
+
+<h2>Weekly Complaint Analysis (Testing)</h2>
+<canvas id="complaintsChart" width="600" height="300"></canvas>
+
+<script>
+  // Dummy complaint data for last 7 days
+  const sampleComplaints = [
+    { created_at: '2025-10-06T12:34:00' },
+    { created_at: '2025-10-06T15:22:00' },
+    { created_at: '2025-10-07T09:10:00' },
+    { created_at: '2025-10-08T18:45:00' },
+    { created_at: '2025-10-08T20:30:00' },
+    { created_at: '2025-10-09T11:05:00' },
+    { created_at: '2025-10-09T14:10:00' },
+    { created_at: '2025-10-09T19:50:00' },
+    { created_at: '2025-10-10T10:20:00' },
+    { created_at: '2025-10-11T08:15:00' },
+    { created_at: '2025-10-11T12:40:00' }
+  ];
+
+  // Compute counts for last 7 days
+  const dailyCounts = {};
+  const today = new Date('2025-10-12'); // fix today for testing
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const key = d.toISOString().split("T")[0];
+    dailyCounts[key] = 0;
+  }
+
+  sampleComplaints.forEach(c => {
+    const dateKey = c.created_at.split("T")[0];
+    if (dailyCounts[dateKey] !== undefined) dailyCounts[dateKey]++;
+  });
+
+  // Prepare Chart.js data
+  const labels = Object.keys(dailyCounts);
+  const values = Object.values(dailyCounts);
+
+  const ctx = document.getElementById("complaintsChart").getContext("2d");
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Complaints per Day',
+        data: values,
+        backgroundColor: '#45a29e',
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: 'Complaints Registered This Week' }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>

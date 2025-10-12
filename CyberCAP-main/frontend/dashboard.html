@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CyberCAP</title>
+  <title>CyberCAP | Cyber Awareness & Protection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* General */
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #fff8f8;
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top left, #0a0f1f, #02060d);
+      color: #e0e0e0;
     }
 
     /* Navbar */
@@ -17,21 +20,23 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: linear-gradient(90deg, #000000, #131212);
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 12px 30px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      align-items: center;
+      padding: 12px 40px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,255,255,0.2);
     }
 
     .navbar .logo {
-      color: #ecf3f5;
-      font-size: 30px;
-      font-weight: bold;
-      text-decoration: none;
-      letter-spacing: 1px;
-    }
+  color: #ecf3f5;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
 
     .navbar ul {
       list-style: none;
@@ -41,94 +46,88 @@
       padding: 0;
     }
 
-    .navbar ul li {
+    .navbar ul li a {
+      color: #eee;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
       position: relative;
     }
 
-    .navbar ul li a,
-    .dropbtn {
-      color: #f5f0f0;
-      font-size: 16px;
-      font-weight: 600;
-      text-decoration: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    .navbar ul li a:hover,
-    .dropbtn:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .dropdown-content {
-      display: none;
+    .navbar ul li a::after {
+      content: "";
       position: absolute;
-      top: 40px;
+      bottom: -4px;
       left: 0;
-      background-color: #545dda;
-      min-width: 160px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      border-radius: 6px;
-      overflow: hidden;
+      width: 0;
+      height: 2px;
+      background: #00eaff;
+      transition: 0.3s;
     }
 
-    .dropdown-content a {
-      color: #000;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-      
-    }
-
-    .dropdown-content a:hover {
-      background-color: #e06deb;
-      color: #b9d43c;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    /* Slider */
-    .slider {
+    .navbar ul li a:hover::after {
       width: 100%;
+    }
+
+    /* Carousel */
+    .carousel {
+      position: relative;
+      width: 100%;
+      height: 400px;
       overflow: hidden;
     }
 
-    
-
-    .slides img {
+    .carousel img {
       width: 100%;
       height: 400px;
       object-fit: cover;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
     }
 
-    
+    .carousel img.active {
+      opacity: 1;
+    }
 
-    /* Crime Cards */
+    /* Section Title */
+    h1.section-title {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 28px;
+      font-family: 'Orbitron', sans-serif;
+      color: #00eaff;
+      text-shadow: 0 0 15px #00eaff;
+    }
+
+    /* Cards */
     .container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 2%;
+      gap: 30px;
+      padding: 40px 20px;
     }
 
     .crime-card {
-      background: white;
-      margin: 20px;
-      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0,255,255,0.3);
+      border-radius: 15px;
+      width: 270px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,255,255,0.1);
+      transition: all 0.3s ease;
       overflow: hidden;
-      box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
-      width: 450px;
+    }
+
+    .crime-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 25px rgba(0,255,255,0.4);
     }
 
     .crime-card img {
       width: 100%;
-      height: 220px;
+      height: 160px;
       object-fit: cover;
     }
 
@@ -137,44 +136,121 @@
     }
 
     .card-title {
-      font-size: 18px;
-      margin-bottom: 10px;
-      text-align: center;
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 12px;
     }
 
     .btn {
       display: inline-block;
-      padding: 10px 14px;
-      margin-left: 25px;
+      padding: 8px 14px;
+      margin: 6px;
       border-radius: 6px;
       text-decoration: none;
       font-size: 14px;
-      font-weight: bold;
+      font-weight: 600;
       color: #fff;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
     }
 
     .btn-register {
-      background-color: #0d6efd;
+      background: #00eaff;
+      color: #000;
+      box-shadow: 0 0 10px #00eaff;
+    }
+
+    .btn-register:hover {
+      background: transparent;
+      color: #00eaff;
+      border: 1px solid #00eaff;
     }
 
     .btn-track {
-      background-color: #198754;
+      background: #8000ff;
+      box-shadow: 0 0 10px #8000ff;
     }
 
-    h1.section-title {
+    .btn-track:hover {
+      background: transparent;
+      color: #b366ff;
+      border: 1px solid #b366ff;
+    }
+
+    /* Footer (Original Style) */
+    footer {
+      background: #000;
+      color: #eee;
+      padding: 40px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 30px;
+    }
+
+    .footer-section {
+      flex: 1 1 250px;
+    }
+
+    .footer-section h3 {
+      color: #56c5f8;
+      margin-bottom: 15px;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 8px;
+    }
+
+    .footer-section ul li a {
+      text-decoration: none;
+      color: #ccc;
+      transition: color 0.3s;
+    }
+
+    .footer-section ul li a:hover {
+      color: #56c5f8;
+    }
+
+    .social-icons a {
+      color: #ccc;
+      font-size: 18px;
+      margin-right: 15px;
+      transition: color 0.3s;
+    }
+
+    .social-icons a:hover {
+      color: #56c5f8;
+    }
+
+    .footer-bottom {
+      width: 100%;
       text-align: center;
-      background-color: black;
-      color: #ee6666;
-      padding: 20px;
-      margin: 0;
+      padding-top: 20px;
+      border-top: 1px solid #333;
+      color: #aaa;
+      font-size: 14px;
     }
 
     @media (max-width: 768px) {
-      .slides img {
-        height: 300px;
+      .navbar {
+        flex-direction: column;
+        text-align: center;
+      }
+      .carousel img {
+        height: 260px;
       }
       .crime-card {
         width: 90%;
+      }
+      footer {
+        flex-direction: column;
+        text-align: center;
       }
     }
   </style>
@@ -185,64 +261,105 @@
 <nav class="navbar">
   <a href="#" class="logo">CyberCAP</a>
   <ul>
-    <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Cyber Volunteers</a></li>
-    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning Corner</a></li>
-    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
-   <li><a href="user_login.html"><i class="fas fa-sign-in-alt"></i>Register</button>
+    <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Volunteers</a></li>
+    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning</a></li>
+    <li><a href="user_login.html"><i class="fas fa-user"></i> User Login</a></li>
     
-     
-      </div>
-    </li>
+    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact</a></li>
   </ul>
 </nav>
 
-<!-- Slider -->
-<div class="slider">
-  <div class="slides">
-    <img src="https://allaboutvanuatu.com/wp-content/uploads/2023/02/CyberSecurity1.png" alt="Cyber Security Awareness">
-  </div>
+<!-- Carousel -->
+<div class="carousel">
+  <img src="https://allaboutvanuatu.com/wp-content/uploads/2023/02/CyberSecurity1.png" class="active" alt="Cyber Security Awareness">
+  <img src="https://thumbs.dreamstime.com/b/cyber-security-data-protection-business-technology-privacy-concept-cyber-crime-cyber-security-data-protection-business-technology-209688540.jpg" alt="Protect Your Data">
+  <img src="https://news.erau.edu/-/media/images/news/cyberforensics.jpg" alt="Cyber Forensics">
 </div>
 
-<!-- Section Title -->
+<!-- Section -->
+<h1 class="section-title">Cybercrime Awareness & Reporting</h1>
 
-<!-- Crime Sections -->
 <div class="container">
   <div class="crime-card">
     <img src="https://cdn.tatlerasia.com/tatlerasia/i/2022/03/09152924-gettyimages-1375105095_cover_1500x854.jpg" alt="Women Related Crime">
     <div class="card-body">
       <h5 class="card-title">Women Related Crime</h5>
-      <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
-      <a href="trackcomplaint.html" class="btn btn-track">File & Track</a>
+      <a href="user_login.html" class="btn btn-register">Register</a>
+      <a href="user_login.html" class="btn btn-track">Track</a>
     </div>
   </div>
 
   <div class="crime-card">
-    <img src="https://tse3.mm.bing.net/th/id/OIP.RjefmPoPUb_7oIYeAiRpPAHaGu?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Phishing Fraud">
+    <img src="https://tse3.mm.bing.net/th/id/OIP.RjefmPoPUb_7oIYeAiRpPAHaGu?rs=1&pid=ImgDetMain" alt="Phishing Fraud">
     <div class="card-body">
       <h5 class="card-title">Phishing Fraud</h5>
-      <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
-      <a href="trackcomplaint.html" class="btn btn-track">File & Track</a>
+      <a href="user_login.html" class="btn btn-register">Register</a>
+      <a href="user_login.html" class="btn btn-track">Track</a>
     </div>
   </div>
 
   <div class="crime-card">
-    <img src="https://tse2.mm.bing.net/th/id/OIP.VQzhJhO5zJgH9_T_SqWMHgHaEc?pid=ImgDet&w=191&h=114&c=7&o=7&rm=3" alt="Hacking Crime">
+    <img src="https://tse2.mm.bing.net/th/id/OIP.VQzhJhO5zJgH9_T_SqWMHgHaEc?pid=ImgDet" alt="Hacking Crime">
     <div class="card-body">
       <h5 class="card-title">Hacking Crime</h5>
-      <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
-      <a href="trackcomplaint.html" class="btn btn-track">File & Track</a>
+      <a href="user_login.html" class="btn btn-register">Register</a>
+      <a href="user_login.html" class="btn btn-track">Track</a>
     </div>
   </div>
 
   <div class="crime-card">
-    <img src="https://tse1.mm.bing.net/th/id/OIP.O3EyGKcKcs3FZpwcIb8DggHaEP?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Malware Crime">
+    <img src="https://tse1.mm.bing.net/th/id/OIP.O3EyGKcKcs3FZpwcIb8DggHaEP?rs=1&pid=ImgDetMain" alt="Malware Crime">
     <div class="card-body">
       <h5 class="card-title">Malware Crime</h5>
-      <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
-      <a href="trackcomplaint.html" class="btn btn-track">File & Track</a>
+      <a href="user_login.html" class="btn btn-register">Register</a>
+      <a href="user_login.html" class="btn btn-track">Track</a>
     </div>
   </div>
 </div>
+
+<!-- Footer (Original) -->
+<footer>
+  <div class="footer-section" id="footer">
+    <h3>About CyberCAP</h3>
+    <p>CyberCAP is a cybersecurity awareness and reporting platform helping citizens fight against cybercrimes through education and quick reporting.</p>
+  </div>
+
+  <div class="footer-section">
+    <h3>Quick Links</h3>
+    <ul>
+      <li><a href="cybervoluteer.html">Cyber Volunteers</a></li>
+      <li><a href="learncorner.html">Learning Corner</a></li>
+      <li><a href="contactus.html">Contact Us</a></li>
+      <li><a href="user_login.html">Register</a></li>
+    </ul>
+  </div>
+
+  <div class="footer-section">
+    <h3>Contact Info</h3>
+    <p><i class="fas fa-envelope"></i> support@cybercap.gov.in</p>
+    <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    © 2025 CyberCAP | All Rights Reserved
+  </div>
+</footer>
+
+<script>
+  const images = document.querySelectorAll('.carousel img');
+  let index = 0;
+  setInterval(() => {
+    images[index].classList.remove('active');
+    index = (index + 1) % images.length;
+    images[index].classList.add('active');
+  }, 3000);
+</script>
 
 </body>
 </html>
