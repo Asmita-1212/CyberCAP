@@ -13,7 +13,18 @@ from Backend.forgot_password_api import send_otp
 from Backend.database import users_collection, complaints_collection, admins_collection, password_resets,volunteers
 
 from fastapi import Body
-
+from deep_translator import GoogleTranslator
+#translate helper function
+def translate_to_english(text: str) -> str:
+    """
+    Translates any text to English using deep-translator.
+    Returns translated text; if translation fails, returns original text.
+    """
+    try:
+        return GoogleTranslator(source='auto', target='en').translate(text)
+    except Exception as e:
+        print("Translation error:", e)
+        return text
 # ---------------- FastAPI App ----------------
 app = FastAPI(title="CyberCAP Backend")
 from fastapi import FastAPI, HTTPException
@@ -103,20 +114,44 @@ def create_complaint(complaint: Complaint):
     complaint_data = complaint.dict()
     complaint_data["created_at"] = datetime.utcnow().isoformat()
 
+    # ------------------ TRANSLATE DESCRIPTION ------------------
+    original_description = complaint_data.get("description", "")
+    translated_description = translate_to_english(original_description)
+
+# Save both
+    complaint_data["description"] = translated_description       # translated
+    complaint_data["original_description"] = original_description # original
+
+    # -----------------------------------------------------------
+
+    # Generate complaint ID
     next_id = get_next_sequence("complaintid")
     complaint_data["complaint_id"] = f"CC-{next_id:05d}"
     complaint_data["status"] = "Pending"
 
+    # Link complaint to logged-in user
+    complaint_data["registered_by"] = complaint_data.get("victim", {}).get("email")
+
+    # Insert into MongoDB
     result = complaints_collection.insert_one(complaint_data)
+    
     return {
         "id": str(result.inserted_id),
         "complaint_id": complaint_data["complaint_id"],
         "message": "Complaint submitted successfully"
-}
+    }
+
 @app.get("/complaints")
 def get_complaints():
     complaints = []
     for c in complaints_collection.find():
+        complaints.append(complaint_helper(c))
+    return complaints
+
+@app.get("/user_complaints/{email}")
+def get_user_complaints(email: str):
+    complaints = []
+    for c in complaints_collection.find({"registered_by": email}):
         complaints.append(complaint_helper(c))
     return complaints
 
@@ -127,10 +162,9 @@ def admin_login(admin: AdminLogin):
     if not db_admin or not check_password_hash(db_admin["password"], admin.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    otp_token = pyotp.random_base32()
-    admin_otp_store[admin.username] = otp_token
+    # ✅ No new random secret needed here
     return {
-        "message": "Password verified. Enter OTP from Authenticator app.",
+        "message": "Password verified. Please enter OTP from your Authenticator app.",
         "username": admin.username
     }
 
@@ -141,12 +175,13 @@ def admin_mfa(mfa: AdminMFA):
         raise HTTPException(status_code=401, detail="Admin not found")
 
     totp = pyotp.TOTP(db_admin["mfa_secret"])
-    if totp.verify(mfa.otp):
-        if mfa.username in admin_otp_store:
-            del admin_otp_store[mfa.username]
+
+    # ✅ Use valid_window to allow slight clock differences
+    if totp.verify(mfa.otp, valid_window=1):
         return {"message": "Admin login successful"}
     else:
         raise HTTPException(status_code=401, detail="Invalid OTP")
+
 
 # ---------------- Password Reset Endpoints ----------------
 from pydantic import BaseModel
@@ -245,3 +280,5 @@ def register_volunteer(
 
     volunteers.insert_one(volunteer_data)
     return {"message": "✅ Registration successful! Thank you for joining CyberCAP."}
+
+
