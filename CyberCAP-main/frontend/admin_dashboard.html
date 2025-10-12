@@ -1,11 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberCAP Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f6fa;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(180deg, #0b0c10, #1f2833);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
+      transition: all 0.4s ease;
+      z-index: 1000;
+    }
+    .sidebar.hidden { left: -260px; }
+
+    .sidebar img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 3px solid #45a29e;
+      margin-bottom: 10px;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .sidebar img:hover { transform: scale(1.05); }
+
+    .sidebar h3, .sidebar p { text-align: center; margin: 5px 0; font-size: 15px; }
+
+    .sidebar button {
+      background: #45a29e;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      margin: 10px 0;
+      transition: 0.3s;
+    }
+    .sidebar button:hover { background: #00bcd4; transform: scale(1.05); }
+
+    .logout {
+      margin-top: auto;
+      width: 100%;
+      background: #e74c3c;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .logout:hover { background: #c0392b; transform: scale(1.05); }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 260px;
+      right: 0;
+      background-color: #1f2833;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 25px;
+      height: 60px;
+      z-index: 900;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: left 0.4s ease;
+    }
+    .navbar.shifted { left: 0; }
+
+    .navbar .left-section { display: flex; align-items: center; gap: 15px; }
+    .toggle-btn { font-size: 22px; cursor: pointer; color: #66fcf1; transition: transform 0.2s; }
+    .toggle-btn:hover { transform: scale(1.2); }
+    .navbar-title { font-size: 20px; font-weight: bold; letter-spacing: 0.5px; }
+    .navbar .right-section { display: flex; align-items: center; gap: 25px; position: relative; }
+    .navbar .right-section i { font-size: 20px; cursor: pointer; color: #66fcf1; transition: 0.3s; }
+    .navbar .right-section i:hover { color: #00bcd4; transform: scale(1.15); }
+
+    /* Notifications */
+    .notification-container { position: relative; }
+    .notifications {
+      display: none;
+      position: absolute;
+      top: 35px;
+      right: 0;
+      background: #fff;
+      color: #000;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      width: 260px;
+      padding: 15px;
+      z-index: 999;
+      animation: fadeIn 0.3s ease;
+    }
+    .notifications h4 {
+      margin: 0 0 12px;
+      color: #1f2833;
+      font-size: 16px;
+      font-weight: 600;
+      border-bottom: 2px solid #45a29e;
+      padding-bottom: 6px;
+      text-align: center;
+    }
+    .notifications ul { list-style: none; margin: 0; padding: 0; }
+    .notifications ul li {
+      font-size: 14px;
+      padding: 8px 6px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+    }
+    .notifications ul li:last-child { border-bottom: none; }
+
+    /* Main Content */
+    .main-content { flex: 1; margin-left: 260px; padding: 90px 30px 30px; transition: margin-left 0.4s ease; }
+    .main-content.shifted { margin-left: 0; }
+    h2 { font-size: 24px; margin-bottom: 20px; color: #1f2833; }
+
+    /* Category Buttons */
+    .category-buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 25px; }
+    .category-buttons button {
+      background: #45a29e;
+      border: none;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .category-buttons button:hover { background-color: #00bcd4; transform: scale(1.07); }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background-color: #1f2833; color: white; }
+    tr { transition: background 0.3s, transform 0.2s; }
+    tr:hover { background-color: #f0f0f0; transform: scale(1.01); }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 768px) {
+      .sidebar { left: -260px; }
+      .sidebar.hidden { left: 0; }
+      .navbar { left: 0; width: 100%; }
+      .main-content { margin-left: 0; padding: 90px 20px; }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Welcome Admin</h1>
-  <p>You have successfully logged in using OTP.</p>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <img id="adminPhoto" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin Photo">
+    <input type="file" id="photoUpload" accept="image/jpeg, image/png" style="display:none;">
+    <button onclick="document.getElementById('photoUpload').click()">Add Photo</button>
+    <h3 id="adminName">Admin Name</h3>
+    <p id="adminEmail">Email: admin@cybercap.com</p>
+    <p id="adminPhone">Phone: +91 9876543210</p>
+    <button class="logout" id="logoutSidebar"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </div>
+
+  <!-- Navbar -->
+  <div class="navbar" id="navbar">
+    <div class="left-section">
+      <i class="fas fa-bars toggle-btn" id="toggle-btn"></i>
+      <span class="navbar-title">Admin Dashboard</span>
+    </div>
+    <div class="right-section">
+      <a href="admin_login.html"><i class="fas fa-home" title="Home"></i></a>
+
+      <div class="notification-container">
+        <i class="fas fa-bell" id="notifIcon" title="Notifications"></i>
+        <div class="notifications" id="notifications">
+          <h4>📊 Dashboard Overview</h4>
+          <ul>
+            <li>📁 Total Complaints <span id="totalComplaints">0</span></li>
+            <li>✅ Resolved <span id="resolvedComplaints">0</span></li>
+            <li>⏳ Pending <span id="pendingComplaints">0</span></li>
+            <li>🚨 Suspicious <span id="suspiciousReports">0</span></li>
+            <li>👥 Active Users <span id="activeUsers">0</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <i class="fas fa-envelope" title="Messages"></i>
+      <i class="fas fa-sign-out-alt" id="logoutNavbar" title="Logout"></i>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" id="main-content">
+    <h2>Complaint Overview</h2>
+
+    <div class="category-buttons">
+      <button onclick="filterCategory('All')">All</button>
+      <button onclick="filterCategory('Women Related')">Women Related</button>
+      <button onclick="filterCategory('Phishing')">Phishing</button>
+      <button onclick="filterCategory('Finance')">Finance</button>
+    </div>
+
+    <table id="complaintTable">
+      <thead>
+        <tr>
+          <th>User</th><th>Complaint</th><th>Date</th><th>Category</th><th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Complaints will be dynamically added here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const navbar = document.getElementById("navbar");
+    const mainContent = document.getElementById("main-content");
+    const toggleBtn = document.getElementById("toggle-btn");
+
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("hidden");
+      navbar.classList.toggle("shifted");
+      mainContent.classList.toggle("shifted");
+    });
+
+    // Category filter
+    function filterCategory(category) {
+      const rows = document.querySelectorAll("#complaintTable tbody tr");
+      rows.forEach(row => {
+        if (category === "All" || row.getAttribute("data-category") === category) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+
+    // Notification toggle
+    const notifIcon = document.getElementById("notifIcon");
+    const notifications = document.getElementById("notifications");
+    notifIcon.addEventListener("click", () => {
+      notifications.style.display = notifications.style.display === "block" ? "none" : "block";
+    });
+    document.addEventListener("click", (e) => {
+      if (!notifIcon.contains(e.target) && !notifications.contains(e.target))
+        notifications.style.display = "none";
+    });
+
+    // Admin Photo Upload with persistence
+    const photoUpload = document.getElementById("photoUpload");
+    const adminPhoto = document.getElementById("adminPhoto");
+
+    photoUpload.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          adminPhoto.src = e.target.result;
+          localStorage.setItem("adminPhoto", e.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else alert("Please upload a JPG or PNG image.");
+    });
+
+    // Load saved admin photo if exists
+    const savedPhoto = localStorage.getItem("adminPhoto");
+    if(savedPhoto) adminPhoto.src = savedPhoto;
+
+    // Fetch Admin Info (works with the JSON you showed)
+async function fetchAdminInfo() {
+  const username = localStorage.getItem("adminUser");
+  if (!username) {
+    // not logged in — send to login page
+    return window.location.href = "admin_login.html";
+  }
+
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/admin-info/${username}`);
+    // debug: log status and headers
+    console.log('fetch /admin-info status:', res.status, res.headers.get('content-type'));
+
+    // try parse JSON (most backends return JSON)
+    const data = await res.json();
+    console.log('admin-info response:', data); // helpful for debugging
+
+    // If the backend returns the Mongo document exactly as you pasted,
+    // fields are at top-level: _id, username, email, password, mfa_secret
+    // We'll use username and email; for phone/photo we show fallbacks.
+    const adminData = data || {};
+
+    // Short helper to format ObjectId-like _id for display (optional)
+    function formatId(id) {
+      if (!id) return '';
+      if (typeof id === 'object' && id.$oid) return id.$oid.slice(-6); // if stored as {$oid: "..."}
+      return String(id).slice(-6); // last 6 chars
+    }
+
+    // Set UI fields
+    document.getElementById("adminName").textContent = adminData.username || "Admin";
+    document.getElementById("adminEmail").textContent = `Email: ${adminData.email || "Not set"}`;
+    // You don't have phone in the response — show Not set (or hide)
+    document.getElementById("adminPhone").textContent = `Phone: ${adminData.phone || "Not set"}`;
+
+    // If your DB doesn't return a photo, keep the default avatar.
+    // If you later add a photo field in the DB, this will use it.
+    if (adminData.photo) {
+      adminPhoto.src = adminData.photo;
+      localStorage.setItem("adminPhoto", adminData.photo);
+    } else {
+      // keep whatever is in localStorage (uploaded) or default icon
+      const stored = localStorage.getItem("adminPhoto");
+      if (stored) adminPhoto.src = stored;
+    }
+
+    // optional: show short id somewhere for admin debugging (uncomment if needed)
+    // console.log('admin id (short):', formatId(adminData._id));
+
+  } catch (err) {
+    console.error("Error fetching admin info:", err);
+    // show basic fallback values
+    document.getElementById("adminName").textContent = "Admin";
+    document.getElementById("adminEmail").textContent = "Email: Not available";
+    document.getElementById("adminPhone").textContent = "Phone: Not available";
+  }
+}
+
+fetchAdminInfo();
+
+    fetchAdminInfo();
+
+    // Fetch All Complaints
+    async function fetchAllComplaints() {
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/complaints`);
+        const complaints = await res.json();
+        const tbody = document.querySelector("#complaintTable tbody");
+        tbody.innerHTML = "";
+
+        let total = 0, resolved = 0, pending = 0, suspicious = 0, users = new Set();
+
+        complaints.forEach(c => {
+          const row = document.createElement("tr");
+          row.setAttribute("data-category", c.category);
+          row.innerHTML = `
+            <td>${c.victim.email}</td>
+            <td>${c.description}</td>
+            <td>${c.created_at}</td>
+            <td>${c.category}</td>
+            <td>${c.priority}</td>
+          `;
+          tbody.appendChild(row);
+
+          total++;
+          if(c.status === "Resolved") resolved++;
+          else if(c.status === "Pending") pending++;
+          else if(c.status === "Suspicious") suspicious++;
+          users.add(c.user);
+        });
+
+        document.getElementById("totalComplaints").textContent = total;
+        document.getElementById("resolvedComplaints").textContent = resolved;
+        document.getElementById("pendingComplaints").textContent = pending;
+        document.getElementById("suspiciousReports").textContent = suspicious;
+        document.getElementById("activeUsers").textContent = users.size;
+      } catch(err) { console.error("Error fetching complaints:", err); }
+    }
+    fetchAllComplaints();
+
+    // Logout
+    function logoutAdmin() {
+      localStorage.removeItem("adminUser");
+      localStorage.removeItem("adminPhoto");
+      window.location.href = "admin_login.html";
+    }
+    document.getElementById("logoutNavbar").addEventListener("click", logoutAdmin);
+    document.getElementById("logoutSidebar").addEventListener("click", logoutAdmin);
+  </script>
 </body>
 </html>

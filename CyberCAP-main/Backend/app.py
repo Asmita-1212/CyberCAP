@@ -162,10 +162,9 @@ def admin_login(admin: AdminLogin):
     if not db_admin or not check_password_hash(db_admin["password"], admin.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    otp_token = pyotp.random_base32()
-    admin_otp_store[admin.username] = otp_token
+    # ✅ No new random secret needed here
     return {
-        "message": "Password verified. Enter OTP from Authenticator app.",
+        "message": "Password verified. Please enter OTP from your Authenticator app.",
         "username": admin.username
     }
 
@@ -176,12 +175,13 @@ def admin_mfa(mfa: AdminMFA):
         raise HTTPException(status_code=401, detail="Admin not found")
 
     totp = pyotp.TOTP(db_admin["mfa_secret"])
-    if totp.verify(mfa.otp):
-        if mfa.username in admin_otp_store:
-            del admin_otp_store[mfa.username]
+
+    # ✅ Use valid_window to allow slight clock differences
+    if totp.verify(mfa.otp, valid_window=1):
         return {"message": "Admin login successful"}
     else:
         raise HTTPException(status_code=401, detail="Invalid OTP")
+
 
 # ---------------- Password Reset Endpoints ----------------
 from pydantic import BaseModel
