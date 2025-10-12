@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<<<<<<< HEAD
+  <meta charset="UTF-8">
+  <title>Cybercrime Complaint Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #639dd8; padding: 20px; color: #333; }
+    .container { max-width: 900px; margin: auto; background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+    header { text-align: center; margin-bottom: 30px; }
+    header h1 { font-size: 28px; color: #2c3e50; }
+    form fieldset { border: 1px solid #d3dce6; padding: 25px; margin-bottom: 30px; border-radius: 8px; background-color: #f9fbfd; }
+    legend { font-weight: bold; padding: 0 10px; color: #007bff; }
+    label { display: block; margin-top: 20px; font-weight: 600; color: #444; }
+    input, select, textarea { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ccd6e0; border-radius: 6px; font-size: 15px; transition: border 0.3s; }
+    input:focus, textarea:focus, select:focus { border-color: #007bff; outline: none; }
+    textarea { resize: vertical; }
+    input[type="file"] { margin-top: 10px; }
+    button[type="submit"] { background-color: #007bff; color: white; padding: 14px 30px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: background 0.3s; }
+    button[type="submit"]:hover { background-color: #0056b3; }
+    @media (max-width: 600px) { .container { padding: 20px; } header h1 { font-size: 22px; } }
+=======
+  <meta charset="UTF-8" />
+  <title>Register Complaint - CyberCAP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #3e64ff, #5edfff);
+      color: #333;
+      min-height: 100vh;
+      padding-top: 70px;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 40px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      z-index: 1000;
+    }
+
+    .navbar .logo {
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 30px;
+    }
+
+    .navbar ul li a {
+      color: #fff;
+      font-size: 15px;
+      text-decoration: none;
+      transition: color 0.3s;
+      padding-bottom: 2px;
+    }
+
+    .navbar ul li a:hover {
+      color: #56c5f8;
+    }
+
+    .navbar ul li a.active {
+      color: #56c5f8;
+      border-bottom: 2px solid #56c5f8;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    header h1 {
+      font-size: 28px;
+      color: #1f3b73;
+    }
+
+    form fieldset {
+      border: 1px solid #d3dce6;
+      padding: 25px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      background-color: #f9fbfd;
+    }
+
+    legend {
+      font-weight: bold;
+      padding: 0 10px;
+      color: #3e64ff;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border: 1px solid #ccd6e0;
+      border-radius: 6px;
+      font-size: 15px;
+      transition: border 0.3s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #3e64ff;
+      outline: none;
+    }
+
+    textarea { resize: vertical; }
+
+    input[type="file"] { margin-top: 10px; }
+
+    button[type="submit"], .toggle-btn {
+      background-color: #3e64ff;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s;
+      display: block;
+      margin: 15px auto;
+    }
+
+    button[type="submit"]:hover, .toggle-btn:hover { background-color: #2b4ae0; }
+
+    .toggle-btn {
+      background-color: #56c5f8;
+      font-weight: 600;
+    }
+
+    .toggle-btn:hover {
+      background-color: #34a2da;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 700px) {
+      .navbar { flex-direction: column; padding: 10px 20px; }
+      .navbar ul { flex-direction: column; gap: 10px; align-items: center; }
+      .container { padding: 25px; }
+    }
+
+    label.required::after {
+      content: " *";
+      color: red;
+    }
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+  </style>
+</head>
+<body>
+
+<<<<<<< HEAD
+<div class="container">
+  <header>
+    <h1>Cybercrime Complaint Form</h1>
+=======
+<!-- ✅ CyberCAP Navbar -->
+<nav class="navbar">
+  <a href="user_dashboard.html" class="logo">CyberCAP</a>
+  <ul>
+    <li><a href="user_dashboard.html"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="complaint.html" class="active"><i class="fas fa-edit"></i> Register Complaint</a></li>
+    <li><a href="trackcomplaint.html"><i class="fas fa-search"></i> Track Complaint</a></li>
+    <li><a href="reportsuspect.html"><i class="fas fa-exclamation-triangle"></i> Report Suspect</a></li>
+    <li><a href="#" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+  </ul>
+</nav>
+
+<!-- ✅ Complaint Form -->
+<div class="container">
+  <header>
+    <h1>📝 Register a Cybercrime Complaint</h1>
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+  </header>
+
+  <form id="complaintForm" enctype="multipart/form-data">
+
+<<<<<<< HEAD
+    <!-- Hidden Complaint ID (Optional) -->
+    <input type="hidden" name="complaint_id" value="">
+
+    <!-- Incident Details -->
+    <fieldset>
+      <legend>Incident Details</legend>
+      <label>Type of Cybercrime:</label>
+      <select name="incident_type" required>
+        <option value="">-- Select --</option>
+        <option value="Financial Fraud">Financial Fraud</option>
+        <option value="Social Media Harassment">Social Media Harassment</option>
+        <option value="Phishing">Phishing</option>
+        <option value="Online Stalking">Online Stalking</option>
+        <option value="Hacking">Hacking</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Date of Incident:</label>
+      <input type="date" name="incident_date" required>
+=======
+    <!-- Incident Details -->
+    <fieldset>
+      <legend>Incident Details</legend>
+      <label class="required">Type of Cybercrime:</label>
+      <select name="incident_type" required>
+        <option value="">-- Select --</option>
+        <option value="Financial Fraud">Financial Fraud</option>
+        <option value="Phishing">Phishing</option>
+        <option value="Online Stalking">Online Stalking</option>
+        <option value="Hacking">Hacking</option>
+        <option value="Social Media Harassment">Social Media Harassment</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label class="required">Date of Incident:</label>
+      <input type="date" name="incident_date" id="incident_date" required>
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+
+      <label>Time of Incident:</label>
+      <input type="time" name="incident_time">
+
+<<<<<<< HEAD
+      <label>Platform Involved:</label>
+      <select name="platform" required>
+        <option value="">-- Select --</option>
+        <option value="WhatsApp">WhatsApp</option>
+        <option value="Facebook">Facebook</option>
+        <option value="Email">Email</option>
+        <option value="Instagram">Instagram</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Description of Incident:</label>
+      <textarea name="description" rows="5" required></textarea>
+    </fieldset>
+
+    <!-- Suspect Details -->
+    <fieldset>
+      <legend>Suspect Details (if known)</legend>
+      <label>Phone Number:</label>
+      <input type="tel" name="suspect_phone" pattern="[0-9]{10}" maxlength="10">
+
+      <label>Email ID:</label>
+      <input type="email" name="suspect_email">
+
+      <label>Social Media Handle:</label>
+      <input type="text" name="suspect_handle">
+
+      <label>Bank Account Details:</label>
+      <input type="text" name="suspect_bank">
+    </fieldset>
+
+    <!-- Victim Details -->
+    <fieldset>
+      <legend>Victim Details</legend>
+      <label>Full Name:</label>
+      <input type="text" name="victim_name" required>
+
+      <label>Gender:</label>
+=======
+      <label class="required">Platform Involved:</label>
+      <input type="text" name="platform" required placeholder="e.g., WhatsApp, Instagram, Email">
+
+      <label class="required">Description of Incident:</label>
+      <textarea name="description" rows="5" required></textarea>
+    </fieldset>
+
+    <!-- Victim Details -->
+    <fieldset>
+      <legend>Victim Details</legend>
+      <label class="required">Full Name:</label>
+      <input type="text" name="victim_name" required>
+
+      <label class="required">Gender:</label>
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+      <select name="victim_gender" required>
+        <option value="">-- Select --</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+
+<<<<<<< HEAD
+      <label>Date of Birth:</label>
+      <input type="date" name="victim_dob" required>
+
+      <label>Address:</label>
+      <textarea name="victim_address" rows="3" required></textarea>
+
+      <label>State:</label>
+      <select name="victim_state" required>
+        <option value="">-- Select --</option>
+        <option value="Maharashtra">Maharashtra</option>
+        <option value="Karnataka">Karnataka</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Tamil Nadu">Tamil Nadu</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>District:</label>
+      <input type="text" name="victim_district" required>
+
+      <label>Email ID:</label>
+      <input type="email" name="victim_email" required>
+
+      <label>Mobile Number:</label>
+      <input type="tel" name="victim_mobile" pattern="[0-9]{10}" maxlength="10" required>
+    </fieldset>
+
+    <!-- Attachments -->
+    <fieldset>
+      <legend>Attachments (Max 5MB each)</legend>
+      <label>Upload Evidence:</label>
+=======
+      <label class="required">Email ID:</label>
+      <input type="email" name="victim_email" required>
+
+      <label class="required">Mobile Number:</label>
+      <input type="tel" name="victim_mobile" pattern="[0-9]{10}" maxlength="10" required>
+    </fieldset>
+
+    <!-- ✅ Collapsible Suspect Section -->
+    <button type="button" class="toggle-btn" id="toggleSuspectBtn">➕ Add Suspect Details</button>
+
+    <fieldset id="suspectSection" class="hidden">
+      <legend>Suspect Details (Optional)</legend>
+
+      <label>Suspect Name:</label>
+      <input type="text" name="suspect_name" placeholder="Enter suspect name">
+
+      <label>Suspect Email:</label>
+      <input type="email" name="suspect_email" placeholder="Enter suspect email">
+
+      <label>Suspect Phone:</label>
+      <input type="tel" name="suspect_phone" pattern="[0-9]{10}" maxlength="10" placeholder="Enter 10-digit number">
+
+      <label>Social Media Handle / Username:</label>
+      <input type="text" name="suspect_handle" placeholder="@username / Profile Link">
+
+      <label>Address (if known):</label>
+      <textarea name="suspect_address" rows="3" placeholder="Enter suspect’s address"></textarea>
+    </fieldset>
+
+    <!-- Attachments -->
+    <fieldset>
+      <legend>Attachments (Optional)</legend>
+      <label>Upload Evidence (JPG, PNG, PDF, max 5MB each):</label>
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+      <input type="file" name="attachments[]" accept=".jpg,.jpeg,.png,.pdf" multiple>
+    </fieldset>
+
+    <button type="submit">Submit Complaint</button>
+  </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+<<<<<<< HEAD
+  const form = document.getElementById("complaintForm");
+=======
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("incident_date").setAttribute("max", today);
+
+  const form = document.getElementById("complaintForm");
+  const toggleBtn = document.getElementById("toggleSuspectBtn");
+  const suspectSection = document.getElementById("suspectSection");
+
+  toggleBtn.addEventListener("click", function() {
+    suspectSection.classList.toggle("hidden");
+    toggleBtn.innerText = suspectSection.classList.contains("hidden")
+      ? "➕ Add Suspect Details"
+      : "➖ Hide Suspect Details";
+  });
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+<<<<<<< HEAD
+    // Safe attachment handling
+=======
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+    const attachmentInput = form.querySelector('input[name="attachments[]"]');
+    const attachments = attachmentInput ? Array.from(attachmentInput.files).map(f => f.name) : [];
+
+    const data = {
+      incident_type: form.incident_type.value,
+      incident_date: form.incident_date.value,
+      incident_time: form.incident_time.value,
+      platform: form.platform.value,
+      description: form.description.value,
+<<<<<<< HEAD
+      attachments: attachments,
+      victim: {
+        full_name: form.victim_name.value,
+        gender: form.victim_gender.value,
+        dob: form.victim_dob.value,
+        address: form.victim_address.value,
+        state: form.victim_state.value,
+        district: form.victim_district.value,
+=======
+      victim: {
+        full_name: form.victim_name.value,
+        gender: form.victim_gender.value,
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+        email: form.victim_email.value,
+        mobile: form.victim_mobile.value
+      },
+      suspect: {
+<<<<<<< HEAD
+        phone: form.suspect_phone.value || null,
+        email: form.suspect_email.value || null,
+        social_handle: form.suspect_handle.value || null,
+        bank_account: form.suspect_bank.value || null
+      }
+=======
+        name: form.suspect_name.value,
+        email: form.suspect_email.value,
+        phone: form.suspect_phone.value,
+        handle: form.suspect_handle.value,
+        address: form.suspect_address.value
+      },
+      attachments: attachments
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+    };
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/complaint", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+<<<<<<< HEAD
+      console.log(result);
+
+      if(res.ok){
+        alert(`✅ ${result.message}\nYour Complaint ID: ${result.complaint_id || "N/A"}`);
+        form.reset();
+      } else {
+        alert(result.detail || "Something went wrong!");
+      }
+    } catch(err){
+      console.error(err);
+      alert("Error submitting complaint. Check console for details.");
+    }
+  });
+});
+=======
+
+      if (res.ok) {
+        alert(`✅ ${result.message}\nComplaint ID: ${result.complaint_id || "N/A"}`);
+        form.reset();
+        suspectSection.classList.add("hidden");
+        toggleBtn.innerText = "➕ Add Suspect Details";
+      } else {
+        alert(result.detail || "❌ Something went wrong!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("⚠️ Error submitting complaint.");
+    }
+  });
+});
+
+// ✅ Logout Function
+function logoutUser() {
+  localStorage.removeItem("username");
+  window.location.href = "dashboard.html";
+}
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+</script>
+
+</body>
+</html>
