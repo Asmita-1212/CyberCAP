@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberCAP Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f6fa;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(180deg, #0b0c10, #1f2833);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
+      transition: all 0.4s ease;
+      z-index: 1000;
+    }
+
+    .sidebar.hidden { left: -260px; }
+
+    .sidebar img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 3px solid #45a29e;
+      margin-bottom: 10px;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+
+    .sidebar img:hover { transform: scale(1.05); }
+
+    .sidebar h3, .sidebar p {
+      text-align: center;
+      margin: 5px 0;
+      font-size: 15px;
+    }
+
+    .sidebar button {
+      background: #45a29e;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      margin: 10px 0;
+      transition: 0.3s;
+    }
+
+    .sidebar button:hover {
+      background: #00bcd4;
+      transform: scale(1.05);
+    }
+
+    .logout {
+      margin-top: auto;
+      width: 100%;
+      background: #e74c3c;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .logout:hover { background: #c0392b; transform: scale(1.05); }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 260px;
+      right: 0;
+      background-color: #1f2833;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 25px;
+      height: 60px;
+      z-index: 900;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: left 0.4s ease;
+    }
+
+    .navbar.shifted { left: 0; }
+
+    .navbar .left-section { display: flex; align-items: center; gap: 15px; }
+    .toggle-btn { font-size: 22px; cursor: pointer; color: #66fcf1; transition: transform 0.2s; }
+    .toggle-btn:hover { transform: scale(1.2); }
+    .navbar-title { font-size: 20px; font-weight: bold; letter-spacing: 0.5px; }
+
+    .navbar .right-section { display: flex; align-items: center; gap: 25px; }
+    .navbar .right-section i { font-size: 20px; cursor: pointer; color: #66fcf1; transition: 0.3s; }
+    .navbar .right-section i:hover { color: #00bcd4; transform: scale(1.15); }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 260px;
+      padding: 90px 30px 30px;
+      transition: margin-left 0.4s ease;
+    }
+
+    .main-content.shifted { margin-left: 0; }
+
+    h2 { font-size: 24px; margin-bottom: 20px; color: #1f2833; }
+
+    /* Category Cards */
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .category-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .category-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    .category-card h3 { color: #1f2833; font-size: 18px; margin-bottom: 10px; }
+    .category-card i { font-size: 30px; color: #45a29e; margin-bottom: 10px; }
+
+    /* Complaint Table */
+    .table-container {
+      margin-top: 40px;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #1f2833;
+      color: white;
+    }
+
+    tr:hover { background-color: #f1f1f1; }
+
+    @media (max-width: 768px) {
+      .sidebar { left: -260px; }
+      .sidebar.hidden { left: 0; }
+      .navbar { left: 0; width: 100%; }
+      .main-content { margin-left: 0; padding: 90px 20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <img id="adminPhoto" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin Photo">
+    <input type="file" id="photoUpload" accept="image/jpeg, image/png" style="display: none;">
+    <button onclick="document.getElementById('photoUpload').click()">Add Photo</button>
+    <h3 id="adminName">Admin Name</h3>
+    <p id="adminEmail">Email: admin@cybercap.com</p>
+    <p id="adminPhone">Phone: +91 9876543210</p>
+    <button class="logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </div>
+
+  <!-- Navbar -->
+  <div class="navbar" id="navbar">
+    <div class="left-section">
+      <i class="fas fa-bars toggle-btn" id="toggle-btn"></i>
+      <span class="navbar-title">Admin Dashboard</span>
+    </div>
+    <div class="right-section">
+      <i class="fas fa-home" title="Home" id="homeIcon"></i>
+      <i class="fas fa-bell" title="Notifications" id="notifIcon"></i>
+      <i class="fas fa-envelope" title="Messages"></i>
+      <i class="fas fa-sign-out-alt" title="Logout" id="logoutIcon"></i>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" id="main-content">
+    <h2>Complaint Overview</h2>
+
+    <div class="card-container">
+      <div class="category-card"><i class="fas fa-female"></i><h3>Women Related</h3></div>
+      <div class="category-card"><i class="fas fa-fish"></i><h3>Phishing</h3></div>
+      <div class="category-card"><i class="fas fa-coins"></i><h3>Finance</h3></div>
+      <div class="category-card"><i class="fas fa-briefcase"></i><h3>Online Job Fraud</h3></div>
+      <div class="category-card"><i class="fas fa-user-secret"></i><h3>Hacking Crime</h3></div>
+      <div class="category-card"><i class="fas fa-bug"></i><h3>Malware Crime</h3></div>
+      <div class="category-card"><i class="fas fa-globe"></i><h3>Website Defacement</h3></div>
+      <div class="category-card"><i class="fas fa-comments"></i><h3>Cyber Bullying</h3></div>
+    </div>
+
+    <div class="table-container">
+      <h3>All Complaints</h3>
+      <table id="complaintTable">
+        <thead>
+          <tr>
+           
+            <th>User</th>
+            <th>Complaint</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Priority</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const navbar = document.getElementById("navbar");
+    const mainContent = document.getElementById("main-content");
+    const toggleBtn = document.getElementById("toggle-btn");
+
+    // Sidebar toggle
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("hidden");
+      navbar.classList.toggle("shifted");
+      mainContent.classList.toggle("shifted");
+    });
+
+    // Admin photo upload
+    document.getElementById("photoUpload").addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
+        const reader = new FileReader();
+        reader.onload = (e) => document.getElementById("adminPhoto").src = e.target.result;
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Fetch admin info from backend
+    async function loadAdminInfo() {
+      const username = localStorage.getItem("adminUser");
+      if (!username) return;
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/admin-info/${username}`);
+        const data = await res.json();
+        document.getElementById("adminName").innerText = data.name;
+        document.getElementById("adminEmail").innerText = `Email: ${data.email}`;
+        document.getElementById("adminPhone").innerText = `Phone: ${data.phone}`;
+      } catch (err) { console.error("Error:", err); }
+    }
+
+    // Fetch complaints table
+    async function loadComplaints() {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/all-complaints");
+        const data = await res.json();
+        const tbody = document.querySelector("#complaintTable tbody");
+        tbody.innerHTML = "";
+        data.forEach((c) => {
+          const row = `<tr>
+            <td>${c._id}</td>
+            <td>${c.user}</td>
+            <td>${c.category}</td>
+            <td>${c.description}</td>
+            <td>${c.status}</td>
+            <td>${new Date(c.date).toLocaleDateString()}</td>
+          </tr>`;
+          tbody.insertAdjacentHTML("beforeend", row);
+        });
+      } catch (err) {
+        console.error("Error loading complaints:", err);
+      }
+    }
+
+    // Notification click - fetch complaint stats
+    document.getElementById("notifIcon").addEventListener("click", async () => {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/complaint-stats");
+        const stats = await res.json();
+        alert(`
+📊 Complaint Overview
+-----------------------------
+✅ Resolved Complaints: ${stats.resolved}
+⏳ Pending Complaints: ${stats.pending}
+🚨 Suspicious Reports: ${stats.suspicious}
+👥 Active Users: ${stats.active_users}
+`);
+      } catch {
+        alert("⚠️ Unable to fetch notification stats.");
+      }
+    });
+
+    // Navigation
+    document.getElementById("homeIcon").onclick = () => window.location.href = "admin_dashboard.html";
+    document.getElementById("logoutIcon").onclick = () => logout();
+    document.getElementById("logoutBtn").onclick = () => logout();
+
+    function logout() {
+      localStorage.removeItem("adminUser");
+      window.location.href = "admin_login.html";
+    }
+
+    loadAdminInfo();
+    loadComplaints();
+  </script>
+</body>
+</html>
