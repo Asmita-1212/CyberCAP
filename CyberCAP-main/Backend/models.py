@@ -29,21 +29,25 @@ class Victim(BaseModel):
     email: EmailStr
     mobile: str = Field(..., pattern=r'^\d{10}$')
 
+
+from pydantic import BaseModel
+from typing import List, Optional, Dict
+
 class Complaint(BaseModel):
     incident_type: str
     incident_date: str
-    incident_time: Optional[str]
+    incident_time: Optional[str] = None
     platform: str
-    description: str
-    suspect: Optional[Suspect]
-    victim: Victim
-    attachments: Optional[List[str]] = []
+    description: str                    # This will store translated text
+    original_description: Optional[str] = None  # Add this field
+    victim: Dict
+    suspect: Dict
+    attachments: List = []
+    status: Optional[str] = None
     priority: Optional[str] = None
     category: Optional[str] = None
+    created_at: Optional[str] = None
 
-
-
-from pydantic import BaseModel
 
 class AdminLogin(BaseModel):
     username: str

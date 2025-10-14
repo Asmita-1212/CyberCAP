@@ -1,8 +1,4 @@
-from libretranslatepy import LibreTranslateAPI
+import pyotp
 
-lt = LibreTranslateAPI("https://translate.argosopentech.com/")
-
-text = "मुझे धोखा दिया गया ऑनलाइन"
-translated = lt.translate(text, "hi", "en")
-
-print("Translated:", translated)
+secret = pyotp.random_base32()
+print(secret)  # Copy this

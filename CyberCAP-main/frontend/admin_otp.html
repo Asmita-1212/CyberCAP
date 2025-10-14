@@ -4,22 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin OTP Verification - CyberCAP</title>
-<<<<<<< HEAD
   <style>
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
     body {
       height:100vh;
       background:linear-gradient(135deg,#3e64ff,#5edfff);
       display:flex; justify-content:center; align-items:center; overflow:hidden;
     }
+
     .otp-box {
-      background:#fff; padding:40px 30px; border-radius:12px; 
-      box-shadow:0 12px 24px rgba(0,0,0,0.1); width:100%; max-width:400px;
-      animation:fadeSlideDown 1s ease forwards; opacity:0; transform:translateY(-30px);
+      background:#fff; 
+      padding:40px 30px; 
+      border-radius:12px; 
+      box-shadow:0 12px 24px rgba(0,0,0,0.1); 
+      width:100%; max-width:400px;
+      animation:fadeSlideDown 1s ease forwards; 
+      opacity:0; 
+      transform:translateY(-30px);
     }
+
     @keyframes fadeSlideDown { to { opacity:1; transform:translateY(0);} }
     h2 { text-align:center; margin-bottom:25px; color:#1f3b73; animation:fadeIn 1.5s ease; }
     @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
     form { display:flex; flex-direction:column; }
     label { margin-bottom:5px; font-weight:600; color:#333; }
     input[type="text"] {
@@ -27,12 +35,14 @@
       transition:border-color .3s, box-shadow .3s; font-size:14px;
     }
     input:focus { border-color:#3e64ff; box-shadow:0 0 8px rgba(62,100,255,.3); outline:none; }
+
     button {
       padding:12px; background:#3e64ff; color:#fff; border:none; border-radius:8px;
       font-size:16px; cursor:pointer; transition:background-color .3s, transform .1s;
     }
     button:hover { background:#2b4ae0; }
     button:active { transform:scale(0.97); }
+
     #otpMessage { text-align:center; margin-bottom:15px; font-size:14px; display:none; }
   </style>
 </head>
@@ -52,9 +62,10 @@
     document.getElementById("otpForm").addEventListener("submit", async function(e) {
       e.preventDefault();
 
-      const otp = document.getElementById("otp").value;
+      const otp = document.getElementById("otp").value.trim();
       const messageEl = document.getElementById("otpMessage");
-      const username = localStorage.getItem("adminUser"); // must match login page key
+      const username = localStorage.getItem("adminUsername");
+ // must match login page key
 
       if (!username) {
         messageEl.style.color = "red";
@@ -73,13 +84,16 @@
         const data = await res.json();
         messageEl.style.display = "block";
 
-        if (res.ok && data.message && data.message.toLowerCase().includes("successful")) {
+        if (res.ok) {
           messageEl.style.color = "green";
           messageEl.innerText = "✅ OTP verified successfully! Redirecting...";
-          setTimeout(() => { window.location.href = "admin_dashboard.html"; }, 900);
+           localStorage.setItem("adminUser", username);
+          setTimeout(() => { 
+            window.location.href = "admin_dashboard.html"; 
+          }, 1000);
         } else {
           messageEl.style.color = "red";
-          messageEl.innerText = data.message || "❌ Invalid OTP. Try again.";
+          messageEl.innerText = data.detail || "❌ Invalid OTP. Try again.";
         }
       } catch (err) {
         console.error(err);
@@ -88,244 +102,5 @@
       }
     });
   </script>
-=======
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #3e64ff, #5edfff);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* ✅ Navbar Styles (same as admin & user login) */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: linear-gradient(90deg, #000000, #131212);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 30px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-      width: 100%;
-    }
-
-    .navbar .logo {
-      color: #ecf3f5;
-      font-size: 30px;
-      font-weight: bold;
-      text-decoration: none;
-      letter-spacing: 1px;
-    }
-
-    .navbar ul {
-      list-style: none;
-      display: flex;
-      gap: 25px;
-      margin: 0;
-      padding: 0;
-    }
-
-    .navbar ul li {
-      position: relative;
-    }
-
-    .navbar ul li a,
-    .dropbtn {
-      color: #f5f0f0;
-      font-size: 16px;
-      font-weight: 600;
-      text-decoration: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    .navbar ul li a:hover,
-    .dropbtn:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-
-    /* ✅ OTP Box Styling */
-    .otp-box {
-      background-color: #ffffff;
-      padding: 40px 30px;
-      border-radius: 12px;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
-      animation: fadeSlideDown 1s ease forwards;
-      opacity: 0;
-      transform: translateY(-30px);
-      margin-top: 60px; /* space below navbar */
-    }
-
-    @keyframes fadeSlideDown {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #1f3b73;
-      animation: fadeIn 1.5s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-
-    label {
-      margin-bottom: 5px;
-      font-weight: 600;
-      color: #333;
-    }
-
-    input[type="text"] {
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    input:focus {
-      border-color: #3e64ff;
-      box-shadow: 0 0 8px rgba(62, 100, 255, 0.3);
-      outline: none;
-    }
-
-    button {
-      padding: 12px;
-      background-color: #3e64ff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.1s;
-    }
-
-    button:hover {
-      background-color: #2b4ae0;
-    }
-
-    button:active {
-      transform: scale(0.97);
-    }
-
-    #otpMessage {
-      text-align: center;
-      margin-bottom: 15px;
-      font-size: 14px;
-      display: none;
-    }
-
-    /* Responsive navbar */
-    @media (max-width: 768px) {
-      .navbar ul {
-        flex-direction: column;
-        gap: 10px;
-        align-items: center;
-      }
-      .navbar {
-        flex-direction: column;
-      }
-    }
-  </style>
-</head>
-<body>
-
-<!-- ✅ CyberCAP Navbar -->
-<nav class="navbar">
-  <a href="#" class="logo">CyberCAP</a>
-  <ul>
-    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-    <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Cyber Volunteers</a></li>
-    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning Corner</a></li>
-    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
-  </ul>
-</nav>
-
-<!-- ✅ OTP Verification Box -->
-<div class="otp-box">
-  <h2>Enter OTP</h2>
-
-  <p id="otpMessage"></p>
-
-  <form id="otpForm">
-    <label for="otp">One-Time Password</label>
-    <input type="text" id="otp" name="otp" required placeholder="Enter the OTP sent to you"/>
-
-    <button type="submit">Verify OTP</button>
-  </form>
-</div>
-
-<script>
-  document.getElementById("otpForm").addEventListener("submit", async function (event) {
-    event.preventDefault();
-
-    const otp = document.getElementById("otp").value;
-    const messageEl = document.getElementById("otpMessage");
-    const username = localStorage.getItem("adminUsername");
-
-    if (!username) {
-      messageEl.style.color = "red";
-      messageEl.innerText = "⚠️ Username not found. Please login again.";
-      messageEl.style.display = "block";
-      return;
-    }
-
-    try {
-      const response = await fetch("http://127.0.0.1:8000/admin/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, otp }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        messageEl.style.color = "green";
-        messageEl.innerText = "✅ OTP verified successfully!";
-        messageEl.style.display = "block";
-
-        setTimeout(() => {
-          window.location.href = "admin_dashboard.html";
-        }, 1000);
-      } else {
-        messageEl.style.color = "red";
-        messageEl.innerText = data.detail || "Invalid OTP. Try again.";
-        messageEl.style.display = "block";
-      }
-    } catch (error) {
-      messageEl.style.color = "red";
-      messageEl.innerText = "⚠️ Error connecting to server.";
-      messageEl.style.display = "block";
-    }
-  });
-</script>
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
 </body>
 </html>
