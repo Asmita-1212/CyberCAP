@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complaint Details</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f6fa;
+      color: #333;
+    }
+
+    h2 {
+      color: #1f2833;
+      margin-bottom: 20px;
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    .attachments {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .attachment-item img {
+      width: 150px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .attachment-item img:hover {
+      transform: scale(1.05);
+    }
+
+    select, button {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    button {
+      background: #2e86de;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #1b4f72;
+    }
+
+    .status-update {
+      margin-top: 20px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h2>Complaint Details</h2>
+  <div id="complaintDetail">Loading...</div>
+
+  <script>
+    async function loadComplaintDetail() {
+      const c_id = localStorage.getItem("selectedComplaintId");
+      console.log("Loaded complaint ID:", c_id);
+
+      if (!c_id) {
+        document.getElementById("complaintDetail").innerHTML = "No complaint selected!";
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/complaint/${c_id}`);
+        if (!res.ok) throw new Error("Complaint not found");
+
+        const c = await res.json();
+        const container = document.getElementById("complaintDetail");
+
+        // Display attachments as clickable thumbnails or links
+        let attachmentHTML = "None";
+        if (c.attachments?.length > 0) {
+          attachmentHTML = `<div class="attachments">` +
+            c.attachments.map(a => `
+              <div class="attachment-item">
+                ${
+                  a.match(/\.(jpg|jpeg|png|gif)$/i)
+                    ? `<img src="http://127.0.0.1:8000/uploads/${a}" alt="Attachment" onclick="window.open('http://127.0.0.1:8000/uploads/${a}', '_blank')">`
+                    : `<a href="http://127.0.0.1:8000/uploads/${a}" target="_blank">${a}</a>`
+                }
+              </div>
+            `).join('') +
+            `</div>`;
+        }
+
+        container.innerHTML = `
+          <div class="field"><span class="label">User:</span> ${c.victim?.email || c.registered_by || "N/A"}</div>
+          <div class="field"><span class="label">Description:</span> ${c.description || "N/A"}</div>
+          <div class="field"><span class="label">Category:</span> ${c.category || "N/A"}</div>
+          <div class="field"><span class="label">Priority:</span> ${c.priority || "N/A"}</div>
+          <div class="field"><span class="label">Status:</span> <span id="statusValue">${c.status || "Pending"}</span></div>
+          <div class="field"><span class="label">Date:</span> ${c.created_at ? new Date(c.created_at).toLocaleString() : "N/A"}</div>
+          <div class="field"><span class="label">Attachments:</span> ${attachmentHTML}</div>
+
+          <div class="status-update">
+            <h3>Update Status</h3>
+            <select id="statusSelect">
+              <option value="Pending" ${c.status === "Pending" ? "selected" : ""}>Pending</option>
+              <option value="In Progress" ${c.status === "In Progress" ? "selected" : ""}>In Progress</option>
+              <option value="Resolved" ${c.status === "Resolved" ? "selected" : ""}>Resolved</option>
+            </select>
+            <button onclick="updateStatus('${c._id}')">Update</button>
+          </div>
+        `;
+      } catch (err) {
+        console.error(err);
+        document.getElementById("complaintDetail").innerHTML =
+          "Failed to load complaint: " + err.message;
+      }
+    }
+
+    async function updateStatus(id) {
+      const newStatus = document.getElementById("statusSelect").value;
+
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/complaint/${id}/status`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        });
+
+        if (!res.ok) throw new Error("Failed to update status");
+
+        document.getElementById("statusValue").innerText = newStatus;
+        alert("Status updated successfully!");
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", loadComplaintDetail);
+  </script>
+</body>
+</html>
