@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<<<<<<< HEAD
-  <title>Cyber Volunteer Registration</title>
+  <title>Cyber Volunteer Registration | CyberCAP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
   <style>
     /* Base Styling */
     * {
@@ -15,78 +16,66 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right,  #56c5f8);
-      padding: 30px 15px;
-    }
-
-=======
-  <title>Cyber Volunteer Registration | CyberCAP</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
+      background: linear-gradient(to right, #4ca1af, #56c5f8);
       padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
     }
 
-    body {
-      background: linear-gradient(to right, #56c5f8, #71afec);
-      padding-top: 70px; /* for fixed navbar */
-      color: #333;
-    }
-
-    /* ===== Navbar Styling ===== */
-    nav {
-      background: linear-gradient(90deg, #000000, #111111);
-      color: white;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
+    /* Navbar */
+    .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 40px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      background: #000;
+      padding: 10px 40px;
+      border-bottom: 2px solid cyan;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
-    nav .logo {
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .navbar .logo img {
+      height: 40px;
+      width: auto;
+      border-radius: 40px;
+      margin-right: 10px; /* space between logo and text */
+      filter: drop-shadow(0 0 3px cyan);
+    }
+
+    .navbar .logo span {
+      color: #00eaff;
       font-size: 22px;
-      font-weight: 700;
-      color: white;
+      font-weight: bold;
+      letter-spacing: 0.5px;
     }
 
-    nav ul {
+    .navbar ul {
       list-style: none;
       display: flex;
       gap: 25px;
     }
 
-    nav ul li a {
-      color: white;
+    .navbar ul li a {
       text-decoration: none;
+      color: #f0f0f0;
       font-weight: 500;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: color 0.3s ease;
+      transition: 0.3s;
     }
 
-    nav ul li a:hover,
-    nav ul li a.active {
-      color: #1e90ff;
+    .navbar ul li a:hover {
+      color: cyan;
     }
 
-    /* ===== Form Container ===== */
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+    /* Container */
     .container {
       max-width: 750px;
-      margin: auto;
+      margin: 50px auto;
       background: white;
       padding: 35px 30px;
       border-radius: 12px;
@@ -98,10 +87,6 @@
       font-size: 28px;
       color: #2c3e50;
       margin-bottom: 10px;
-<<<<<<< HEAD
-=======
-      font-weight: 700;
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     }
 
     h1::before {
@@ -166,25 +151,19 @@
       margin-top: 5px;
     }
 
-<<<<<<< HEAD
     @media (max-width: 600px) {
-=======
-    @media (max-width: 700px) {
-      nav {
+      .navbar {
         flex-direction: column;
-        align-items: flex-start;
-        padding: 15px 25px;
+        padding: 10px 20px;
+        text-align: center;
       }
 
-      nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
-        width: 100%;
+      .navbar ul {
+        flex-direction: column;
+        gap: 10px;
         margin-top: 10px;
-        gap: 15px;
       }
 
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       .container {
         padding: 25px 20px;
       }
@@ -195,42 +174,39 @@
     }
   </style>
 </head>
+
 <body>
 
-<<<<<<< HEAD
-=======
-  <!-- Navbar (matches the black one from your image) -->
-  <nav>
-    <div class="logo">CyberCAP</div>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <img src="logo.png" alt="CyberCAP Logo">
+      <span>CyberCAP</span>
+    </a>
     <ul>
       <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
-      <li><a href="user_login.html"><i class="fas fa-sign-in-alt"></i>Register</button>
-      <li><a href="cybervoluteer.html" class="active"><i class="fa-solid fa-users"></i> Cyber Volunteers</a></li>
-      <li><a href="learncorner.html"><i class="fa-solid fa-book"></i> Learning Corner</a></li>
-      <li><a href="contactus.html"><i class="fa-solid fa-envelope"></i> Contact Us</a></li>
+      <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Volunteers</a></li>
+      <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning</a></li>
+      <li><a href="user_login.html"><i class="fas fa-user"></i> User Login</a></li>
+      <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact</a></li>
     </ul>
   </nav>
 
-  <!-- Main Content -->
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+  <!-- Volunteer Registration Form -->
   <div class="container">
     <h1>Cyber Volunteer Registration</h1>
     <p>Join hands with the Government to identify harmful and unlawful content online.</p>
 
     <form>
-      <!-- Name -->
       <label for="name">Full Name:</label>
       <input type="text" id="name" name="name" required placeholder="Enter your full name">
 
-      <!-- Email -->
       <label for="email">Email Address:</label>
       <input type="email" id="email" name="email" required placeholder="Enter your email">
 
-      <!-- Mobile -->
       <label for="mobile">Mobile Number:</label>
       <input type="tel" id="mobile" name="mobile" required placeholder="Enter your phone number">
 
-      <!-- Role -->
       <label for="role">Select Role:</label>
       <select id="role" name="role" required>
         <option value="">-- Choose Role --</option>
@@ -239,19 +215,15 @@
         <option value="organization">Cyber Awareness Organization</option>
       </select>
 
-      <!-- State -->
       <label for="state">State/UT:</label>
       <input type="text" id="state" name="state" required placeholder="Enter your State or Union Territory">
 
-      <!-- Area of Expertise -->
       <label for="expertise">Area of Expertise (Optional):</label>
       <input type="text" id="expertise" name="expertise" placeholder="e.g., Cyber Security, Law, IT, Education">
 
-      <!-- Motivation -->
       <label for="message">Why do you want to join?</label>
       <textarea id="message" name="message" required placeholder="Write a short message explaining your motivation."></textarea>
 
-      <!-- Submit -->
       <button type="submit">Register as Volunteer</button>
     </form>
   </div>

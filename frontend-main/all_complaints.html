@@ -1,0 +1,356 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Complaints - CyberCAP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #3e64ff, #5edfff);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    nav {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #000;
+      color: white;
+      padding: 15px 50px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .menu-icon {
+      font-size: 26px;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.3s;
+    }
+
+    .menu-icon:hover {
+      color: #56c5f8;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 60px;
+      right: 50px;
+      background-color: #000;
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      display: none;
+      flex-direction: column;
+      min-width: 200px;
+      z-index: 100;
+    }
+
+    .dropdown a {
+      color: white;
+      text-decoration: none;
+      padding: 12px 20px;
+      font-size: 15px;
+      transition: background 0.3s;
+    }
+
+    .dropdown a:hover,
+    .dropdown a.active {
+      background-color: #3e64ff;
+    }
+
+    /* Container */
+    .container {
+      margin-top: 120px;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h2 {
+      font-size: 28px;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    /* Search & Filter Section */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .filter-bar input,
+    .filter-bar select {
+      padding: 10px 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      width: 250px;
+      outline: none;
+    }
+
+    .filter-bar select {
+      background-color: #fff;
+      color: #333;
+    }
+
+    .filter-bar input {
+      background-color: #fff;
+      color: #333;
+    }
+
+    /* Table Styling */
+    .table-container {
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 500px;
+      background: white;
+      color: #000;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      max-width: 95%;
+      margin: 0 auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    th {
+      background-color: #3e64ff;
+      color: #fff;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tr:hover {
+      background-color: #f7f7f7;
+    }
+
+    /* Loading and Error messages */
+    #loading, #errorMsg {
+      margin-top: 20px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    /* Logout Button */
+    .logout-btn {
+      margin-top: 40px;
+      background: #000;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #2b4ae0;
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        padding: 10px 20px;
+      }
+      .dropdown {
+        right: 20px;
+      }
+      h2 {
+        font-size: 24px;
+      }
+      .filter-bar input,
+      .filter-bar select {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">CyberCAP</div>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+
+    <div class="dropdown" id="dropdownMenu">
+      <a href="complaint.html">Register Complaint</a>
+      <a href="trackcomplaint.html">Track Complaint</a>
+      <a href="reportsuspect.html">Report Suspect</a>
+      <a href="all_complaints.html" class="active">All Complaints Submitted</a>
+      <li><a href="#" onclick="logoutUser()">Logout</a></li>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h2>All Complaints Submitted</h2>
+
+    <!-- Filter and Search Bar -->
+    <div class="filter-bar">
+      <input type="text" id="searchInput" placeholder="🔍 Search by Complaint ID or keyword">
+      <select id="statusFilter">
+        <option value="">Filter by Status</option>
+        <option value="Pending">Pending</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Resolved">Resolved</option>
+        <option value="Closed">Closed</option>
+      </select>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Complaint ID</th>
+            <th>Incident Type</th>
+            <th>Platform</th>
+            <th>Date Submitted</th>
+            <th>Status</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody id="complaintTable">
+          <!-- Data loads here -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="loading">Loading complaints...</div>
+    <div id="errorMsg" style="display:none; color: #ffdddd;"></div>
+
+    <button class="logout-btn" onclick="logoutUser()">🚪 Log Out</button>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("dropdownMenu");
+      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    }
+
+    window.onclick = function(event) {
+      const menu = document.getElementById("dropdownMenu");
+      const icon = document.querySelector(".menu-icon");
+      if (event.target !== menu && event.target !== icon) {
+        menu.style.display = "none";
+      }
+    };
+
+    function logoutUser() {
+      localStorage.removeItem("username");
+      window.location.href = "dashboard.html";
+    }
+
+    let complaintsData = [];
+
+    async function fetchComplaints() {
+      const loading = document.getElementById("loading");
+      const errorMsg = document.getElementById("errorMsg");
+      const tableBody = document.getElementById("complaintTable");
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/get_all_complaints");
+        loading.style.display = "none";
+
+        if (!response.ok) {
+          errorMsg.style.display = "block";
+          errorMsg.textContent = "Error fetching complaints from server.";
+          return;
+        }
+
+        complaintsData = await response.json();
+
+        if (complaintsData.length === 0) {
+          tableBody.innerHTML = "<tr><td colspan='6'>No complaints found.</td></tr>";
+          return;
+        }
+
+        displayComplaints(complaintsData);
+      } catch (error) {
+        loading.style.display = "none";
+        errorMsg.style.display = "block";
+        errorMsg.textContent = "Unable to connect to backend server.";
+      }
+    }
+
+    function displayComplaints(data) {
+      const tableBody = document.getElementById("complaintTable");
+      tableBody.innerHTML = "";
+
+      data.forEach(c => {
+        const row = `
+          <tr>
+            <td>${c.complaint_id}</td>
+            <td>${c.incident_type}</td>
+            <td>${c.platform}</td>
+            <td>${c.incident_date}</td>
+            <td>${c.status}</td>
+            <td>${c.description || "N/A"}</td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
+      });
+    }
+
+    // Search and Filter
+    document.getElementById("searchInput").addEventListener("input", filterComplaints);
+    document.getElementById("statusFilter").addEventListener("change", filterComplaints);
+
+    function filterComplaints() {
+      const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+      const statusValue = document.getElementById("statusFilter").value;
+
+      const filtered = complaintsData.filter(c => {
+        const matchesSearch =
+          c.complaint_id.toString().toLowerCase().includes(searchTerm) ||
+          (c.description && c.description.toLowerCase().includes(searchTerm)) ||
+          (c.platform && c.platform.toLowerCase().includes(searchTerm)) ||
+          (c.incident_type && c.incident_type.toLowerCase().includes(searchTerm));
+
+        const matchesStatus = statusValue ? c.status === statusValue : true;
+        return matchesSearch && matchesStatus;
+      });
+
+      displayComplaints(filtered);
+    }
+
+    fetchComplaints();
+  </script>
+
+</body>
+</html>

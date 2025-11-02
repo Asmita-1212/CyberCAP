@@ -4,77 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Register - CyberCAP</title>
-<<<<<<< HEAD
-=======
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-<<<<<<< HEAD
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-=======
-      font-family: 'Poppins', sans-serif;
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     }
 
     body {
       min-height: 100vh;
       background: linear-gradient(135deg, #3e64ff, #5edfff);
       display: flex;
-<<<<<<< HEAD
       justify-content: center;
       align-items: center;
       padding: 20px;
     }
 
-=======
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* Navbar */
-    nav {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #000;
-      color: white;
-      padding: 15px 50px;
-      font-weight: bold;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 10;
-    }
-
-    .logo {
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 30px;
-    }
-
-    .nav-links a {
-      color: white;
-      text-decoration: none;
-      font-size: 15px;
-    }
-
-    .nav-links a.active {
-      color: #56c5f8;
-      border-bottom: 2px solid #56c5f8;
-      padding-bottom: 2px;
-    }
-
-    /* Register Container */
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     .register-container {
       background-color: #ffffff;
       padding: 40px 30px;
@@ -82,10 +28,6 @@
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
       width: 100%;
       max-width: 450px;
-<<<<<<< HEAD
-=======
-      margin-top: 120px; /* space for navbar */
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       animation: fadeSlideIn 1s ease forwards;
       opacity: 0;
       transform: translateY(-30px);
@@ -173,41 +115,9 @@
       display: none;
     }
 
-<<<<<<< HEAD
     @media (max-width: 500px) {
       .register-container {
         padding: 30px 20px;
-=======
-    /* Login Prompt */
-    .login-prompt {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 15px;
-      color: #333;
-    }
-
-    .login-prompt a {
-      color: #3e64ff;
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.3s;
-    }
-
-    .login-prompt a:hover {
-      color: #2b4ae0;
-    }
-
-    @media (max-width: 500px) {
-      nav {
-        flex-direction: column;
-        gap: 10px;
-        padding: 10px 20px;
-      }
-
-      .register-container {
-        padding: 30px 20px;
-        margin-top: 150px;
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       }
 
       input,
@@ -215,26 +125,18 @@
         font-size: 15px;
       }
     }
+    nav .logo img {
+  height: 45px;           /* Adjust this value (e.g., 40–60px) as needed */
+  width: auto;
+  vertical-align: middle;
+  filter: drop-shadow(0 0 4px cyan);
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
   </style>
 </head>
 <body>
-<<<<<<< HEAD
-=======
-
-  <!-- Navbar -->
-  <nav>
-    <div class="logo">CyberCAP</div>
-    <div class="nav-links">
-      <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
-      <a href="cybervoluteer.html">👥 Cyber Volunteers</a>
-      <a href="learncorner.html">📘 Learning Corner</a>
-      <a href="contactus.html">✉️ Contact Us</a>
-      <a href="register.html" class="active">📝 Register</a>
-    </div>
-  </nav>
-
-  <!-- Register Form -->
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
   <div class="register-container">
     <h2>Create a New Account</h2>
 
@@ -254,14 +156,6 @@
       <button type="submit">Register</button>
     </form>
 
-<<<<<<< HEAD
-=======
-    <!-- Login Prompt -->
-    <div class="login-prompt">
-      Already have an account? <a href="user_login.html">Login here</a>
-    </div>
-
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     <p id="message"></p>
   </div>
 
@@ -273,11 +167,7 @@
     }
 
     document.getElementById("registerForm").addEventListener("submit", async function (event) {
-<<<<<<< HEAD
       event.preventDefault();  // prevent default form submission
-=======
-      event.preventDefault();
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
 
       const username = document.getElementById("username").value;
       const email = document.getElementById("email").value;
@@ -311,8 +201,5 @@
   </script>
 </body>
 </html>
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed

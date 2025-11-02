@@ -2,27 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<<<<<<< HEAD
   <title>Report Suspect - Cybercrime</title>
-=======
-  <title>Report Suspect - CyberCAP</title>
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* Reset and Base */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-<<<<<<< HEAD
     }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #5dbaf0);
-      padding: 30px 15px;
+      background: linear-gradient(to right, #6f7579, #a4d4fa);
+      padding: 100px 15px 30px; /* space for fixed navbar */
     }
 
+    /* Navbar */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 60px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+      border-bottom: 2px solid royalblue;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .logo img {
+      height: 40px;
+      width: auto;
+      border-radius: 50%;
+      margin-right: 10px;
+      filter: drop-shadow(0 0 3px cyan);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #00bfff;
+    }
+
+    /* Blue underline for active or hover */
+    .nav-links a.active::after,
+    .nav-links a:hover::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 100%;
+      height: 2px;
+      background-color: #00bfff;
+      border-radius: 2px;
+    }
+
+    /* Main container */
     .container {
       max-width: 720px;
       margin: auto;
@@ -30,65 +87,6 @@
       padding: 40px 30px;
       border-radius: 15px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-=======
-      font-family: 'Poppins', sans-serif;
-    }
-
-    body {
-      background: linear-gradient(to right, #5fa8f1, #5dbaf0);
-      padding: 0;
-      margin: 0;
-    }
-
-    /* Navbar */
-    nav {
-      background-color: #000;
-      padding: 15px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    }
-
-    nav .logo {
-      color: white;
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: 1px;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 25px;
-    }
-
-    nav ul li a {
-      text-decoration: none;
-      color: white;
-      font-weight: 500;
-      transition: color 0.3s ease;
-      padding-bottom: 2px;
-    }
-
-    nav ul li a:hover {
-      color: #56c5f8;
-    }
-
-    nav ul li a.active {
-      color: #56c5f8;
-      border-bottom: 2px solid #56c5f8;
-    }
-
-    /* Container */
-    .container {
-      max-width: 720px;
-      margin: 50px auto;
-      background: white;
-      padding: 40px 30px;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       transition: transform 0.3s ease;
     }
 
@@ -173,90 +171,45 @@
       background: linear-gradient(to right, #0056b3, #004494);
     }
 
-<<<<<<< HEAD
-    @media (max-width: 600px) {
-      .container {
-        padding: 25px 20px;
-=======
-    #message {
-      margin-top: 20px;
-      padding: 12px;
-      border-radius: 6px;
-      display: none;
-      text-align: center;
-      font-weight: 500;
-    }
-
-    .success {
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-
-    .error {
-      background-color: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       nav {
         flex-direction: column;
-        text-align: center;
         gap: 10px;
+        padding: 15px;
       }
-
-      nav ul {
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .container {
-        padding: 25px 20px;
-        margin: 30px 15px;
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
-      }
-
-      h1 {
-        font-size: 24px;
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
       }
     }
   </style>
 </head>
 <body>
 
-<<<<<<< HEAD
-=======
-  <!-- Navbar -->
+  <!-- NAVBAR -->
   <nav>
-    <div class="logo">CyberCAP</div>
-    <ul>
-      <li><a href="user_dashboard.html">Home</a></li>
-      <li><a href="complaint.html">Register Complaint</a></li>
-      <li><a href="trackcomplaint.html">Track Complaint</a></li>
-      <li><a href="reportsuspect.html" class="active">Report Suspect</a></li>
-      <li><a href="dashboard.html" onclick="logoutUser()">Logout</a></li>
-    </ul>
+    <div class="logo">
+      <img src="logo.png" alt="CyberCAP Logo"> CyberCAP
+    </div>
+    <div class="nav-links">
+      <a href="home.html">Home</a>
+      <a href="complaint.html">Register Complaint</a>
+      <a href="trackcomplaint.html">Track Complaint</a>
+      <a href="reportsuspect.html" class="active">Report Suspect</a>
+      <a href="#" onclick="logoutUser()">Logout</a>
+    </div>
   </nav>
 
-  <!-- Main Content -->
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+  <!-- PAGE CONTENT -->
   <div class="container">
     <h1>Report Suspect</h1>
     <p>Help us fight cybercrime by reporting suspicious online activities.</p>
 
     <form id="suspectForm">
-<<<<<<< HEAD
-      <!-- State -->
       <label for="state">State/UT:</label>
       <input type="text" id="state" name="state" required placeholder="Enter your State or UT">
 
-      <!-- Type of Suspect -->
-=======
-      <label for="state">State/UT:</label>
-      <input type="text" id="state" name="state" required placeholder="Enter your State or UT">
-
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       <label for="suspectType">Type of Suspect Identifier:</label>
       <select id="suspectType" name="suspectType" required>
         <option value="">-- Select --</option>
@@ -268,81 +221,36 @@
         <option value="other">Other</option>
       </select>
 
-<<<<<<< HEAD
-      <!-- Platform -->
-      <label for="platform">Platform Involved:</label>
-      <input type="text" id="platform" name="platform" placeholder="e.g., Facebook, WhatsApp, Instagram">
-
-      <!-- Identifier -->
-      <label for="identifier">Suspect Identifier:</label>
-      <input type="text" id="identifier" name="identifier" required placeholder="Enter email/number/link/etc.">
-
-      <!-- Evidence Upload -->
-=======
       <label for="platform">Platform Involved:</label>
       <input type="text" id="platform" name="platform" placeholder="e.g., Facebook, WhatsApp, Instagram">
 
       <label for="identifier">Suspect Identifier:</label>
       <input type="text" id="identifier" name="identifier" required placeholder="Enter email/number/link/etc.">
 
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       <label for="evidence">Upload Evidence (Max 5MB, JPG/PNG/PDF):</label>
       <input type="file" id="evidence" name="evidence" accept=".jpg,.jpeg,.png,.pdf">
       <span class="note">Optional but recommended</span>
 
-<<<<<<< HEAD
-      <!-- Description -->
       <label for="description">Description:</label>
-      <textarea id="description" name="description" rows="3" ></textarea>
-
-      <!-- Submit Button -->
-      <button type="submit">Submit Report</button>
-    </form>
-  </div>
-
-</body>
-</html>
-nahi or naku
-=======
-      <label for="description">Description:</label>
-      <textarea id="description" name="description" rows="3" required placeholder="Describe the suspicious activity"></textarea>
+      <textarea id="description" name="description" rows="3"></textarea>
 
       <button type="submit">Submit Report</button>
     </form>
-
-    <div id="message"></div>
   </div>
 
   <script>
-    // ✅ Form Handling
-    document.getElementById('suspectForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const file = document.getElementById('evidence').files[0];
-      const message = document.getElementById('message');
-
-      // Validate file size (max 5MB)
-      if (file && file.size > 5 * 1024 * 1024) {
-        message.className = 'error';
-        message.textContent = 'File size exceeds 5MB limit.';
-        message.style.display = 'block';
-        return;
-      }
-
-      message.className = 'success';
-      message.textContent = '✅ Your suspect report has been successfully submitted!';
-      message.style.display = 'block';
-
-      // Reset form
-      document.getElementById('suspectForm').reset();
-    });
-
-    // ✅ Logout Function
     function logoutUser() {
-      localStorage.removeItem('username');
-      window.location.href = 'user_dashboard.html';
+      window.location.href = "dashboard.html";
     }
+
+    // Highlight active link dynamically
+    const currentPage = window.location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      if (link.getAttribute("href") === currentPage) {
+        link.classList.add("active");
+      }
+    });
   </script>
+
 </body>
 </html>
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed

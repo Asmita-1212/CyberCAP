@@ -173,13 +173,22 @@
         font-size: 24px;
       }
     }
+   nav .logo img {
+  height: 45px;           /* Adjust this value (e.g., 40–60px) as needed */
+  width: auto;
+  vertical-align: middle;
+  filter: drop-shadow(0 0 4px cyan);
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
   </style>
 </head>
 <body>
 
   <!-- Navbar -->
   <nav>
-    <div class="logo">CyberCAP</div>
+    <div class="logo"><img src="logo.png" >CyberCAP</div>
     <div class="menu-icon" onclick="toggleMenu()">☰</div>
 
     <div class="dropdown" id="dropdownMenu">

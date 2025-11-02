@@ -139,13 +139,19 @@
       padding: 20px;
       text-align: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
       cursor: pointer;
     }
 
     .category-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    .category-card.active {
+      background: #d1f3f0;
+      border: 2px solid #45a29e;
+      box-shadow: 0 0 10px rgba(69,162,158,0.4);
     }
 
     .category-card h3 { color: #1f2833; font-size: 18px; margin-bottom: 10px; }
@@ -234,7 +240,6 @@
       <table id="complaintTable">
         <thead>
           <tr>
-           
             <th>User</th>
             <th>Complaint</th>
             <th>Category</th>
@@ -261,82 +266,64 @@
       mainContent.classList.toggle("shifted");
     });
 
-    // Admin photo upload
-    document.getElementById("photoUpload").addEventListener("change", (event) => {
-      const file = event.target.files[0];
-      if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
-        const reader = new FileReader();
-        reader.onload = (e) => document.getElementById("adminPhoto").src = e.target.result;
-        reader.readAsDataURL(file);
-      }
+    // Dummy complaint data
+    const complaints = [
+      { user: "Amit", complaint: "Phishing link via email", category: "Phishing", date: "2025-10-02", status: "Pending", priority: "High" },
+      { user: "Sneha", complaint: "Fake job offer scam", category: "Online Job Fraud", date: "2025-09-28", status: "Resolved", priority: "Medium" },
+      { user: "Rahul", complaint: "Cyber bullying on social media", category: "Cyber Bullying", date: "2025-10-10", status: "Pending", priority: "High" },
+      { user: "Priya", complaint: "Malware attack detected", category: "Malware Crime", date: "2025-09-30", status: "Resolved", priority: "Low" },
+      { user: "Ravi", complaint: "Hacked account", category: "Hacking Crime", date: "2025-10-05", status: "Pending", priority: "Medium" },
+      { user: "Anita", complaint: "Fraud transaction", category: "Finance", date: "2025-10-03", status: "Resolved", priority: "High" },
+      { user: "Meena", complaint: "Website vandalized", category: "Website Defacement", date: "2025-10-07", status: "Pending", priority: "Medium" },
+    ];
+
+    function displayComplaints(filter = "All") {
+      const tbody = document.querySelector("#complaintTable tbody");
+      tbody.innerHTML = "";
+      const filtered = filter === "All" ? complaints : complaints.filter(c => c.category === filter);
+      filtered.forEach(c => {
+        const row = `
+          <tr>
+            <td>${c.user}</td>
+            <td>${c.complaint}</td>
+            <td>${c.category}</td>
+            <td>${c.date}</td>
+            <td>${c.status}</td>
+            <td>${c.priority}</td>
+          </tr>`;
+        tbody.insertAdjacentHTML("beforeend", row);
+      });
+    }
+
+    document.querySelectorAll(".category-card").forEach(card => {
+      card.addEventListener("click", () => {
+        document.querySelectorAll(".category-card").forEach(c => c.classList.remove("active"));
+        card.classList.add("active");
+        const selected = card.querySelector("h3").innerText;
+        displayComplaints(selected);
+      });
     });
 
-    // Fetch admin info from backend
-    async function loadAdminInfo() {
-      const username = localStorage.getItem("adminUser");
-      if (!username) return;
-      try {
-        const res = await fetch(`http://127.0.0.1:8000/admin-info/${username}`);
-        const data = await res.json();
-        document.getElementById("adminName").innerText = data.name;
-        document.getElementById("adminEmail").innerText = `Email: ${data.email}`;
-        document.getElementById("adminPhone").innerText = `Phone: ${data.phone}`;
-      } catch (err) { console.error("Error:", err); }
-    }
-
-    // Fetch complaints table
-    async function loadComplaints() {
-      try {
-        const res = await fetch("http://127.0.0.1:8000/all-complaints");
-        const data = await res.json();
-        const tbody = document.querySelector("#complaintTable tbody");
-        tbody.innerHTML = "";
-        data.forEach((c) => {
-          const row = `<tr>
-            <td>${c._id}</td>
-            <td>${c.user}</td>
-            <td>${c.category}</td>
-            <td>${c.description}</td>
-            <td>${c.status}</td>
-            <td>${new Date(c.date).toLocaleDateString()}</td>
-          </tr>`;
-          tbody.insertAdjacentHTML("beforeend", row);
-        });
-      } catch (err) {
-        console.error("Error loading complaints:", err);
-      }
-    }
-
-    // Notification click - fetch complaint stats
-    document.getElementById("notifIcon").addEventListener("click", async () => {
-      try {
-        const res = await fetch("http://127.0.0.1:8000/complaint-stats");
-        const stats = await res.json();
-        alert(`
+    document.getElementById("notifIcon").addEventListener("click", () => {
+      alert(`
 📊 Complaint Overview
 -----------------------------
-✅ Resolved Complaints: ${stats.resolved}
-⏳ Pending Complaints: ${stats.pending}
-🚨 Suspicious Reports: ${stats.suspicious}
-👥 Active Users: ${stats.active_users}
+✅ Resolved Complaints: 3
+⏳ Pending Complaints: 4
+🚨 Suspicious Reports: 1
+👥 Active Users: 7
 `);
-      } catch {
-        alert("⚠️ Unable to fetch notification stats.");
-      }
     });
 
-    // Navigation
     document.getElementById("homeIcon").onclick = () => window.location.href = "admin_dashboard.html";
     document.getElementById("logoutIcon").onclick = () => logout();
     document.getElementById("logoutBtn").onclick = () => logout();
 
     function logout() {
-      localStorage.removeItem("adminUser");
       window.location.href = "admin_login.html";
     }
 
-    loadAdminInfo();
-    loadComplaints();
+    displayComplaints();
   </script>
 </body>
 </html>

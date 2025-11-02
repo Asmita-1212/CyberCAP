@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login - CyberCAP</title>
+<<<<<<< HEAD
+=======
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+<<<<<<< HEAD
+      height: 100vh;
+      background: linear-gradient(135deg, #3e64ff, #5edfff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+=======
+      min-height: 100vh;
+      background: linear-gradient(135deg, #3e64ff, #5edfff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ✅ Navbar Styles (copied and unified with user login page) */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: linear-gradient(90deg, #000000, #131212);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 30px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      width: 100%;
+    }
+
+    .navbar .logo {
+      color: #ecf3f5;
+      font-size: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar ul li {
+      position: relative;
+    }
+
+    .navbar ul li a,
+    .dropbtn {
+      color: #f5f0f0;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .navbar ul li a:hover,
+    .dropbtn:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Login box styling */
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+    .login-box {
+      background-color: #ffffff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      animation: fadeSlideDown 1s ease forwards;
+      opacity: 0;
+      transform: translateY(-30px);
+<<<<<<< HEAD
+=======
+      margin-top: 60px;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+    }
+
+    @keyframes fadeSlideDown {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #1f3b73;
+      animation: fadeIn 1.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus {
+      border-color: #3e64ff;
+      box-shadow: 0 0 8px rgba(62, 100, 255, 0.3);
+      outline: none;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #3e64ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.1s;
+    }
+
+    button:hover {
+      background-color: #2b4ae0;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+<<<<<<< HEAD
+=======
+    a {
+      text-align: center;
+      margin-top: 15px;
+      color: #3e64ff;
+      font-size: 14px;
+      text-decoration: none;
+      opacity: 0;
+      animation: fadeIn 1.8s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+    #loginMessage {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 14px;
+      display: none;
+    }
+<<<<<<< HEAD
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Admin Login</h2>
+
+    <p id="loginMessage"></p>
+
+    <form id="loginForm">
+      <label>Username</label>
+      <input type="text" id="username" required placeholder="Enter your username"/>
+
+      <label>Password</label>
+      <input type="password" id="password" required placeholder="Enter your password"/>
+
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const messageEl = document.getElementById("loginMessage");
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/admin-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (res.status === 200 && data.message.includes("Password verified")) {
+          messageEl.style.color = "green";
+          messageEl.innerText = "✅ Login successful! Redirecting...";
+          messageEl.style.display = "block";
+
+          // ✅ Store username and redirect to OTP page
+          localStorage.setItem("adminUser", username);
+          setTimeout(() => {
+            window.location.href = "admin_otp.html";
+          }, 1000);
+        } else {
+          messageEl.style.color = "red";
+          messageEl.innerText = "❌ Invalid Username or Password!";
+          messageEl.style.display = "block";
+        }
+      } catch (err) {
+        console.error(err);
+        messageEl.style.color = "red";
+        messageEl.innerText = "⚠️ Something went wrong! Try again.";
+        messageEl.style.display = "block";
+      }
+    });
+  </script>
+=======
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .navbar ul {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+      }
+      .navbar {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ✅ Persistent Navbar -->
+<nav class="navbar">
+  <a href="#" class="logo">CyberCAP</a>
+  <ul>
+    <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Cyber Volunteers</a></li>
+    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning Corner</a></li>
+    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
+  </ul>
+</nav>
+
+<!-- Admin Login Form -->
+<div class="login-box">
+  <h2>Admin Login</h2>
+
+  <p id="loginMessage"></p>
+
+  <form id="loginForm">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" required placeholder="Enter your username"/>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required placeholder="Enter your password"/>
+
+    <button type="submit">Login</button>
+
+    <a href="forgot_password.html">Forgot Password?</a>
+  </form>
+</div>
+
+<script>
+  document.getElementById("loginForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const messageEl = document.getElementById("loginMessage");
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        messageEl.style.color = "green";
+        messageEl.innerText = "✅ Admin login successful!";
+        messageEl.style.display = "block";
+
+        localStorage.setItem("adminUsername", data.user.username);
+
+        setTimeout(() => {
+          window.location.href = "admin_dashboard.html";
+        }, 1000);
+      } else {
+        messageEl.style.color = "red";
+        messageEl.innerText = data.detail || "Invalid admin credentials";
+        messageEl.style.display = "block";
+      }
+    } catch (error) {
+      messageEl.style.color = "red";
+      messageEl.innerText = "⚠️ Error connecting to server.";
+      messageEl.style.display = "block";
+    }
+  });
+</script>
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+</body>
+</html>

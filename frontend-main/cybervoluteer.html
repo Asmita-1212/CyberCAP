@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<<<<<<< HEAD
+  <title>Cyber Volunteer Registration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Base Styling */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right,  #56c5f8);
+      padding: 30px 15px;
+    }
+
+=======
+  <title>Cyber Volunteer Registration | CyberCAP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #56c5f8, #71afec);
+      padding-top: 70px; /* for fixed navbar */
+      color: #333;
+    }
+
+    /* ===== Navbar Styling ===== */
+    nav {
+      background: linear-gradient(90deg, #000000, #111111);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 40px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    nav .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #1e90ff;
+    }
+
+    /* ===== Form Container ===== */
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+    .container {
+      max-width: 750px;
+      margin: auto;
+      background: white;
+      padding: 35px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+<<<<<<< HEAD
+=======
+      font-weight: 700;
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+    }
+
+    h1::before {
+      content: "🛡️ ";
+    }
+
+    p {
+      text-align: center;
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #2196f3;
+      box-shadow: 0 0 5px rgba(33, 150, 243, 0.3);
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      background: linear-gradient(to right, #2196f3, #1e88e5);
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #1e88e5, #1565c0);
+    }
+
+    .note {
+      font-size: 13px;
+      color: #888;
+      margin-top: 5px;
+    }
+
+<<<<<<< HEAD
+    @media (max-width: 600px) {
+=======
+    @media (max-width: 700px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px 25px;
+      }
+
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        margin-top: 10px;
+        gap: 15px;
+      }
+
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+      .container {
+        padding: 25px 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<<<<<<< HEAD
+=======
+  <!-- Navbar (matches the black one from your image) -->
+  <nav>
+    <div class="logo">CyberCAP</div>
+    <ul>
+      <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="user_login.html"><i class="fas fa-sign-in-alt"></i>Register</button>
+      <li><a href="cybervoluteer.html" class="active"><i class="fa-solid fa-users"></i> Cyber Volunteers</a></li>
+      <li><a href="learncorner.html"><i class="fa-solid fa-book"></i> Learning Corner</a></li>
+      <li><a href="contactus.html"><i class="fa-solid fa-envelope"></i> Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+>>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+  <div class="container">
+    <h1>Cyber Volunteer Registration</h1>
+    <p>Join hands with the Government to identify harmful and unlawful content online.</p>
+
+    <form>
+      <!-- Name -->
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" name="name" required placeholder="Enter your full name">
+
+      <!-- Email -->
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" name="email" required placeholder="Enter your email">
+
+      <!-- Mobile -->
+      <label for="mobile">Mobile Number:</label>
+      <input type="tel" id="mobile" name="mobile" required placeholder="Enter your phone number">
+
+      <!-- Role -->
+      <label for="role">Select Role:</label>
+      <select id="role" name="role" required>
+        <option value="">-- Choose Role --</option>
+        <option value="volunteer">Cyber Volunteer</option>
+        <option value="expert">Cyber Expert</option>
+        <option value="organization">Cyber Awareness Organization</option>
+      </select>
+
+      <!-- State -->
+      <label for="state">State/UT:</label>
+      <input type="text" id="state" name="state" required placeholder="Enter your State or Union Territory">
+
+      <!-- Area of Expertise -->
+      <label for="expertise">Area of Expertise (Optional):</label>
+      <input type="text" id="expertise" name="expertise" placeholder="e.g., Cyber Security, Law, IT, Education">
+
+      <!-- Motivation -->
+      <label for="message">Why do you want to join?</label>
+      <textarea id="message" name="message" required placeholder="Write a short message explaining your motivation."></textarea>
+
+      <!-- Submit -->
+      <button type="submit">Register as Volunteer</button>
+    </form>
+  </div>
+
+</body>
+</html>

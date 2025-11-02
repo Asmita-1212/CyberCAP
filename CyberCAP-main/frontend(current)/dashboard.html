@@ -3,30 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CyberCAP</title>
+  <title>CyberCAP | Cyber Awareness & Protection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* 🌌 General */
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background-color: #fff8f8;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #f3f3f3;
     }
 
-    /* Navbar */
+    /* 🧭 Navbar */
     .navbar {
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: linear-gradient(90deg, #000000, #131212);
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 12px 30px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      align-items: center;
+      padding: 12px 40px;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,255,255,0.2);
     }
 
     .navbar .logo {
-      color: #ecf3f5;
+      color: #00eaff;
       font-size: 30px;
       font-weight: bold;
       text-decoration: none;
@@ -42,20 +46,29 @@
     }
 
     .navbar ul li a {
-      color: #f5f0f0;
-      font-size: 16px;
-      font-weight: 600;
+      color: #e0e0e0;
       text-decoration: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      transition: background 0.3s;
+      font-weight: 500;
+      transition: 0.3s;
+      position: relative;
     }
 
-    .navbar ul li a:hover {
-      background-color: rgba(255, 255, 255, 0.2);
+    .navbar ul li a::after {
+      content: "";
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #00eaff;
+      transition: 0.3s;
     }
 
-    /* Image Carousel */
+    .navbar ul li a:hover::after {
+      width: 100%;
+    }
+
+    /* 🖼️ Carousel */
     .carousel {
       position: relative;
       width: 100%;
@@ -76,87 +89,96 @@
       opacity: 1;
     }
 
-    /* Cards */
+    /* 💫 Section Title */
+    h1.section-title {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 28px;
+      font-family: 'Orbitron', sans-serif;
+      color: #00ffff;
+      text-shadow: 0 0 20px #00ffff;
+    }
+
+    /* 🧩 Cards */
     .container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      margin: 40px auto;
-      max-width: 1200px;
-      padding: 0 20px;
-      gap: 20px;
+      gap: 30px;
+      padding: 40px 20px;
     }
 
     .crime-card {
-      background: white;
-      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(0,255,255,0.3);
+      border-radius: 15px;
+      width: 270px;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(0,255,255,0.1);
+      transition: all 0.3s ease;
       overflow: hidden;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-      width: 280px;
-      transition: transform 0.3s, box-shadow 0.3s;
-      cursor: pointer;
     }
 
     .crime-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+      transform: translateY(-10px);
+      box-shadow: 0 0 25px rgba(0,255,200,0.6);
+      background: rgba(0, 255, 255, 0.1);
     }
 
     .crime-card img {
       width: 100%;
-      height: 180px;
+      height: 160px;
       object-fit: cover;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     .card-body {
       padding: 15px;
-      text-align: center;
     }
 
     .card-title {
-      font-size: 18px;
+      color: #fff;
       font-weight: 600;
-      color: #222;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .btn {
       display: inline-block;
-      padding: 10px 14px;
-      margin: 5px;
+      padding: 8px 14px;
+      margin: 6px;
       border-radius: 6px;
       text-decoration: none;
       font-size: 14px;
-      font-weight: bold;
+      font-weight: 600;
       color: #fff;
-      transition: background 0.3s;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
     }
 
     .btn-register {
-      background-color: #0d6efd;
-    }
-
-    .btn-track {
-      background-color: #198754;
+      background: #00ffff;
+      color: #000;
+      box-shadow: 0 0 10px #00ffff;
     }
 
     .btn-register:hover {
-      background-color: #0848c1;
+      background: transparent;
+      color: #00ffff;
+      border: 1px solid #00ffff;
+    }
+
+    .btn-track {
+      background: #ff00ff;
+      box-shadow: 0 0 10px #ff00ff;
     }
 
     .btn-track:hover {
-      background-color: #11663b;
+      background: transparent;
+      color: #ff80ff;
+      border: 1px solid #ff80ff;
     }
 
-    h1.section-title {
-      text-align: center;
-      background-color: black;
-      color: #ee6666;
-      padding: 20px;
-      margin: 0;
-    }
-
-    /* Footer */
+    /* 🦶 Footer */
     footer {
       background: #000;
       color: #eee;
@@ -173,7 +195,7 @@
     }
 
     .footer-section h3 {
-      color: #56c5f8;
+      color: #00ffff;
       margin-bottom: 15px;
     }
 
@@ -193,7 +215,7 @@
     }
 
     .footer-section ul li a:hover {
-      color: #56c5f8;
+      color: #00ffff;
     }
 
     .social-icons a {
@@ -204,7 +226,7 @@
     }
 
     .social-icons a:hover {
-      color: #56c5f8;
+      color: #00ffff;
     }
 
     .footer-bottom {
@@ -216,133 +238,95 @@
       font-size: 14px;
     }
 
-    /* Responsive Design */
-    @media (max-width: 1024px) {
-      .container {
-        justify-content: center;
-      }
-    }
-
     @media (max-width: 768px) {
-      .navbar ul {
-        flex-wrap: wrap;
-        justify-content: center;
+      .navbar {
+        flex-direction: column;
+        text-align: center;
       }
-
       .carousel img {
-        height: 280px;
+        height: 260px;
       }
-
       .crime-card {
         width: 90%;
       }
-
       footer {
         flex-direction: column;
         text-align: center;
       }
-
-      .footer-section {
-        flex: 1 1 100%;
-      }
     }
+    .navbar .logo img {
+  height: 45px;            /* adjust as per your logo size */
+  width: auto;
+  vertical-align: middle;
+  filter: drop-shadow(0 0 4px cyan);
+  border-radius: 40px;
+  margin-right: 10px;
+}
 
-    @media (max-width: 480px) {
-      .navbar .logo {
-        font-size: 22px;
-      }
-
-      .btn {
-        font-size: 13px;
-        padding: 8px 12px;
-      }
-
-      .card-title {
-        font-size: 16px;
-      }
-    }
   </style>
 </head>
 <body>
 
-<!-- Navbar -->
+<!-- 🌐 Navbar -->
 <nav class="navbar">
-  <a href="#" class="logo">CyberCAP</a>
+  <a href="#" class="logo"><img src="logo.png" >CyberCAP</a>
   <ul>
-    <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Cyber Volunteers</a></li>
-    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning Corner</a></li>
-
-   
-    <li><a href="user_login.html"><i class="fas fa-sign-in-alt"></i> Register</a></li>
-
-    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
-
-    <li class="dropdown">
-      <button class="dropbtn"><i class="fas fa-sign-in-alt"></i> Login</button>
-      <div class="dropdown-content">
-        <a href="login.html">User Login</a>
-        <a href="admin_login.html">Admin Login</a>
-
-   <li><a href="user_login.html"><i class="fas fa-sign-in-alt"></i>Register</button>
-    
-     
-
-      </div>
-    </li>
-
+    <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Volunteers</a></li>
+    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning</a></li>
+    <li><a href="user_login.html"><i class="fas fa-user"></i> User Login</a></li>
+    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact</a></li>
   </ul>
 </nav>
 
-<!-- Auto-Sliding Image Carousel -->
+<!-- 🎞️ Carousel -->
 <div class="carousel">
   <img src="https://allaboutvanuatu.com/wp-content/uploads/2023/02/CyberSecurity1.png" class="active" alt="Cyber Security Awareness">
   <img src="https://thumbs.dreamstime.com/b/cyber-security-data-protection-business-technology-privacy-concept-cyber-crime-cyber-security-data-protection-business-technology-209688540.jpg" alt="Protect Your Data">
-  <img src="https://th.bing.com/th/id/R.5bc024ac6419099a4add730107c55b21?rik=L0yFJfmbGzxcuw&riu=http%3a%2f%2fnews.erau.edu%2f-%2fmedia%2fimages%2fnews%2fcyberforensics.jpg%3fas%3d0%26hash%3d4D31203714C81ECACAE815680A7199E05B163E1D&ehk=QPVz%2fkq29iZ27ZJD3S1j2HEnhQbL8SvsqMdvdNWD%2fLA%3d&risl=&pid=ImgRaw&r=0" alt="Online Safety Awareness">
+  <img src="https://news.erau.edu/-/media/images/news/cyberforensics.jpg" alt="Cyber Forensics">
 </div>
 
-<!-- Section Title -->
+<!-- 🧠 Section -->
 <h1 class="section-title">Cybercrime Awareness & Reporting</h1>
 
-<!-- Crime Cards -->
 <div class="container">
   <div class="crime-card">
     <img src="https://cdn.tatlerasia.com/tatlerasia/i/2022/03/09152924-gettyimages-1375105095_cover_1500x854.jpg" alt="Women Related Crime">
     <div class="card-body">
       <h5 class="card-title">Women Related Crime</h5>
-      <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
-      <a href="trackcomplaint.html" class="btn btn-track">Track</a>
+      <a href="user_login.html" class="btn btn-register">Register</a>
+      <a href="track_complaint.html" class="btn btn-track">Track</a>
     </div>
   </div>
 
   <div class="crime-card">
-    <img src="https://tse3.mm.bing.net/th/id/OIP.RjefmPoPUb_7oIYeAiRpPAHaGu?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Phishing Fraud">
+    <img src="https://tse3.mm.bing.net/th/id/OIP.RjefmPoPUb_7oIYeAiRpPAHaGu?rs=1&pid=ImgDetMain" alt="Phishing Fraud">
     <div class="card-body">
       <h5 class="card-title">Phishing Fraud</h5>
-      <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
-      <a href="trackcomplaint.html" class="btn btn-track">Track</a>
+      <a href="user_login.html" class="btn btn-register">Register</a>
+      <a href="track_complaint.html" class="btn btn-track">Track</a>
     </div>
   </div>
 
   <div class="crime-card">
-    <img src="https://tse2.mm.bing.net/th/id/OIP.VQzhJhO5zJgH9_T_SqWMHgHaEc?pid=ImgDet&w=191&h=114&c=7&o=7&rm=3" alt="Hacking Crime">
+    <img src="https://tse2.mm.bing.net/th/id/OIP.VQzhJhO5zJgH9_T_SqWMHgHaEc?pid=ImgDet" alt="Hacking Crime">
     <div class="card-body">
       <h5 class="card-title">Hacking Crime</h5>
-      <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
-      <a href="trackcomplaint.html" class="btn btn-track">Track</a>
+      <a href="user_login.html" class="btn btn-register">Register</a>
+      <a href="track_complaint.html" class="btn btn-track">Track</a>
     </div>
   </div>
 
   <div class="crime-card">
-    <img src="https://tse1.mm.bing.net/th/id/OIP.O3EyGKcKcs3FZpwcIb8DggHaEP?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Malware Crime">
+    <img src="https://tse1.mm.bing.net/th/id/OIP.O3EyGKcKcs3FZpwcIb8DggHaEP?rs=1&pid=ImgDetMain" alt="Malware Crime">
     <div class="card-body">
       <h5 class="card-title">Malware Crime</h5>
-      <a href="complaint.html" class="btn btn-register">Register a Complaint</a>
-      <a href="trackcomplaint.html" class="btn btn-track">Track</a>
+      <a href="user_login.html" class="btn btn-register">Register</a>
+      <a href="track_complaint.html" class="btn btn-track">Track</a>
     </div>
   </div>
 </div>
 
-<!-- Footer -->
+<!-- 🦶 Footer -->
 <footer>
   <div class="footer-section">
     <h3>About CyberCAP</h3>
@@ -377,10 +361,8 @@
 </footer>
 
 <script>
-  // Auto-slide carousel
   const images = document.querySelectorAll('.carousel img');
   let index = 0;
-
   setInterval(() => {
     images[index].classList.remove('active');
     index = (index + 1) % images.length;

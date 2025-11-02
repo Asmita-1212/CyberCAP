@@ -2,97 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<<<<<<< HEAD
   <title>Track Your Cybercrime Complaint</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    /* ========== NAVBAR ========== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(90deg, #000000, #0b0c10);
+      padding: 12px 50px;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .navbar .logo {
+      font-size: 1.6em;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+    }
+
+    .navbar .logo img {
+      height: 45px;
+      width: auto;
+      vertical-align: middle;
+      filter: drop-shadow(0 0 4px cyan);
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+      margin: 0;
+      padding: 0;
+    }
+
+  .navbar ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s, border-bottom 0.3s;
+  padding-bottom: 4px;
+  display: inline-block;
+  border-bottom: none;
+}
+
+.navbar ul li a:hover {
+  color: #eaf1f3; /* light blue on hover */
+}
+
+.navbar ul li a.active {
+  color: #d7e3e7; /* highlight active page */
+  border-bottom: 2px solid #00bfff;
+}
+
+
+    /* ========== PAGE STYLING ========== */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #5fa8f1;
       padding: 20px;
+      margin: 0;
     }
 
     .container {
       max-width: 500px;
-      margin: auto;
-=======
-  <title>Track Your Cybercrime Complaint - CyberCAP</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    /* Reset and Base */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    body {
-      background-color: #5fa8f1;
-      padding: 0;
-      margin: 0;
-    }
-
-    /* Navbar */
-    nav {
-      background-color: #000;
-      padding: 15px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    }
-
-    nav .logo {
-      color: white;
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: 1px;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 25px;
-    }
-
-    nav ul li a {
-      text-decoration: none;
-      color: white;
-      font-weight: 500;
-      transition: color 0.3s ease;
-      padding-bottom: 2px;
-    }
-
-    nav ul li a:hover {
-      color: #56c5f8;
-    }
-
-    nav ul li a.active {
-      color: #56c5f8;
-      border-bottom: 2px solid #56c5f8;
-    }
-
-    /* Container */
-    .container {
-      max-width: 500px;
-      margin: 80px auto;
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+      margin: 40px auto;
       background: white;
       padding: 35px;
       border-radius: 10px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-3px);
     }
 
     h2 {
       text-align: center;
-<<<<<<< HEAD
       color: #2c3e50;
       margin-bottom: 10px;
-=======
-      color: #1f3b73;
-      margin-bottom: 20px;
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     }
 
     label {
@@ -115,11 +108,7 @@
     button[type="submit"] {
       margin-top: 30px;
       width: 100%;
-<<<<<<< HEAD
       background-color: #007bff;
-=======
-      background-color: #3e64ff;
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       color: white;
       padding: 14px;
       border: none;
@@ -130,82 +119,65 @@
     }
 
     button[type="submit"]:hover {
-<<<<<<< HEAD
       background-color: #0056b3;
-=======
-      background-color: #2b4ae0;
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
     }
 
     #result {
       margin-top: 30px;
       display: none;
-      background-color: #e9f7ef;
-      border: 1px solid #c3e6cb;
+      background-color: #f8f9fa;
+      border: 1px solid #d1ecf1;
       padding: 18px;
       border-radius: 6px;
-      color: #155724;
+      color: #0c5460;
       transition: all 0.3s ease;
+    }
+
+    .status-box {
+      background-color: #e9f7ef;
+      color: #155724;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      font-weight: bold;
+      border: 1px solid #c3e6cb;
     }
 
     .loading {
       text-align: center;
       margin-top: 20px;
       display: none;
-<<<<<<< HEAD
       color: #007bff;
-=======
-      color: #3e64ff;
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
       font-weight: bold;
     }
 
-    @media (max-width: 600px) {
-<<<<<<< HEAD
-      .container {
-        padding: 25px;
-=======
-      nav {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
-      }
-
-      nav ul {
+    @media (max-width: 768px) {
+      .navbar {
         flex-direction: column;
         gap: 10px;
       }
-
-      .container {
-        padding: 25px;
-        margin: 40px 15px;
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
-      }
-
-      input, button {
-        font-size: 14px;
+      .navbar ul {
+        flex-direction: column;
+        align-items: center;
       }
     }
+    
   </style>
 </head>
 <body>
 
-<<<<<<< HEAD
-=======
-  <!-- Navbar -->
-  <nav>
-    <div class="logo">CyberCAP</div>
+  <!-- ✅ Navbar Section -->
+  <nav class="navbar">
+    <a href="#" class="logo"><img src="logo.png">CyberCAP</a>
     <ul>
-      <li><a href="user_dashboard.html">Home</a></li>
-      <li><a href="complaint.html">Register Complaint</a></li>
-      <li><a href="trackcomplaint.html" class="active">Track Complaint</a></li>
-      <li><a href="reportsuspect.html">Report Suspect</a></li>
-      <li><a href="dashboard.html" onclick="logoutUser()">Logout</a></li>
+      <a href="home.html">Home</a>
+      <a href="complaint.html">Register Complaint</a>
+      <a href="trackcomplaint.html">Track Complaint</a>
+      <a href="reportsuspect.html" class="active">Report Suspect</a>
     </ul>
   </nav>
 
-  <!-- Main Content -->
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
+  <!-- ✅ Complaint Tracker -->
   <div class="container">
     <h2>🔍 Track Your Complaint</h2>
 
@@ -214,11 +186,7 @@
       <input type="text" id="complaintId" name="complaintId" required placeholder="Enter your Complaint ID">
 
       <label for="mobile">Registered Mobile Number:</label>
-<<<<<<< HEAD
       <input type="tel" id="mobile" name="mobile" required placeholder="Enter your mobile number">
-=======
-      <input type="tel" id="mobile" name="mobile" required placeholder="Enter your mobile number" pattern="[0-9]{10}" maxlength="10">
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
 
       <button type="submit">Track Complaint</button>
     </form>
@@ -229,106 +197,59 @@
   </div>
 
   <script>
-<<<<<<< HEAD
-  document.getElementById('trackForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
-
-  document.getElementById('result').style.display = 'none';
-  const loading = document.getElementById('loading');
-  loading.style.display = 'block';
-
-  const complaintId = document.getElementById('complaintId').value;
-  const mobile = document.getElementById('mobile').value;
-
-  try {
-    const response = await fetch("http://127.0.0.1:8000/track_complaint", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ complaintId, mobile })
-    });
-
-    loading.style.display = 'none';
-
-    if (!response.ok) {
-      const error = await response.json();
-      document.getElementById('result').innerHTML = `<strong>Error:</strong> ${error.detail}`;
-      document.getElementById('result').style.display = 'block';
-      return;
-    }
-
-    const data = await response.json();
-    document.getElementById('result').innerHTML = `
-      <strong>Status:</strong> ${data.status}<br>
-      <strong>Complaint ID:</strong> ${data.complaint_id}<br>
-      <strong>Incident Type:</strong> ${data.incident_type}<br>
-      <strong>Date:</strong> ${data.incident_date}<br>
-      <strong>Platform:</strong> ${data.platform}<br>
-      <strong>Description:</strong> ${data.description}
-    `;
-    document.getElementById('result').style.display = 'block';
-
-  } catch (err) {
-    loading.style.display = 'none';
-    document.getElementById('result').innerHTML = `<strong>Error connecting to server:</strong> ${err.message}`;
-    document.getElementById('result').style.display = 'block';
-  }
-});
-
-</script>
-
-=======
-    // ✅ Track Complaint Logic
     document.getElementById('trackForm').addEventListener('submit', async function (e) {
       e.preventDefault();
 
-      document.getElementById('result').style.display = 'none';
+      const result = document.getElementById('result');
+      result.style.display = 'none';
       const loading = document.getElementById('loading');
       loading.style.display = 'block';
 
-      const complaint_id = document.getElementById('complaintId').value.trim();
+      const complaintId = document.getElementById('complaintId').value.trim();
       const mobile = document.getElementById('mobile').value.trim();
 
       try {
         const response = await fetch("http://127.0.0.1:8000/track_complaint", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ complaint_id, mobile })
+          body: JSON.stringify({ complaintId, mobile })
         });
 
         loading.style.display = 'none';
 
-        const data = await response.json();
-
         if (!response.ok) {
-          document.getElementById('result').innerHTML = `<strong>Error:</strong> ${data.detail || "Invalid Complaint ID or Mobile Number."}`;
-          document.getElementById('result').style.display = 'block';
+          const error = await response.json();
+          result.innerHTML = `<div class="status-box" style="background-color:#f8d7da;color:#721c24;border:1px solid #f5c6cb;">
+            ❌ Error: ${error.detail || "Complaint not found or invalid details."}
+          </div>`;
+          result.style.display = 'block';
           return;
         }
 
-        document.getElementById('result').innerHTML = `
-          <strong>Status:</strong> ${data.status || "Pending"}<br>
-          <strong>Complaint ID:</strong> ${data.complaint_id || "N/A"}<br>
-          <strong>Incident Type:</strong> ${data.incident_type || "N/A"}<br>
-          <strong>Date:</strong> ${data.incident_date || "N/A"}<br>
-          <strong>Platform:</strong> ${data.platform || "N/A"}<br>
-          <strong>Description:</strong> ${data.description || "N/A"}
+        const data = await response.json();
+
+        result.innerHTML = `
+          <div class="status-box">
+            📄 <strong>Status:</strong> ${data.status}
+          </div>
+          <strong>Complaint ID:</strong> ${data.complaint_id}<br>
+          <strong>Incident Type:</strong> ${data.incident_type}<br>
+          <strong>Date:</strong> ${data.incident_date}<br>
+          <strong>Platform:</strong> ${data.platform}<br>
+          <strong>Description:</strong> ${data.description}<br><br>
+          <em>For any updates, please check again later or contact your nearest cybercrime cell.</em>
         `;
-        document.getElementById('result').style.display = 'block';
+        result.style.display = 'block';
 
       } catch (err) {
         loading.style.display = 'none';
-        document.getElementById('result').innerHTML = `<strong>Error connecting to server:</strong> ${err.message}`;
-        document.getElementById('result').style.display = 'block';
+        result.innerHTML = `<div class="status-box" style="background-color:#fff3cd;color:#856404;border:1px solid #ffeeba;">
+          ⚠️ Error connecting to server: ${err.message}
+        </div>`;
+        result.style.display = 'block';
       }
     });
-
-    // ✅ Logout Function
-    function logoutUser() {
-      localStorage.removeItem("username");
-      window.location.href = "user_dashboard.html";
-    }
   </script>
->>>>>>> 9fb3a709ef112a9c826cd9b171e506d20264f4ed
 
 </body>
 </html>
