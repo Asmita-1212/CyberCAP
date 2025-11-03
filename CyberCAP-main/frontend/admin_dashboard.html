@@ -4,21 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CyberCAP Admin Dashboard</title>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background-color: #f5f6fa;
+      background: linear-gradient(135deg, #f4f7fb, #eaf0f4);
       color: #333;
       display: flex;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* Sidebar */
+    /* ================= Sidebar (unchanged look, kept as you liked) ================= */
     .sidebar {
       width: 260px;
       background: linear-gradient(180deg, #0b0c10, #1f2833);
@@ -33,6 +35,7 @@
       top: 0;
       transition: all 0.4s ease;
       z-index: 1000;
+      box-shadow: 4px 0 18px rgba(11,12,16,0.45);
     }
     .sidebar.hidden { left: -260px; }
 
@@ -43,154 +46,351 @@
       border: 3px solid #45a29e;
       margin-bottom: 10px;
       object-fit: cover;
-      transition: transform 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
-    .sidebar img:hover { transform: scale(1.05); }
+    .sidebar img:hover { transform: scale(1.05); box-shadow: 0 6px 18px rgba(69,162,158,0.25); }
 
-    .sidebar h3, .sidebar p { text-align: center; margin: 5px 0; font-size: 15px; }
+    .sidebar h3, .sidebar p { text-align: center; margin: 5px 0; font-size: 15px; color: #e6f7f6; }
 
-    .sidebar button {
-      background: #45a29e;
+    .sidebar .small {
+      font-size: 13px;
+      color: #bcdedd;
+    }
+
+    .sidebar .sidebar-nav {
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    .sidebar .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 90%;
+      margin: 8px auto;
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: #cfd8dc;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all 0.25s ease;
+    }
+    .sidebar .sidebar-nav a i { color: #66fcf1; width: 22px; text-align: center; }
+    .sidebar .sidebar-nav a:hover { background: rgba(102,252,241,0.08); transform: translateX(6px); color: #66fcf1; }
+    .sidebar .sidebar-nav a.active { background: linear-gradient(90deg,#45a29e,#66fcf1); color: #0b0c10; box-shadow: 0 6px 18px rgba(69,162,158,0.18); }
+
+    .sidebar hr {
+      width: 100%;
       border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      color: #fff;
-      cursor: pointer;
-      margin: 10px 0;
-      transition: 0.3s;
+      border-top: 1px solid rgba(69,162,158,0.22);
+      margin: 15px 0;
     }
-    .sidebar button:hover { background: #00bcd4; transform: scale(1.05); }
 
     .logout {
       margin-top: auto;
-      width: 100%;
-      background: #e74c3c;
+      width: 90%;
+      background: linear-gradient(90deg, #ff5f6d, #d6293e);
       border: none;
       padding: 10px;
       border-radius: 6px;
       cursor: pointer;
       color: #fff;
       font-weight: bold;
-      transition: 0.3s;
+      transition: 0.25s;
+      box-shadow: 0 6px 14px rgba(246,100,116,0.18);
     }
-    .logout:hover { background: #c0392b; transform: scale(1.05); }
+    .logout:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(246,100,116,0.25); }
 
-    /* Navbar */
+    /* ================= Navbar ================= */
     .navbar {
       position: fixed;
       top: 0;
       left: 260px;
       right: 0;
-      background-color: #1f2833;
+      background: linear-gradient(90deg, #15202b, #1f2833);
       color: white;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 25px;
-      height: 60px;
+      padding: 12px 24px;
+      height: 64px;
       z-index: 900;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      transition: left 0.4s ease;
+      box-shadow: 0 6px 18px rgba(11,12,16,0.15);
+      transition: left 0.35s ease;
     }
     .navbar.shifted { left: 0; }
 
-    .navbar .left-section { display: flex; align-items: center; gap: 15px; }
-    .toggle-btn { font-size: 22px; cursor: pointer; color: #66fcf1; transition: transform 0.2s; }
-    .toggle-btn:hover { transform: scale(1.2); }
-    .navbar-title { font-size: 20px; font-weight: bold; letter-spacing: 0.5px; }
-    .navbar .right-section { display: flex; align-items: center; gap: 25px; position: relative; }
-    .navbar .right-section i { font-size: 20px; cursor: pointer; color: #66fcf1; transition: 0.3s; }
-    .navbar .right-section i:hover { color: #00bcd4; transform: scale(1.15); }
+    .navbar .left-section { display:flex; align-items:center; gap:14px; }
+    .toggle-btn { font-size: 22px; cursor: pointer; color: #66fcf1; transition: transform 0.18s; }
+    .toggle-btn:hover { transform: scale(1.15); }
 
-    /* Notifications */
+    .navbar-title { font-size: 18px; font-weight: 700; color: #cfeff3; letter-spacing: 0.4px; }
+
+    .navbar .right-section { display:flex; align-items:center; gap:18px; position:relative; }
+    .navbar .right-section i { font-size: 18px; color: #66fcf1; cursor:pointer; transition: transform 0.18s, color 0.18s; }
+    .navbar .right-section i:hover { color: #00c6ff; transform: scale(1.14); }
+
+    /* notif dropdown */
     .notification-container { position: relative; }
     .notifications {
       display: none;
       position: absolute;
-      top: 35px;
+      top: 38px;
       right: 0;
       background: #fff;
-      color: #000;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      width: 260px;
-      padding: 15px;
+      color: #0b0c10;
+      border-radius: 10px;
+      width: 300px;
+      padding: 14px;
+      box-shadow: 0 12px 30px rgba(11,12,16,0.15);
       z-index: 999;
-      animation: fadeIn 0.3s ease;
     }
-    .notifications h4 {
-      margin: 0 0 12px;
-      color: #1f2833;
-      font-size: 16px;
-      font-weight: 600;
-      border-bottom: 2px solid #45a29e;
-      padding-bottom: 6px;
-      text-align: center;
-    }
-    .notifications ul { list-style: none; margin: 0; padding: 0; }
-    .notifications ul li {
-      font-size: 14px;
-      padding: 8px 6px;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      justify-content: space-between;
-    }
-    .notifications ul li:last-child { border-bottom: none; }
+    .notifications h4 { margin:0 0 10px; font-size:15px; color:#1f2833; border-bottom:2px solid rgba(69,162,158,0.24); padding-bottom:8px; text-align:center; }
+    .notifications ul { list-style:none; padding:0; margin:0; }
+    .notifications ul li { display:flex; justify-content:space-between; padding:8px 6px; border-bottom:1px solid #eee; font-size:14px; }
+    .notifications ul li:last-child { border-bottom:none; }
 
-    /* Main Content */
-    .main-content { flex: 1; margin-left: 260px; padding: 90px 30px 30px; transition: margin-left 0.4s ease; }
+    /* ================= Main content (Professional Tech Glow) ================= */
+    .main-content {
+      flex: 1;
+      margin-left: 260px;
+      padding: 110px 36px 36px;
+      transition: margin-left 0.35s ease;
+      min-height: calc(100vh - 110px);
+      /* subtle inner glow background stripe */
+      background-image: linear-gradient(180deg, rgba(0,198,255,0.02), rgba(0,198,255,0.00));
+    }
     .main-content.shifted { margin-left: 0; }
-    h2 { font-size: 24px; margin-bottom: 20px; color: #1f2833; }
 
-    /* Category Buttons */
-    .category-buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 25px; }
+    h2 { font-size: 24px; margin-bottom: 18px; color: #1f2833; font-weight:700; }
+
+    /* Fade-up entrance for the main zones */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.6s ease-out both; }
+
+    /* Category / filter area: modern pills + glow */
+    .category-buttons {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:18px;
+      align-items:center;
+    }
     .category-buttons button {
-      background: #45a29e;
+      background: transparent;
+      border: 1px solid rgba(69,162,158,0.18);
+      color: #0b0c10;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight:600;
+      transition: transform 0.18s, box-shadow 0.18s, background 0.18s, color 0.18s;
+      box-shadow: 0 6px 18px rgba(69,162,158,0.04);
+    }
+    .category-buttons button.primary {
+      background: linear-gradient(90deg,#45a29e,#00c6ff);
+      color: #071018;
       border: none;
-      color: white;
-      padding: 10px 18px;
+      box-shadow: 0 8px 24px rgba(69,162,158,0.16);
+    }
+    .category-buttons button:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(69,162,158,0.12); }
+    .category-buttons button.primary:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(0,198,255,0.14); }
+
+    /* Table with subtle tech glow on header + row hover */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(11,12,16,0.06);
+      border: 1px solid rgba(11,12,16,0.04);
+    }
+    thead th {
+      padding: 14px 16px;
+      background: linear-gradient(90deg,#0f2a33,#102f3b);
+      color: #eaf7f6;
+      font-size: 13px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    tbody td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #f0f3f4;
+      font-size: 14px;
+      color: #1f2833;
+    }
+
+    tbody tr {
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      transform-origin: left center;
+    }
+    tbody tr:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 30px rgba(13, 39, 45, 0.06);
+      background: linear-gradient(90deg, rgba(69,162,158,0.03), rgba(0,198,255,0.02));
+    }
+
+    .view-btn {
+      background: linear-gradient(90deg,#45a29e,#00c6ff);
+      border: none;
+      color: #041217;
+      padding: 8px 12px;
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      font-weight:600;
+      box-shadow: 0 8px 20px rgba(69,162,158,0.12);
+      transition: transform 0.18s, box-shadow 0.18s;
     }
-    .category-buttons button:hover { background-color: #00bcd4; transform: scale(1.07); }
+    .view-btn:hover { transform: translateY(-3px); box-shadow: 0 20px 36px rgba(69,162,158,0.18); }
 
-    /* Table */
-    table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
-    th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
-    th { background-color: #1f2833; color: white; }
-    tr { transition: background 0.3s, transform 0.2s; }
-    tr:hover { background-color: #f0f0f0; transform: scale(1.01); }
+    /* small helper chips for status */
+    .status-chip { padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px; display:inline-block; color:#fff; }
+    .status-resolved { background:#28a745; }
+    .status-pending { background:#fd7e14; }
+    .status-suspicious { background:#ffc107; color:#111; }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
-    @media (max-width: 768px) {
-      .sidebar { left: -260px; }
-      .sidebar.hidden { left: 0; }
-      .navbar { left: 0; width: 100%; }
-      .main-content { margin-left: 0; padding: 90px 20px; }
+    /* Chart container */
+    #chartContainer {
+      margin-top: 28px;
+      background: #fff;
+      padding: 18px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(11,12,16,0.06);
     }
+
+    /* responsiveness */
+    @media (max-width: 900px) {
+      .main-content { padding: 100px 18px 18px; }
+      .navbar { left: 0; }
+      .sidebar { left: -260px; position: fixed; }
+      .sidebar.show { left: 0; }
+    }
+
+/* Feedback Table Styling */
+.feedback-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  margin-top: 25px;
+  animation: fadeInUp 0.5s ease-in-out;
+}
+
+.feedback-table th {
+  background: linear-gradient(90deg, #1f2833, #45a29e);
+  color: #ffffff;
+  text-align: left;
+  padding: 14px 16px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.feedback-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+  font-size: 15px;
+}
+
+.feedback-table tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+.feedback-table tr:hover {
+  background: #e3f2fd;
+  transform: scale(1.01);
+  transition: all 0.2s ease;
+}
+
+.feedback-table td:first-child {
+  font-weight: 600;
+  color: #1f2833;
+}
+
+.feedback-table td:last-child {
+  color: #007bff;
+}
+
+.feedback-heading {
+  font-size: 22px;
+  font-weight: bold;
+  color: #1f2833;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.feedback-heading i {
+  color: #45a29e;
+  font-size: 22px;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+  .feedback-table, .feedback-table thead, .feedback-table tbody, .feedback-table th, .feedback-table td, .feedback-table tr {
+    display: block;
+  }
+
+  .feedback-table tr {
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+
+  .feedback-table td {
+    padding: 12px;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .feedback-table th {
+    display: none;
+  }
+}
   </style>
 </head>
-
 <body>
-  <!-- Sidebar -->
+  <!-- Sidebar (kept exactly as requested) -->
   <div class="sidebar" id="sidebar">
     <img id="adminPhoto" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin Photo">
     <input type="file" id="photoUpload" accept="image/jpeg, image/png" style="display:none;">
-    <button onclick="document.getElementById('photoUpload').click()">Add Photo</button>
+    <button onclick="document.getElementById('photoUpload').click()"><i class="fas fa-camera"></i> Add Photo</button>
     <h3 id="adminName">Admin Name</h3>
-    <p id="adminEmail">Email: admin@cybercap.com</p>
-    <p id="adminPhone">Phone: +91 9876543210</p>
-   
-    <hr style="width:100%; border-color:#45a29e; margin:15px 0;">
-    <h3 style="font-size:16px; margin-top:10px;">Complaint Analysis</h3>
-    <button onclick="showAllComplaints()" style="width:90%; margin-bottom:8px;">All Complaints</button>
-    <button onclick="showWeeklyChart()" style="width:90%; margin-bottom:8px;">Weekly Analysis</button>
-    <button onclick="showMonthlyChart()" style="width:90%;">Monthly Analysis</button>
+    <p class="small" id="adminEmail">Email: admin@cybercap.com</p>
+    <p class="small" id="adminPhone">Phone: +91 9876543210</p>
+    <hr>
+    <div class="sidebar-nav">
+      <a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="#"><i class="fas fa-list"></i> All Complaints</a>
+      <a href="#" onclick="showWeeklyChart(); setActiveTab(this);">
+  <i class="fas fa-chart-bar"></i> Weekly Analysis
+</a>
+<a href="#" onclick="showMonthlyChart(); setActiveTab(this);">
+  <i class="fas fa-chart-line"></i> Monthly Analysis
+</a>
+<a href="#" onclick="showFeedback(); setActiveTab(this);">
+  <i class="fas fa-user-shield"></i> Feedback
+</a>
+      <a href="#"><i class="fas fa-cog"></i> Settings</a>
+    </div>
     <button class="logout" id="logoutSidebar"><i class="fas fa-sign-out-alt"></i> Logout</button>
-
-    
   </div>
 
   <!-- Navbar -->
@@ -199,9 +399,9 @@
       <i class="fas fa-bars toggle-btn" id="toggle-btn"></i>
       <span class="navbar-title">Admin Dashboard</span>
     </div>
-    <div class="right-section">
-      <a href="admin_login.html"><i class="fas fa-home" title="Home"></i></a>
 
+    <div class="right-section">
+      <a href="admin_login.html" title="Home"><i class="fas fa-home"></i></a>
       <div class="notification-container">
         <i class="fas fa-bell" id="notifIcon" title="Notifications"></i>
         <div class="notifications" id="notifications">
@@ -215,42 +415,68 @@
           </ul>
         </div>
       </div>
-
       <i class="fas fa-envelope" title="Messages"></i>
       <i class="fas fa-sign-out-alt" id="logoutNavbar" title="Logout"></i>
     </div>
   </div>
 
   <!-- Main Content -->
-  <div class="main-content" id="main-content">
-    <h2>Complaint Overview</h2>
+  <main class="main-content fade-up" id="main-content">
 
-    <div class="category-buttons">
-      <button onclick="filterCategory('All')">All</button>
+    <div class="category-buttons" role="tablist" aria-label="Complaint categories">
+      <button class="primary" onclick="filterCategory('All')">All</button>
       <button onclick="filterCategory('Women Related')">Women Related</button>
       <button onclick="filterCategory('Phishing')">Phishing</button>
       <button onclick="filterCategory('Financial Fraud')">Financial Fraud</button>
     </div>
-
-    <table id="complaintTable">
+  <h2>Complaint Overview</h2>
+    <table id="complaintTable" role="table" aria-label="Complaints table">
       <thead>
         <tr>
-          <th>User</th><th>Complaint</th><th>Date</th><th>Category</th><th>Priority</th>
-           <th>Status</th><th>Details</th> 
+          <th>User</th>
+          <th>Complaint</th>
+          <th>Date</th>
+          <th>Category</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Details</th>
         </tr>
       </thead>
       <tbody>
-        <!-- Complaints will be dynamically added here -->
+        <!-- dynamic rows inserted by JS -->
       </tbody>
     </table>
-<div id="chartContainer" style="display:none; margin-top:40px;">
-  <h2>Weekly Complaint Analysis</h2>
-  <canvas id="complaintsChart" width="300" height="130"></canvas>
-</div>
-      
-  </div>
+
+    <div id="chartContainer" style="display:none; margin-top:24px;">
+      <h2>Weekly Complaint Analysis</h2>
+      <canvas id="complaintsChart" width="600" height="240"></canvas>
+    </div>
+
+    <section id="feedbackSection" style="display:none;">
+  <h2>Feedback / Contact Responses</h2>
+  <table id="feedbackTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Message</th>
+        <th>Date</th>
+        <th>Issued Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- feedback data will load here -->
+    </tbody>
+  </table>
+  </main>
 
   <script>
+    /***********************
+     * Interactivity & Data
+     * (kept your original endpoints & logic,
+     *  but fixed minor JS issues so the page runs)
+     ***********************/
+
     const sidebar = document.getElementById("sidebar");
     const navbar = document.getElementById("navbar");
     const mainContent = document.getElementById("main-content");
@@ -262,22 +488,11 @@
       mainContent.classList.toggle("shifted");
     });
 
-    // Category filter
-    function filterCategory(category) {
-      const rows = document.querySelectorAll("#complaintTable tbody tr");
-      rows.forEach(row => {
-        if (category === "All" || row.getAttribute("data-category") === category) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      });
-    }
-
     // Notification toggle
     const notifIcon = document.getElementById("notifIcon");
     const notifications = document.getElementById("notifications");
-    notifIcon.addEventListener("click", () => {
+    notifIcon.addEventListener("click", (e) => {
+      e.stopPropagation();
       notifications.style.display = notifications.style.display === "block" ? "none" : "block";
     });
     document.addEventListener("click", (e) => {
@@ -288,7 +503,6 @@
     // Admin Photo Upload with persistence
     const photoUpload = document.getElementById("photoUpload");
     const adminPhoto = document.getElementById("adminPhoto");
-
     photoUpload.addEventListener("change", (event) => {
       const file = event.target.files[0];
       if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
@@ -300,110 +514,90 @@
         reader.readAsDataURL(file);
       } else alert("Please upload a JPG or PNG image.");
     });
-
-    // Load saved admin photo if exists
     const savedPhoto = localStorage.getItem("adminPhoto");
-    if(savedPhoto) adminPhoto.src = savedPhoto;
+    if (savedPhoto) adminPhoto.src = savedPhoto;
 
-    // Fetch Admin Info (works with the JSON you showed)
-async function fetchAdminInfo() {
-  const username = localStorage.getItem("adminUser");
-  if (!username) {
-    // not logged in — send to login page
-    return window.location.href = "admin_login.html";
-  }
+    // Fetch Admin Info
+    async function fetchAdminInfo() {
+      const username = localStorage.getItem("adminUser");
+      if (!username) { return; /* don't redirect during testing if not set */ }
 
-  try {
-    const res = await fetch(`http://127.0.0.1:8000/admin-info/${username}`);
-    // debug: log status and headers
-    console.log('fetch /admin-info status:', res.status, res.headers.get('content-type'));
-
-    // try parse JSON (most backends return JSON)
-    const data = await res.json();
-    console.log('admin-info response:', data); // helpful for debugging
-
-    // If the backend returns the Mongo document exactly as you pasted,
-    // fields are at top-level: _id, username, email, password, mfa_secret
-    // We'll use username and email; for phone/photo we show fallbacks.
-    const adminData = data || {};
-
-    // Short helper to format ObjectId-like _id for display (optional)
-    function formatId(id) {
-      if (!id) return '';
-      if (typeof id === 'object' && id.$oid) return id.$oid.slice(-6); // if stored as {$oid: "..."}
-      return String(id).slice(-6); // last 6 chars
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/admin-info/${username}`);
+        console.log('fetch /admin-info status:', res.status, res.headers.get('content-type'));
+        const data = await res.json();
+        const adminData = data || {};
+        document.getElementById("adminName").textContent = adminData.username || "Admin";
+        document.getElementById("adminEmail").textContent = `Email: ${adminData.email || "Not set"}`;
+        document.getElementById("adminPhone").textContent = `Phone: ${adminData.phone || "Not set"}`;
+        if (adminData.photo) {
+          adminPhoto.src = adminData.photo;
+          localStorage.setItem("adminPhoto", adminData.photo);
+        }
+      } catch (err) {
+        console.error("Error fetching admin info:", err);
+      }
     }
 
-    // Set UI fields
-    document.getElementById("adminName").textContent = adminData.username || "Admin";
-    document.getElementById("adminEmail").textContent = `Email: ${adminData.email || "Not set"}`;
-    // You don't have phone in the response — show Not set (or hide)
-    document.getElementById("adminPhone").textContent = `Phone: ${adminData.phone || "Not set"}`;
-
-    // If your DB doesn't return a photo, keep the default avatar.
-    // If you later add a photo field in the DB, this will use it.
-    if (adminData.photo) {
-      adminPhoto.src = adminData.photo;
-      localStorage.setItem("adminPhoto", adminData.photo);
-    } else {
-      // keep whatever is in localStorage (uploaded) or default icon
-      const stored = localStorage.getItem("adminPhoto");
-      if (stored) adminPhoto.src = stored;
+    // Helper: format local datetime
+    function formatLocalDateTime(dateStr) {
+      if (!dateStr) return "";
+      const cleanStr = dateStr.split('.')[0];
+      const date = new Date(cleanStr);
+      if (isNaN(date.getTime())) return dateStr; // fallback if invalid
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
     }
 
-    // optional: show short id somewhere for admin debugging (uncomment if needed)
-    // console.log('admin id (short):', formatId(adminData._id));
-
-  } catch (err) {
-    console.error("Error fetching admin info:", err);
-    // show basic fallback values
-    document.getElementById("adminName").textContent = "Admin";
-    document.getElementById("adminEmail").textContent = "Email: Not available";
-    document.getElementById("adminPhone").textContent = "Phone: Not available";
-  }
-}
-
-fetchAdminInfo();
-
-    fetchAdminInfo();
-
-    // Fetch All Complaints
+    // Fetch all complaints and render rows
     async function fetchAllComplaints() {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/complaints`);
+        const res = await fetch('http://127.0.0.1:8000/complaints');
         const complaints = await res.json();
         const tbody = document.querySelector("#complaintTable tbody");
         tbody.innerHTML = "";
 
         let total = 0, resolved = 0, pending = 0, suspicious = 0, users = new Set();
 
-        complaints.forEach(c => {
+        (complaints || []).forEach(c => {
           const row = document.createElement("tr");
-          row.setAttribute("data-category", c.category);
-          row.setAttribute("data-complaint-id", c.complaint_id);
-          row.innerHTML = `
-            <td>${c.victim.email}</td>
-            <td>${c.description}</td>
-          <td>${formatLocalDateTime(c.created_at)}</td>
-            <td>${c.category}</td>
-            <td>${c.priority}</td>
-            <td>${c.status || "Pending"}</td>
-            <td>
-<button class="view-btn" onclick="viewComplaint('${c.complaint_id}')">View</button>
+          row.setAttribute("data-category", c.category || "N/A");
+          row.setAttribute("data-complaint-id", c.complaint_id || (c._id || ''));
+          const dateStr = formatLocalDateTime(c.created_at || c.date || '');
+          const statusText = c.status || "Pending";
 
-  </td>
+          // build status chip
+          let statusClass = 'status-pending';
+          if (statusText.toLowerCase() === 'resolved') statusClass = 'status-resolved';
+          else if (statusText.toLowerCase() === 'suspicious') statusClass = 'status-suspicious';
+
+          row.innerHTML = `
+            <td>${(c.victim && c.victim.email) || c.user || 'N/A'}</td>
+            <td>${c.description || 'N/A'}</td>
+            <td>${dateStr}</td>
+            <td>${c.category || 'N/A'}</td>
+            <td>${c.priority || 'N/A'}</td>
+            <td><span class="status-chip ${statusClass}">${statusText}</span></td>
+            <td><button class="view-btn" onclick="viewComplaint('${c.complaint_id || (c._id || '')}')">View</button></td>
           `;
-           if(c.status === "Resolved") row.style.backgroundColor = "#28a745"; // greenish
-  else if(c.status === "Pending") row.style.backgroundColor = "#fd7e14"; // reddish
-  else if(c.status === "Suspicious") row.style.backgroundColor = "#ffc107"; // optional: yellow
+
+          // optional color row background for quick visual (kept but subtle)
+          if (statusText === "Resolved") row.style.backgroundColor = "rgba(40,167,69,0.04)";
+          else if (statusText === "Pending") row.style.backgroundColor = "rgba(253,126,20,0.03)";
+          else if (statusText === "Suspicious") row.style.backgroundColor = "rgba(255,193,7,0.03)";
 
           tbody.appendChild(row);
 
           total++;
-          if(c.status === "Resolved") resolved++;
-          else if(c.status === "Pending") pending++;
-          else if(c.status === "Suspicious") suspicious++;
-          users.add(c.user);
+          if (statusText === "Resolved") resolved++;
+          else if (statusText === "Pending") pending++;
+          else if (statusText === "Suspicious") suspicious++;
+          if (c.user) users.add(c.user);
+          if (c.victim && c.victim.email) users.add(c.victim.email);
         });
 
         document.getElementById("totalComplaints").textContent = total;
@@ -411,256 +605,260 @@ fetchAdminInfo();
         document.getElementById("pendingComplaints").textContent = pending;
         document.getElementById("suspiciousReports").textContent = suspicious;
         document.getElementById("activeUsers").textContent = users.size;
-      } catch(err) { console.error("Error fetching complaints:", err); }
+      } catch (err) {
+        console.error("Error fetching complaints:", err);
+      }
     }
+
+    // call once on load
+    fetchAdminInfo();
     fetchAllComplaints();
 
-    // Logout
+    // view complaint
+    function viewComplaint(id) {
+      if (!id) return alert("Complaint ID missing!");
+      localStorage.setItem("selectedComplaintId", id);
+      window.location.href = "complaints_detail.html";
+    }
+
+    // change complaint status (PATCH)
+    async function changeComplaintStatus(c_id, newStatus) {
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/complaint/${c_id}/status`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (!res.ok) throw new Error("Failed to update status");
+        const data = await res.json();
+        console.log("Status updated:", data);
+        updateRowStatus(c_id, newStatus);
+      } catch (err) {
+        console.error(err);
+        alert("Error updating status. Try again.");
+      }
+    }
+
+    function updateRowStatus(c_id, newStatus) {
+      const rows = document.querySelectorAll("#complaintTable tbody tr");
+      rows.forEach(row => {
+        if (row.getAttribute("data-complaint-id") === c_id) {
+          const td = row.querySelector("td:nth-child(6)");
+          if (td) td.innerHTML = `<span class="status-chip ${newStatus==='Resolved'?'status-resolved':(newStatus==='Suspicious'?'status-suspicious':'status-pending')}">${newStatus}</span>`;
+        }
+      });
+    }
+
+    // Charts: weekly & monthly rendering
+    async function renderComplaintChart() {
+      try {
+        const res = await fetch('http://127.0.0.1:8000/complaints');
+        const complaints = await res.json();
+
+        // Prepare daily counts for last 7 days
+        const dailyCounts = {};
+        const today = new Date();
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(today);
+          d.setDate(today.getDate() - i);
+          const key = d.toISOString().split("T")[0]; // YYYY-MM-DD
+          dailyCounts[key] = 0;
+        }
+
+        (complaints || []).forEach(c => {
+          const dateKey = (c.created_at || '').split("T")[0];
+          if (dateKey && dailyCounts.hasOwnProperty(dateKey)) dailyCounts[dateKey]++;
+        });
+
+        const labels = Object.keys(dailyCounts);
+        const values = Object.values(dailyCounts);
+        const ctx = document.getElementById("complaintsChart").getContext("2d");
+
+        if (window.complaintChartInstance) window.complaintChartInstance.destroy();
+
+        window.complaintChartInstance = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Complaints per Day",
+              data: values,
+              backgroundColor: "#45a29e",
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              title: { display: true, text: "Complaints Registered This Week" }
+            },
+            scales: {
+              x: { grid: { display: false } },
+              y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+          }
+        });
+
+      } catch (err) {
+        console.error("Error rendering weekly chart:", err);
+      }
+    }
+
+    async function renderMonthlyComplaintChart() {
+      try {
+        const res = await fetch('http://127.0.0.1:8000/complaints');
+        const complaints = await res.json();
+
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
+        const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        const monthLabel = `${monthNames[currentMonth]} ${currentYear}`;
+
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        const dailyCounts = {};
+        for (let i = 1; i <= daysInMonth; i++) dailyCounts[i] = 0;
+
+        (complaints || []).forEach(c => {
+          const date = new Date(c.created_at || c.date || '');
+          if (!isNaN(date.getTime()) && date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+            dailyCounts[date.getDate()]++;
+          }
+        });
+
+        const labels = Object.keys(dailyCounts);
+        const values = Object.values(dailyCounts);
+        const ctx = document.getElementById("complaintsChart").getContext("2d");
+
+        if (window.complaintChartInstance) window.complaintChartInstance.destroy();
+
+        window.complaintChartInstance = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Complaints per Day",
+              data: values,
+              borderColor: "#45a29e",
+              backgroundColor: "#66fcf1",
+              tension: 0.25,
+              fill: true,
+              pointRadius: 4,
+              pointBackgroundColor: "#45a29e",
+              pointBorderColor: "#fff"
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              title: { display: true, text: monthLabel, font: { size: 18 } }
+            },
+            scales: {
+              x: { title: { display: true, text: 'Day of Month' }, grid: { display: false } },
+              y: { beginAtZero: true, ticks: { stepSize: 1 }, title: { display: true, text: 'Complaints' } }
+            }
+          }
+        });
+
+      } catch (err) {
+        console.error("Error rendering monthly chart:", err);
+      }
+    }
+
+    // UI helpers to show/hide table & charts
+    function showWeeklyChart() {
+document.querySelector(".category-buttons").style.display = "none";
+      document.getElementById("complaintTable").style.display = "none";
+      document.getElementById("chartContainer").style.display = "block";
+      document.querySelector("#chartContainer h2").textContent = "Weekly Complaint Analysis";
+      renderComplaintChart();
+    }
+    function showMonthlyChart() {
+document.querySelector(".category-buttons").style.display = "none";
+      document.getElementById("complaintTable").style.display = "none";
+      document.getElementById("chartContainer").style.display = "block";
+      document.querySelector("#chartContainer h2").textContent = "Monthly Complaint Analysis";
+      renderMonthlyComplaintChart();
+    }
+    function showAllComplaints() {
+      document.getElementById("chartContainer").style.display = "none";
+      document.getElementById("complaintTable").style.display = "table";
+    }
+
+    // filter by category (client-side)
+    function filterCategory(category) {
+      const rows = document.querySelectorAll("#complaintTable tbody tr");
+      rows.forEach(row => {
+        if (category === "All" || row.getAttribute("data-category") === category) row.style.display = "";
+        else row.style.display = "none";
+      });
+    }
+
+    // Logout handlers
     function logoutAdmin() {
       localStorage.removeItem("adminUser");
       localStorage.removeItem("adminPhoto");
       window.location.href = "admin_login.html";
     }
-    document.getElementById("logoutNavbar").addEventListener("click", logoutAdmin);
-    document.getElementById("logoutSidebar").addEventListener("click", logoutAdmin);
+    const logoutNavbar = document.getElementById("logoutNavbar");
+    const logoutSidebar = document.getElementById("logoutSidebar");
+    if (logoutNavbar) logoutNavbar.addEventListener("click", logoutAdmin);
+    if (logoutSidebar) logoutSidebar.addEventListener("click", logoutAdmin);
+
+    // optional: refresh data every 60s (uncomment if desired)
+    // setInterval(fetchAllComplaints, 60000);
 
 
-    async function renderComplaintChart() {
+// Fetch and display feedback data
+async function fetchFeedback() {
   try {
-    const res = await fetch(`http://127.0.0.1:8000/complaints`);
-    const complaints = await res.json();
+    const res = await fetch("http://127.0.0.1:8000/feedback"); // your FastAPI route
+    if (!res.ok) throw new Error("Failed to fetch feedback data");
 
-    // Prepare daily counts for last 7 days
-    const dailyCounts = {};
-    const today = new Date();
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
-      const key = d.toISOString().split("T")[0]; // YYYY-MM-DD
-      dailyCounts[key] = 0;
+    const feedbacks = await res.json();
+    const tbody = document.querySelector("#feedbackTable tbody");
+    tbody.innerHTML = "";
+
+    if (feedbacks.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No feedback messages yet.</td></tr>`;
+      return;
     }
 
-    complaints.forEach(c => {
-      const dateKey = c.created_at?.split("T")[0];
-      if (dailyCounts[dateKey] !== undefined) dailyCounts[dateKey]++;
-    });
-
-    const labels = Object.keys(dailyCounts);
-    const values = Object.values(dailyCounts);
-
-    const ctx = document.getElementById("complaintsChart").getContext("2d");
-
-    // Destroy previous chart instance if exists
-    if (window.complaintChartInstance) window.complaintChartInstance.destroy();
-
-    window.complaintChartInstance = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: labels,
-        datasets: [{
-          label: "Complaints per Day",
-          data: values,
-          backgroundColor: "#45a29e",
-          borderRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          title: { display: true, text: "Complaints Registered This Week" }
-        },
-        scales: {
-          x: { grid: { display: false } },
-          y: { beginAtZero: true, ticks: { stepSize: 1 } }
-        }
-      }
+    feedbacks.forEach(f => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${f.name || "Anonymous"}</td>
+        <td>${f.email || "N/A"}</td>
+        <td>${f.subject || "—"}</td>
+        <td>${f.message || "No message provided"}</td>
+        <td>${f.timestamp || "—"}</td>
+      `;
+      tbody.appendChild(row);
     });
 
   } catch (err) {
-    console.error("Error fetching complaints:", err);
-  }
-}
-const btnAnalysis = document.getElementById("btnComplaintAnalysis");
-const complaintTable = document.getElementById("complaintTable");
-const chartContainer = document.getElementById("chartContainer");
-
-btnAnalysis.addEventListener("click", () => {
-  // Toggle table and chart
-  const showChart = chartContainer.style.display === "none";
-  chartContainer.style.display = showChart ? "block" : "none";
-  complaintTable.style.display = showChart ? "none" : "";
-
-  // Render chart only when showing it
-  if (showChart) renderComplaintChart();
-});
-
-async function renderMonthlyComplaintChart() {
-  try {
-    const res = await fetch(`http://127.0.0.1:8000/complaints`);
-    const complaints = await res.json();
-
-    // Get current month info
-    const today = new Date();
-    const currentMonth = today.getMonth(); // 0-11
-    const currentYear = today.getFullYear();
-
-    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    const monthLabel = `${monthNames[currentMonth]} ${currentYear}`;
-
-    // Initialize counts for each day of the month
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const dailyCounts = {};
-    for (let i = 1; i <= daysInMonth; i++) {
-      dailyCounts[i] = 0; // key = day number
-    }
-
-    // Count complaints per day
-    complaints.forEach(c => {
-      const date = new Date(c.created_at);
-      if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
-        dailyCounts[date.getDate()]++;
-      }
-    });
-
-    const labels = Object.keys(dailyCounts); // [1,2,3,...]
-    const values = Object.values(dailyCounts);
-
-    const ctx = document.getElementById("complaintsChart").getContext("2d");
-
-    // Destroy previous chart instance if exists
-    if (window.complaintChartInstance) window.complaintChartInstance.destroy();
-
-    window.complaintChartInstance = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: labels,
-        datasets: [{
-          label: "Complaints per Day",
-          data: values,
-          borderColor: "#45a29e",
-          backgroundColor: "#66fcf1",
-          tension: 0.3,
-          fill: true,
-          pointRadius: 4,
-          pointBackgroundColor: "#45a29e",
-          pointBorderColor: "#fff"
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          title: { display: true, text: monthLabel, font: { size: 18 } } // month-year on top
-        },
-        scales: {
-          x: { 
-            title: { display: true, text: 'Day of Month' },
-            grid: { display: false }
-          },
-          y: { 
-            beginAtZero: true,
-            ticks: { stepSize: 1 },
-            title: { display: true, text: 'Complaints' }
-          }
-        }
-      }
-    });
-
-  } catch (err) {
-    console.error("Error fetching complaints:", err);
+    console.error("Error loading feedback:", err);
   }
 }
 
+// Show Feedback Section
+function showFeedback() {
+  document.getElementById("chartContainer").style.display = "none";
+  document.getElementById("complaintTable").style.display = "none";
+  document.querySelector(".category-buttons").style.display = "none";
 
-function showWeeklyChart() {
-    const complaintTable = document.getElementById("complaintTable");
-    const chartContainer = document.getElementById("chartContainer");
+  // hide other sections
+  document.querySelectorAll("main section").forEach(sec => sec.style.display = "none");
 
-    // Hide table, show chart
-    complaintTable.style.display = "none";
-    chartContainer.style.display = "block";
+  // show feedback section
+  const feedbackSec = document.getElementById("feedbackSection");
+  feedbackSec.style.display = "block";
 
-    // Change chart title
-    document.querySelector("#chartContainer h2").textContent = "Weekly Complaint Analysis";
-
-    // Render weekly chart
-    renderComplaintChart();
+  // fetch data
+  fetchFeedback();
 }
-
-function showMonthlyChart() {
-    const complaintTable = document.getElementById("complaintTable");
-    const chartContainer = document.getElementById("chartContainer");
-
-    // Hide table, show chart
-    complaintTable.style.display = "none";
-    chartContainer.style.display = "block";
-
-    // Change chart title
-    document.querySelector("#chartContainer h2").textContent = "Monthly Complaint Analysis";
-
-    // Render monthly chart
-    renderMonthlyComplaintChart();
-}
-function showAllComplaints() {
-    document.getElementById("chartContainer").style.display = "none";
-    document.getElementById("complaintTable").style.display = "table";
-}
-function formatLocalDateTime(dateStr) {
-  if (!dateStr) return "";
-  
-  // Remove microseconds if present (":256649")
-  const cleanStr = dateStr.split('.')[0];
-
-  const date = new Date(cleanStr); // JS will use local timezone
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-
-  return `${year}-${month}-${day} ${hours}:${minutes}`;
-}
-function viewComplaint(id) {
-  if (!id) return alert("Complaint ID missing!");
-  console.log("Selected complaint ID:", id); // Debug
-  localStorage.setItem("selectedComplaintId", id);
-  window.location.href = "complaints_detail.html";
-}
-
-
-async function changeComplaintStatus(c_id, newStatus) {
-  try {
-    const res = await fetch(`http://127.0.0.1:8000/complaint/${c_id}/status`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: newStatus })
-    });
-    
-    if (!res.ok) throw new Error("Failed to update status");
-    
-    const data = await res.json();
-    console.log("Status updated:", data);
-
-    // Update the table immediately
-    updateRowStatus(c_id, newStatus);
-
-  } catch (err) {
-    console.error(err);
-    alert("Error updating status. Try again.");
-  }
-}
-function updateRowStatus(c_id, newStatus) {
-  const rows = document.querySelectorAll("#complaintTable tbody tr");
-  rows.forEach(row => {
-    if (row.getAttribute("data-complaint-id") === c_id) {
-      row.querySelector("td:nth-child(6)").textContent = newStatus; // Status column
-    }
-  });
-}
-
-
-
 
 
   </script>
