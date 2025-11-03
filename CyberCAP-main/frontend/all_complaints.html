@@ -183,12 +183,28 @@ async function loadComplaints() {
       tr.innerHTML = `
         <td data-label="ID">${complaint.complaint_id}</td>
         <td data-label="Incident Type">${complaint.incident_type}</td>
-        <td data-label="Date">${complaint.incident_date}</td>
+        <td data-label="Date">${
+          complaint.incident_date
+            ? new Date(complaint.incident_date).toLocaleDateString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+              })
+            : "N/A"
+        }</td>
         <td data-label="Time">${complaint.incident_time}</td>
         <td data-label="Platform">${complaint.platform}</td>
         <td data-label="Description">${complaint.description}</td>
         <td data-label="Status" class="status-${complaint.status.toLowerCase()}">${complaint.status}</td>
       `;
+
+      // ✅ Make each row clickable
+      tr.addEventListener("click", () => {
+        localStorage.setItem("selectedComplaintId", complaint.complaint_id);
+        console.log("Saved Complaint ID:", complaint.complaint_id);
+        window.location.href = "complaints_detail.html"; // redirect to details page
+      });
+
       tbody.appendChild(tr);
     });
   } catch (err) {
@@ -197,7 +213,7 @@ async function loadComplaints() {
   }
 }
 
-// Search/filter
+// 🔍 Search/filter
 document.getElementById("searchInput").addEventListener("keyup", function() {
   const filter = this.value.toLowerCase();
   const rows = document.querySelectorAll("#complaintsTable tbody tr");

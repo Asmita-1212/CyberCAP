@@ -229,13 +229,14 @@
       <button onclick="filterCategory('All')">All</button>
       <button onclick="filterCategory('Women Related')">Women Related</button>
       <button onclick="filterCategory('Phishing')">Phishing</button>
-      <button onclick="filterCategory('Finance')">Finance</button>
+      <button onclick="filterCategory('Financial Fraud')">Financial Fraud</button>
     </div>
 
     <table id="complaintTable">
       <thead>
         <tr>
           <th>User</th><th>Complaint</th><th>Date</th><th>Category</th><th>Priority</th>
+           <th>Status</th><th>Details</th> 
         </tr>
       </thead>
       <tbody>
@@ -379,13 +380,23 @@ fetchAdminInfo();
         complaints.forEach(c => {
           const row = document.createElement("tr");
           row.setAttribute("data-category", c.category);
+          row.setAttribute("data-complaint-id", c.complaint_id);
           row.innerHTML = `
             <td>${c.victim.email}</td>
             <td>${c.description}</td>
-            <td>${c.created_at}</td>
+          <td>${formatLocalDateTime(c.created_at)}</td>
             <td>${c.category}</td>
             <td>${c.priority}</td>
+            <td>${c.status || "Pending"}</td>
+            <td>
+<button class="view-btn" onclick="viewComplaint('${c.complaint_id}')">View</button>
+
+  </td>
           `;
+           if(c.status === "Resolved") row.style.backgroundColor = "#28a745"; // greenish
+  else if(c.status === "Pending") row.style.backgroundColor = "#fd7e14"; // reddish
+  else if(c.status === "Suspicious") row.style.backgroundColor = "#ffc107"; // optional: yellow
+
           tbody.appendChild(row);
 
           total++;
@@ -595,6 +606,63 @@ function showAllComplaints() {
     document.getElementById("chartContainer").style.display = "none";
     document.getElementById("complaintTable").style.display = "table";
 }
+function formatLocalDateTime(dateStr) {
+  if (!dateStr) return "";
+  
+  // Remove microseconds if present (":256649")
+  const cleanStr = dateStr.split('.')[0];
+
+  const date = new Date(cleanStr); // JS will use local timezone
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+function viewComplaint(id) {
+  if (!id) return alert("Complaint ID missing!");
+  console.log("Selected complaint ID:", id); // Debug
+  localStorage.setItem("selectedComplaintId", id);
+  window.location.href = "complaints_detail.html";
+}
+
+
+async function changeComplaintStatus(c_id, newStatus) {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/complaint/${c_id}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus })
+    });
+    
+    if (!res.ok) throw new Error("Failed to update status");
+    
+    const data = await res.json();
+    console.log("Status updated:", data);
+
+    // Update the table immediately
+    updateRowStatus(c_id, newStatus);
+
+  } catch (err) {
+    console.error(err);
+    alert("Error updating status. Try again.");
+  }
+}
+function updateRowStatus(c_id, newStatus) {
+  const rows = document.querySelectorAll("#complaintTable tbody tr");
+  rows.forEach(row => {
+    if (row.getAttribute("data-complaint-id") === c_id) {
+      row.querySelector("td:nth-child(6)").textContent = newStatus; // Status column
+    }
+  });
+}
+
+
+
+
+
   </script>
 </body>
 </html>

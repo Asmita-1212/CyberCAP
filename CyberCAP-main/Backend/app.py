@@ -1,12 +1,50 @@
-# Backend/app.py
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File, Body, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from datetime import datetime
 from passlib.hash import bcrypt
 from bson.objectid import ObjectId
 from pymongo import ReturnDocument
 from werkzeug.security import check_password_hash
 import pyotp
+import os
+import shutil
+from deep_translator import GoogleTranslator
+
+from Backend.models import User, LoginUser, Complaint, AdminLogin, AdminMFA, Volunteers
+from Backend.forgot_password_api import send_otp
+from Backend.database import users_collection, complaints_collection, admins_collection, password_resets, volunteers
+
+# ---------------- Initialize App ----------------
+app = FastAPI(title="CyberCAP Backend")
+
+# Enable CORS for frontend access
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ---------------- Setup Uploads Folder ----------------
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+app.mount("/uploads", StaticFiles(directory=UPLOAD_FOLDER), name="uploads")
+
+
+# ---------------- Upload Route ----------------
+@app.post("/upload")
+async def upload_files(files: list[UploadFile] = File(...)):
+    saved_filenames = []
+    for file in files:
+        file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        saved_filenames.append(file.filename)
+    return {"filenames": saved_filenames}
+
 
 from Backend.models import User, LoginUser, Complaint, AdminLogin, AdminMFA,Volunteers
 from Backend.forgot_password_api import send_otp
@@ -113,15 +151,88 @@ def login(user: LoginUser):
 def create_complaint(complaint: Complaint):
     complaint_data = complaint.dict()
     complaint_data["created_at"] = datetime.utcnow().isoformat()
+    # ------------------ HANDLE ATTACHMENTS ------------------
+    attachments = complaint_data.get("attachments", [])
+    if attachments and isinstance(attachments, list):
+        saved_files = []
+        for file_data in attachments:
+            if hasattr(file_data, "filename"):  # handle file uploads if passed
+                file_path = os.path.join(UPLOAD_FOLDER, file_data.filename)
+                with open(file_path, "wb") as buffer:
+                    shutil.copyfileobj(file_data.file, buffer)
+                saved_files.append(f"/uploads/{file_data.filename}")
+            else:
+                saved_files.append(file_data)  # in case it's already a string path
+        complaint_data["attachments"] = saved_files
+    else:
+        complaint_data["attachments"] = []
+    # ---------------------------------------------------------
 
     # ------------------ TRANSLATE DESCRIPTION ------------------
     original_description = complaint_data.get("description", "")
     translated_description = translate_to_english(original_description)
 
-# Save both
+    # Save both
     complaint_data["description"] = translated_description       # translated
     complaint_data["original_description"] = original_description # original
+    # -----------------------------------------------------------
 
+    # ------------------ MANUAL CATEGORY & PRIORITY ------------------
+    description_lower = translated_description.lower()
+    incident_lower = complaint_data.get("incident_type", "").lower()
+
+    # Define keywords for each category
+    categories_keywords = {
+        "Financial Fraud": ["bank", "account", "money", "fraud", "credit card", "upi", "loan", "scam"],
+        "Online Stalking": ["stalk", "facebook", "instagram", "social media", "tracking", "follow"],
+        "Harassment": ["harass", "abuse", "threat", "bully", "intimidate", "offensive"],
+        "Cyberbullying": ["cyberbully", "insult", "social media", "troll", "mock", "humiliate"],
+        "Phishing": ["phish", "email scam", "fake website", "password", "credentials", "link"],
+        "Hate Speech": ["hate", "discriminate", "religion", "race", "ethnicity", "offensive"],
+        "Child Exploitation": ["child", "minor", "abuse", "porn", "exploitation"],
+        "Data Breach": ["data leak", "database", "password leak", "confidential", "breach"],
+        "Identity Theft": ["identity", "stolen", "impersonate", "fraud", "fake id"],
+        "Ransomware": ["ransomware", "encrypt", "malware", "virus", "attack"],
+        "Hacking": ["hack", "unauthorized access", "breach", "intrusion"],
+        "Spam": ["spam", "unwanted message", "ads", "junk"],
+        "Fake Profile": ["fake account", "impersonate", "scam", "clone"],
+        "Pornography": ["porn", "explicit", "sexual content", "obscene"],
+        "Impersonation": ["impersonate", "fake profile", "pretend", "identity theft"],
+        "Cyber Threat": ["threat", "danger", "attack", "hack", "malware"],
+        "Social Media Misuse": ["social media", "misuse", "fake news", "rumor"],
+        "Online Gambling": ["gamble", "betting", "casino", "money"],
+        "Extortion": ["extort", "blackmail", "threat", "money"],
+        "Drug Sale": ["drugs", "narcotics", "illegal", "sale"],
+        "Terrorism": ["terror", "attack", "bomb", "threat"],
+        "Fake News": ["fake news", "rumor", "misinformation", "propaganda"],
+        "Other": []
+    }
+
+    # Assign category based on keywords
+    assigned_category = "Other"
+    for category, keywords in categories_keywords.items():
+        for kw in keywords:
+            if kw in description_lower or kw in incident_lower:
+                assigned_category = category
+                break
+        if assigned_category != "Other":
+            break
+
+    # Assign priority based on category
+    high_priority_categories = ["Financial Fraud", "Child Exploitation", "Ransomware", "Hacking", "Extortion", "Terrorism"]
+    medium_priority_categories = ["Online Stalking", "Harassment", "Cyberbullying", "Phishing", "Identity Theft"]
+    low_priority_categories = ["Spam", "Fake Profile", "Pornography", "Impersonation", "Social Media Misuse", "Online Gambling", "Fake News", "Drug Sale", "Cyber Threat"]
+
+    if assigned_category in high_priority_categories:
+        assigned_priority = "High"
+    elif assigned_category in medium_priority_categories:
+        assigned_priority = "Medium"
+    else:
+        assigned_priority = "Low"
+
+    complaint_data["category"] = assigned_category
+    complaint_data["priority"] = assigned_priority
+    print(f"✅ Assigned -> Category: {assigned_category}, Priority: {assigned_priority}")
     # -----------------------------------------------------------
 
     # Generate complaint ID
@@ -134,27 +245,22 @@ def create_complaint(complaint: Complaint):
 
     # Insert into MongoDB
     result = complaints_collection.insert_one(complaint_data)
-    
+
+    # Response back to frontend
     return {
         "id": str(result.inserted_id),
         "complaint_id": complaint_data["complaint_id"],
-        "message": "Complaint submitted successfully"
+        "message": "Complaint submitted successfully",
+        "assigned_category": complaint_data["category"],
+        "assigned_priority": complaint_data["priority"]
     }
-
 @app.get("/complaints")
-def get_complaints():
-    complaints = []
-    for c in complaints_collection.find():
-        complaints.append(complaint_helper(c))
-    return complaints
-
-@app.get("/user_complaints/{email}")
-def get_user_complaints(email: str):
-    complaints = []
-    for c in complaints_collection.find({"registered_by": email}):
-        complaints.append(complaint_helper(c))
-    return complaints
-
+def get_all_complaints():
+    # Fetch all complaints from MongoDB
+    complaints = complaints_collection.find().sort("created_at", -1)  # latest first
+    complaint_list = [complaint_helper(c) for c in complaints]
+    print(f"⚡ Fetched {len(complaint_list)} complaints")
+    return complaint_list
 # ---------------- Admin Endpoints ----------------
 @app.post("/admin-login")
 def admin_login(admin: AdminLogin):
@@ -282,3 +388,40 @@ def register_volunteer(
     return {"message": "✅ Registration successful! Thank you for joining CyberCAP."}
 
 
+@app.get("/admin-info/{username}")
+def get_admin_info(username: str):
+    admin = admins_collection.find_one({"username": username})
+    if not admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+    return {
+        "_id": str(admin["_id"]),
+        "username": admin["username"],
+        "email": admin["email"],
+        "phone": admin.get("phone", None),
+        "photo": admin.get("photo", None)
+    }
+
+@app.get("/complaint/{complaint_id}")
+def get_complaint(complaint_id: str):
+    complaint = complaints_collection.find_one({"complaint_id": complaint_id})
+    if not complaint:
+        raise HTTPException(status_code=404, detail="Complaint not found")
+    complaint["_id"] = str(complaint["_id"])
+    return complaint
+
+@app.patch("/complaint/{c_id}/status")
+async def update_complaint_status(c_id: str, data: dict):
+    new_status = data.get("status")
+    if not new_status:
+        raise HTTPException(status_code=400, detail="Status is required")
+
+    updated = complaints_collection.find_one_and_update(
+        {"_id": ObjectId(c_id)},
+        {"$set": {"status": new_status}},
+        return_document=ReturnDocument.AFTER
+    )
+
+    if not updated:
+        raise HTTPException(status_code=404, detail="Complaint not found")
+
+    return {"message": "Status updated", "status": new_status}

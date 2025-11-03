@@ -151,7 +151,21 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Handle attachments safely
     const attachmentInput = form.querySelector('input[name="attachments[]"]');
-    const attachments = attachmentInput ? Array.from(attachmentInput.files).map(f => f.name) : [];
+    let attachments = [];
+if (attachmentInput && attachmentInput.files.length > 0) {
+  const formData = new FormData();
+  Array.from(attachmentInput.files).forEach(file => formData.append("files", file));
+
+  // Upload the files to backend
+  const uploadRes = await fetch("http://127.0.0.1:8000/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  const uploadData = await uploadRes.json();
+  attachments = uploadData.filenames;  // store uploaded file names
+}
+
 
     // Prepare complaint data
     const data = {
