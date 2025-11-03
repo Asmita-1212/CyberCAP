@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberCAP Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #f7f9fb, #eaf0f4);
+      display: flex;
+      min-height: 100vh;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar (same as before) */
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(180deg, #0b0c10, #1f2833);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 25px 15px;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
+      transition: all 0.4s ease;
+      box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+    }
+
+    .sidebar img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 3px solid #45a29e;
+      margin-bottom: 10px;
+      object-fit: cover;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .sidebar img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #45a29e;
+    }
+    .sidebar h3, .sidebar p {
+      text-align: center;
+      margin: 5px 0;
+      font-size: 15px;
+    }
+    .sidebar hr {
+      width: 100%;
+      border: none;
+      border-top: 1px solid #45a29e;
+      margin: 15px 0;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      width: 100%;
+      padding: 0;
+      margin-top: 20px;
+    }
+    .sidebar ul li {
+      width: 100%;
+      margin: 10px 0;
+    }
+    .sidebar ul li a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .sidebar ul li a:hover {
+      background: linear-gradient(90deg, #45a29e, #66fcf1);
+      color: #0b0c10;
+      transform: translateX(5px);
+    }
+    .sidebar ul li a i {
+      margin-right: 10px;
+    }
+
+    .logout {
+      margin-top: auto;
+      width: 90%;
+      background: linear-gradient(90deg, #ff5f6d, #d6293e);
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: bold;
+      transition: 0.3s;
+      box-shadow: 0 2px 8px rgba(255,95,109,0.4);
+    }
+    .logout:hover {
+      background: linear-gradient(90deg, #ff7676, #ff3c3c);
+      transform: translateY(-2px);
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 260px;
+      right: 0;
+      background-color: #1f2833;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 25px;
+      height: 60px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      z-index: 900;
+    }
+
+    .navbar-title {
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .navbar .right-section i {
+      font-size: 20px;
+      cursor: pointer;
+      color: #66fcf1;
+      transition: 0.3s;
+    }
+    .navbar .right-section i:hover {
+      color: #00bcd4;
+      transform: scale(1.15);
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      flex: 1;
+      margin-left: 260px;
+      padding: 90px 30px 30px;
+    }
+    h2 { font-size: 24px; margin-bottom: 20px; color: #1f2833; }
+
+    /* ANIMATIONS (Try each) */
+    /* 1️⃣ Fade-Up */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fadeUp { animation: fadeUp 0.6s ease-in-out; }
+
+    /* 2️⃣ Float In */
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(25px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .floatIn { animation: floatIn 0.5s ease-in-out; }
+
+    /* 3️⃣ Slide Reveal */
+    @keyframes slideReveal {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .slideReveal { animation: slideReveal 0.6s ease; }
+
+    /* Filter Layouts */
+    /* 🟩 Option A - Tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #45a29e;
+    }
+    .filter-tabs button {
+      background: none;
+      border: none;
+      padding: 10px 16px;
+      font-weight: 500;
+      color: #1f2833;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-tabs button.active,
+    .filter-tabs button:hover {
+      border-bottom: 3px solid #45a29e;
+      color: #45a29e;
+    }
+
+    /* 🟦 Option B - Dropdown */
+    #filterDropdown {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 2px solid #45a29e;
+      font-weight: 500;
+      outline: none;
+      background: white;
+      transition: 0.3s;
+      margin-bottom: 20px;
+    }
+    #filterDropdown:hover { box-shadow: 0 0 8px #45a29e; }
+
+    /* 🟨 Option C - Floating Panel */
+    .filter-panel {
+      display: flex;
+      gap: 12px;
+      background: #fff;
+      padding: 10px 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      margin-bottom: 20px;
+    }
+    .filter-panel button {
+      border: none;
+      background: linear-gradient(90deg, #45a29e, #66fcf1);
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .filter-panel button:hover {
+      background: linear-gradient(90deg, #66fcf1, #45a29e);
+      transform: translateY(-2px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th { background-color: #1f2833; color: white; }
+    tr:hover { background-color: #f0f0f0; transform: scale(1.01); transition: 0.2s; }
+    .view-btn {
+      background: #45a29e;
+      border: none;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .view-btn:hover {
+      background: #00bcd4;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin Photo">
+    <h3>Admin Name</h3>
+    <p>Email: admin@cybercap.com</p>
+    <hr>
+    <ul>
+      <li><a href="#"><i class="fas fa-list"></i> All Complaints</a></li>
+      <li><a href="#"><i class="fas fa-chart-bar"></i> Weekly Analysis</a></li>
+      <li><a href="#"><i class="fas fa-chart-line"></i> Monthly Analysis</a></li>
+    </ul>
+    <button class="logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </div>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <span class="navbar-title">Admin Dashboard</span>
+    <div class="right-section">
+      <i class="fas fa-bell"></i>
+      <i class="fas fa-envelope"></i>
+      <i class="fas fa-sign-out-alt"></i>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main-content fadeUp">
+    <h2>Complaint Overview</h2>
+
+    <!-- 🟩 Filter Tabs -->
+    <div class="filter-tabs">
+      <button class="active">All</button>
+      <button>Women Related</button>
+      <button>Phishing</button>
+      <button>Financial Fraud</button>
+    </div>
+
+    <!-- 🟦 Dropdown (uncomment to test) -->
+    <!-- <select id="filterDropdown">
+      <option>All</option>
+      <option>Women Related</option>
+      <option>Phishing</option>
+      <option>Financial Fraud</option>
+    </select> -->
+
+    <!-- 🟨 Floating Panel (uncomment to test) -->
+    <!-- <div class="filter-panel">
+      <button>All</button>
+      <button>Women Related</button>
+      <button>Phishing</button>
+      <button>Financial Fraud</button>
+    </div> -->
+
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Complaint</th>
+          <th>Date</th>
+          <th>Category</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>asmitatanmor12@gmail.com</td>
+          <td>Instagram account hacked</td>
+          <td>10/13/2025</td>
+          <td>Financial Fraud</td>
+          <td>High</td>
+          <td>Resolved</td>
+          <td><button class="view-btn">View</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

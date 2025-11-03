@@ -13,3 +13,5 @@ users_collection = db["users"]
 complaints_collection = db["complaints"]
 admins_collection = db["admins"]   # 🔐 New collection for admins
 volunteers = db["volunteers"] #volunteer registration
+contact_collection = db["contact_messages"]
+

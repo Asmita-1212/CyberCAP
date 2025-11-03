@@ -65,3 +65,9 @@ class Volunteers(BaseModel):
     state: str
     expertise: str = None
     message: str
+
+class ContactMessage(BaseModel):
+    name: str
+    email: str
+    subject: str | None = None
+    message: str

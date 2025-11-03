@@ -1,3 +1,7 @@
+import joblib
+import os
+from fastapi import HTTPException
+
 from fastapi import FastAPI, HTTPException, UploadFile, File, Body, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -13,10 +17,41 @@ from deep_translator import GoogleTranslator
 
 from Backend.models import User, LoginUser, Complaint, AdminLogin, AdminMFA, Volunteers
 from Backend.forgot_password_api import send_otp
-from Backend.database import users_collection, complaints_collection, admins_collection, password_resets, volunteers
+from Backend.database import users_collection, complaints_collection, admins_collection, password_resets, volunteers,contact_collection
 
 # ---------------- Initialize App ----------------
 app = FastAPI(title="CyberCAP Backend")
+
+
+# ---------------- ML Model Loading ----------------
+# Path: Backend/app.py → ../ml/category_model.pkl
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # Go one level up from Backend/
+ML_DIR = os.path.join(BASE_DIR, "ml")
+
+category_model_path = os.path.join(ML_DIR, "category_model.pkl")
+priority_model_path = os.path.join(ML_DIR, "priority_model.pkl")
+
+try:
+    category_model = joblib.load(category_model_path)
+    priority_model = joblib.load(priority_model_path)
+    print("✅ ML Models loaded successfully from /ml folder")
+except Exception as e:
+    print(f"❌ Error loading ML models: {e}")
+    category_model = None
+    priority_model = None
+
+def classify_complaint(description: str):
+    """
+    Predicts complaint category and priority using trained ML models.
+    """
+    if not category_model or not priority_model:
+        raise HTTPException(status_code=500, detail="ML models not loaded")
+
+    # Predict category and priority
+    category_pred = category_model.predict([description])[0]
+    priority_pred = priority_model.predict([description])[0]
+
+    return {"category": category_pred, "priority": priority_pred}
 
 # Enable CORS for frontend access
 app.add_middleware(
@@ -149,20 +184,22 @@ def login(user: LoginUser):
 # ---------------- Complaint Endpoints ----------------
 @app.post("/complaint")
 def create_complaint(complaint: Complaint):
+    # Convert incoming Pydantic model to dict
     complaint_data = complaint.dict()
     complaint_data["created_at"] = datetime.utcnow().isoformat()
+
     # ------------------ HANDLE ATTACHMENTS ------------------
     attachments = complaint_data.get("attachments", [])
     if attachments and isinstance(attachments, list):
         saved_files = []
         for file_data in attachments:
-            if hasattr(file_data, "filename"):  # handle file uploads if passed
+            if hasattr(file_data, "filename"):
                 file_path = os.path.join(UPLOAD_FOLDER, file_data.filename)
                 with open(file_path, "wb") as buffer:
                     shutil.copyfileobj(file_data.file, buffer)
                 saved_files.append(f"/uploads/{file_data.filename}")
             else:
-                saved_files.append(file_data)  # in case it's already a string path
+                saved_files.append(file_data)
         complaint_data["attachments"] = saved_files
     else:
         complaint_data["attachments"] = []
@@ -171,82 +208,34 @@ def create_complaint(complaint: Complaint):
     # ------------------ TRANSLATE DESCRIPTION ------------------
     original_description = complaint_data.get("description", "")
     translated_description = translate_to_english(original_description)
-
-    # Save both
-    complaint_data["description"] = translated_description       # translated
-    complaint_data["original_description"] = original_description # original
+    complaint_data["description"] = translated_description
+    complaint_data["original_description"] = original_description
     # -----------------------------------------------------------
 
-    # ------------------ MANUAL CATEGORY & PRIORITY ------------------
-    description_lower = translated_description.lower()
-    incident_lower = complaint_data.get("incident_type", "").lower()
-
-    # Define keywords for each category
-    categories_keywords = {
-        "Financial Fraud": ["bank", "account", "money", "fraud", "credit card", "upi", "loan", "scam"],
-        "Online Stalking": ["stalk", "facebook", "instagram", "social media", "tracking", "follow"],
-        "Harassment": ["harass", "abuse", "threat", "bully", "intimidate", "offensive"],
-        "Cyberbullying": ["cyberbully", "insult", "social media", "troll", "mock", "humiliate"],
-        "Phishing": ["phish", "email scam", "fake website", "password", "credentials", "link"],
-        "Hate Speech": ["hate", "discriminate", "religion", "race", "ethnicity", "offensive"],
-        "Child Exploitation": ["child", "minor", "abuse", "porn", "exploitation"],
-        "Data Breach": ["data leak", "database", "password leak", "confidential", "breach"],
-        "Identity Theft": ["identity", "stolen", "impersonate", "fraud", "fake id"],
-        "Ransomware": ["ransomware", "encrypt", "malware", "virus", "attack"],
-        "Hacking": ["hack", "unauthorized access", "breach", "intrusion"],
-        "Spam": ["spam", "unwanted message", "ads", "junk"],
-        "Fake Profile": ["fake account", "impersonate", "scam", "clone"],
-        "Pornography": ["porn", "explicit", "sexual content", "obscene"],
-        "Impersonation": ["impersonate", "fake profile", "pretend", "identity theft"],
-        "Cyber Threat": ["threat", "danger", "attack", "hack", "malware"],
-        "Social Media Misuse": ["social media", "misuse", "fake news", "rumor"],
-        "Online Gambling": ["gamble", "betting", "casino", "money"],
-        "Extortion": ["extort", "blackmail", "threat", "money"],
-        "Drug Sale": ["drugs", "narcotics", "illegal", "sale"],
-        "Terrorism": ["terror", "attack", "bomb", "threat"],
-        "Fake News": ["fake news", "rumor", "misinformation", "propaganda"],
-        "Other": []
-    }
-
-    # Assign category based on keywords
-    assigned_category = "Other"
-    for category, keywords in categories_keywords.items():
-        for kw in keywords:
-            if kw in description_lower or kw in incident_lower:
-                assigned_category = category
-                break
-        if assigned_category != "Other":
-            break
-
-    # Assign priority based on category
-    high_priority_categories = ["Financial Fraud", "Child Exploitation", "Ransomware", "Hacking", "Extortion", "Terrorism"]
-    medium_priority_categories = ["Online Stalking", "Harassment", "Cyberbullying", "Phishing", "Identity Theft"]
-    low_priority_categories = ["Spam", "Fake Profile", "Pornography", "Impersonation", "Social Media Misuse", "Online Gambling", "Fake News", "Drug Sale", "Cyber Threat"]
-
-    if assigned_category in high_priority_categories:
-        assigned_priority = "High"
-    elif assigned_category in medium_priority_categories:
-        assigned_priority = "Medium"
-    else:
-        assigned_priority = "Low"
-
-    complaint_data["category"] = assigned_category
-    complaint_data["priority"] = assigned_priority
-    print(f"✅ Assigned -> Category: {assigned_category}, Priority: {assigned_priority}")
+    # ------------------ ML MODEL PREDICTION ------------------
+    try:
+        predictions = classify_complaint(translated_description)
+        complaint_data["category"] = predictions["category"]
+        complaint_data["priority"] = predictions["priority"]
+        print(f"🔍 Predicted -> Category: {predictions['category']}, Priority: {predictions['priority']}")
+    except Exception as e:
+        print(f"⚠️ Prediction error: {e}")
+        complaint_data["category"] = "Unknown"
+        complaint_data["priority"] = "Normal"
     # -----------------------------------------------------------
 
-    # Generate complaint ID
+    # Generate unique complaint ID
     next_id = get_next_sequence("complaintid")
     complaint_data["complaint_id"] = f"CC-{next_id:05d}"
     complaint_data["status"] = "Pending"
 
-    # Link complaint to logged-in user
+    # Link to logged-in user if applicable
     complaint_data["registered_by"] = complaint_data.get("victim", {}).get("email")
 
-    # Insert into MongoDB
+    # Save in MongoDB
     result = complaints_collection.insert_one(complaint_data)
 
-    # Response back to frontend
+    # Return success response
     return {
         "id": str(result.inserted_id),
         "complaint_id": complaint_data["complaint_id"],
@@ -254,6 +243,7 @@ def create_complaint(complaint: Complaint):
         "assigned_category": complaint_data["category"],
         "assigned_priority": complaint_data["priority"]
     }
+
 @app.get("/complaints")
 def get_all_complaints():
     # Fetch all complaints from MongoDB
@@ -409,19 +399,64 @@ def get_complaint(complaint_id: str):
     complaint["_id"] = str(complaint["_id"])
     return complaint
 
+
+
+from bson import ObjectId
+
+from bson import ObjectId
+
 @app.patch("/complaint/{c_id}/status")
-async def update_complaint_status(c_id: str, data: dict):
+async def update_status(c_id: str, data: dict):
     new_status = data.get("status")
-    if not new_status:
-        raise HTTPException(status_code=400, detail="Status is required")
+    print(f"🟡 Incoming PATCH request for complaint_id={c_id}")
+    print(f"🟢 New status received: {new_status}")
 
-    updated = complaints_collection.find_one_and_update(
-        {"_id": ObjectId(c_id)},
-        {"$set": {"status": new_status}},
-        return_document=ReturnDocument.AFTER
-    )
+    # Convert string to ObjectId
+    try:
+        obj_id = ObjectId(c_id)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid complaint ID format")
 
-    if not updated:
+    # Find complaint by ObjectId
+    complaint = complaints_collection.find_one({"_id": obj_id})
+    print(f"🔍 Found complaint: {complaint}")
+
+    if not complaint:
         raise HTTPException(status_code=404, detail="Complaint not found")
 
-    return {"message": "Status updated", "status": new_status}
+    # Perform update
+    result = complaints_collection.update_one(
+        {"_id": obj_id},
+        {"$set": {"status": new_status}}
+    )
+
+    print(f"✅ Matched {result.matched_count}, Modified {result.modified_count}")
+    return {"message": "Status updated successfully"}
+
+@app.post("/contact")
+async def save_contact(
+    name: str = Form(...),
+    email: str = Form(...),
+    subject: str = Form(""),
+    message: str = Form(...)
+):
+    contact_data = {
+        "name": name,
+        "email": email,
+        "subject": subject,
+        "message": message,
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+    contact_collection.insert_one(contact_data)
+    return {"status": "success", "message": "Your message has been received!"}
+
+@app.get("/contact_messages")
+async def get_contact_messages():
+    messages = list(contact_collection.find({}, {"_id": 0}))
+    return {"messages": messages}
+@app.get("/feedback")
+def get_feedback():
+    feedbacks = list(contact_collection.find({}))
+    for f in feedbacks:
+        f["_id"] = str(f["_id"])
+    return feedbacks
