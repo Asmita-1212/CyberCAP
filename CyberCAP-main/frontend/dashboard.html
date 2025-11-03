@@ -7,15 +7,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* General */
+    /* 🌌 General */
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at top left, #0a0f1f, #02060d);
-      color: #e0e0e0;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #f3f3f3;
     }
 
-    /* Navbar */
+    /* 🧭 Navbar */
     .navbar {
       position: sticky;
       top: 0;
@@ -24,19 +24,18 @@
       justify-content: space-between;
       align-items: center;
       padding: 12px 40px;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(0,255,255,0.2);
     }
 
     .navbar .logo {
-  color: #ecf3f5;
-  font-size: 30px;
-  font-weight: bold;
-  text-decoration: none;
-  letter-spacing: 1px;
-}
-
+      color: #00eaff;
+      font-size: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
 
     .navbar ul {
       list-style: none;
@@ -47,7 +46,7 @@
     }
 
     .navbar ul li a {
-      color: #eee;
+      color: #e0e0e0;
       text-decoration: none;
       font-weight: 500;
       transition: 0.3s;
@@ -69,7 +68,7 @@
       width: 100%;
     }
 
-    /* Carousel */
+    /* 🖼️ Carousel */
     .carousel {
       position: relative;
       width: 100%;
@@ -90,17 +89,17 @@
       opacity: 1;
     }
 
-    /* Section Title */
+    /* 💫 Section Title */
     h1.section-title {
       text-align: center;
       margin-top: 40px;
       font-size: 28px;
       font-family: 'Orbitron', sans-serif;
-      color: #00eaff;
-      text-shadow: 0 0 15px #00eaff;
+      color: #00ffff;
+      text-shadow: 0 0 20px #00ffff;
     }
 
-    /* Cards */
+    /* 🧩 Cards */
     .container {
       display: flex;
       flex-wrap: wrap;
@@ -110,25 +109,27 @@
     }
 
     .crime-card {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(0,255,255,0.3);
       border-radius: 15px;
       width: 270px;
       text-align: center;
-      box-shadow: 0 0 15px rgba(0,255,255,0.1);
+      box-shadow: 0 0 25px rgba(0,255,255,0.1);
       transition: all 0.3s ease;
       overflow: hidden;
     }
 
     .crime-card:hover {
       transform: translateY(-10px);
-      box-shadow: 0 0 25px rgba(0,255,255,0.4);
+      box-shadow: 0 0 25px rgba(0,255,200,0.6);
+      background: rgba(0, 255, 255, 0.1);
     }
 
     .crime-card img {
       width: 100%;
       height: 160px;
       object-fit: cover;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     .card-body {
@@ -155,29 +156,29 @@
     }
 
     .btn-register {
-      background: #00eaff;
+      background: #00ffff;
       color: #000;
-      box-shadow: 0 0 10px #00eaff;
+      box-shadow: 0 0 10px #00ffff;
     }
 
     .btn-register:hover {
       background: transparent;
-      color: #00eaff;
-      border: 1px solid #00eaff;
+      color: #00ffff;
+      border: 1px solid #00ffff;
     }
 
     .btn-track {
-      background: #8000ff;
-      box-shadow: 0 0 10px #8000ff;
+      background: #ff00ff;
+      box-shadow: 0 0 10px #ff00ff;
     }
 
     .btn-track:hover {
       background: transparent;
-      color: #b366ff;
-      border: 1px solid #b366ff;
+      color: #ff80ff;
+      border: 1px solid #ff80ff;
     }
 
-    /* Footer (Original Style) */
+    /* 🦶 Footer */
     footer {
       background: #000;
       color: #eee;
@@ -194,7 +195,7 @@
     }
 
     .footer-section h3 {
-      color: #56c5f8;
+      color: #00ffff;
       margin-bottom: 15px;
     }
 
@@ -214,7 +215,7 @@
     }
 
     .footer-section ul li a:hover {
-      color: #56c5f8;
+      color: #00ffff;
     }
 
     .social-icons a {
@@ -225,7 +226,7 @@
     }
 
     .social-icons a:hover {
-      color: #56c5f8;
+      color: #00ffff;
     }
 
     .footer-bottom {
@@ -253,30 +254,38 @@
         text-align: center;
       }
     }
+    .navbar .logo img {
+  height: 45px;            /* adjust as per your logo size */
+  width: auto;
+  vertical-align: middle;
+  filter: drop-shadow(0 0 4px cyan);
+  border-radius: 40px;
+  margin-right: 10px;
+}
+
   </style>
 </head>
 <body>
 
-<!-- Navbar -->
+<!-- 🌐 Navbar -->
 <nav class="navbar">
-  <a href="#" class="logo">CyberCAP</a>
+  <a href="#" class="logo"><img src="logo.png" >CyberCAP</a>
   <ul>
     <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Volunteers</a></li>
     <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning</a></li>
     <li><a href="user_login.html"><i class="fas fa-user"></i> User Login</a></li>
-    
     <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact</a></li>
   </ul>
 </nav>
 
-<!-- Carousel -->
+<!-- 🎞️ Carousel -->
 <div class="carousel">
   <img src="https://allaboutvanuatu.com/wp-content/uploads/2023/02/CyberSecurity1.png" class="active" alt="Cyber Security Awareness">
   <img src="https://thumbs.dreamstime.com/b/cyber-security-data-protection-business-technology-privacy-concept-cyber-crime-cyber-security-data-protection-business-technology-209688540.jpg" alt="Protect Your Data">
   <img src="https://news.erau.edu/-/media/images/news/cyberforensics.jpg" alt="Cyber Forensics">
 </div>
 
-<!-- Section -->
+<!-- 🧠 Section -->
 <h1 class="section-title">Cybercrime Awareness & Reporting</h1>
 
 <div class="container">
@@ -285,7 +294,7 @@
     <div class="card-body">
       <h5 class="card-title">Women Related Crime</h5>
       <a href="user_login.html" class="btn btn-register">Register</a>
-      <a href="user_login.html" class="btn btn-track">Track</a>
+      <a href="track_complaint.html" class="btn btn-track">Track</a>
     </div>
   </div>
 
@@ -294,7 +303,7 @@
     <div class="card-body">
       <h5 class="card-title">Phishing Fraud</h5>
       <a href="user_login.html" class="btn btn-register">Register</a>
-      <a href="user_login.html" class="btn btn-track">Track</a>
+      <a href="track_complaint.html" class="btn btn-track">Track</a>
     </div>
   </div>
 
@@ -303,7 +312,7 @@
     <div class="card-body">
       <h5 class="card-title">Hacking Crime</h5>
       <a href="user_login.html" class="btn btn-register">Register</a>
-      <a href="user_login.html" class="btn btn-track">Track</a>
+      <a href="track_complaint.html" class="btn btn-track">Track</a>
     </div>
   </div>
 
@@ -312,14 +321,14 @@
     <div class="card-body">
       <h5 class="card-title">Malware Crime</h5>
       <a href="user_login.html" class="btn btn-register">Register</a>
-      <a href="user_login.html" class="btn btn-track">Track</a>
+      <a href="track_complaint.html" class="btn btn-track">Track</a>
     </div>
   </div>
 </div>
 
-<!-- Footer (Original) -->
+<!-- 🦶 Footer -->
 <footer>
-  <div class="footer-section" id="footer">
+  <div class="footer-section">
     <h3>About CyberCAP</h3>
     <p>CyberCAP is a cybersecurity awareness and reporting platform helping citizens fight against cybercrimes through education and quick reporting.</p>
   </div>

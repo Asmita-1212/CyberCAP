@@ -13,10 +13,59 @@
       box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #000;
+      padding: 10px 40px;
+      border-bottom: 2px solid cyan;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
 
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .navbar .logo img {
+      height: 40px;
+      width: auto;
+      border-radius: 40px;
+      margin-right: 10px; /* space between logo and text */
+      filter: drop-shadow(0 0 3px cyan);
+    }
+
+    .navbar .logo span {
+      color: #00eaff;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    .navbar ul li a {
+      text-decoration: none;
+      color: #f0f0f0;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .navbar ul li a:hover {
+      color: cyan;
+    }
     body {
       background: linear-gradient(to right, #56c5f8, #71afec);
-      padding-top: 70px; /* for fixed navbar */
+       /* for fixed navbar */
       color: #333;
     }
 
@@ -85,20 +134,17 @@
     h1::before {
       content: "🛡️ ";
     }
-
     p {
       text-align: center;
       color: #666;
       margin-bottom: 25px;
     }
-
     label {
       display: block;
       margin-top: 16px;
       font-weight: 600;
       color: #333;
     }
-
     input, select, textarea {
       width: 100%;
       padding: 12px;
@@ -171,14 +217,18 @@
 </head>
 <body>
 
-  <!-- Navbar (matches the black one from your image) -->
-  <nav>
-    <div class="logo">CyberCAP</div>
+   <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <img src="logo.png" alt="CyberCAP Logo">
+      <span>CyberCAP</span>
+    </a>
     <ul>
-      <li><a href="dashboard.html"><i class="fas fa-home"></i>Home</a></li>
-      <li><a href="#" class="active"><i class="fa-solid fa-users"></i> Cyber Volunteers</a></li>
-      <li><a href="learncorner.html"><i class="fa-solid fa-book"></i> Learning Corner</a></li>
-      <li><a href="contactus.html"><i class="fa-solid fa-envelope"></i> Contact Us</a></li>
+      <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Volunteers</a></li>
+      <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning</a></li>
+      <li><a href="user_login.html"><i class="fas fa-user"></i> User Login</a></li>
+      <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact</a></li>
     </ul>
   </nav>
 
