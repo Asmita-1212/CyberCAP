@@ -9,7 +9,7 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #3e64ff, #5edfff);
+      background: linear-gradient(135deg, #54596b);
       display: flex;
       flex-direction: column; /* Stack children vertically */
       justify-content: flex-start; /* Align children from the top */
@@ -42,7 +42,7 @@
     .navbar ul {
       list-style: none;
       display: flex;
-      gap: 25px;
+      gap: 5px;
       margin: 0;
       padding: 0;
     }
@@ -208,18 +208,27 @@
         flex-direction: column;
       }
     }
+    .navbar .logo img {
+  height: 45px;            /* adjust as per your logo size */
+  width: auto;
+  vertical-align: middle;
+  filter: drop-shadow(0 0 4px cyan);
+  border-radius: 40px;
+  margin-right: 10px;
+}
   </style>
 </head>
 <body>
 
 <!-- Persistent Navbar -->
 <nav class="navbar">
-  <a href="#" class="logo">CyberCAP</a>
+  <a href="#" class="logo"><img src="logo.png" >CyberCAP</a>
   <ul>
      <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
     <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Cyber Volunteers</a></li>
-    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning Corner</a></li>
-    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact Us</a></li>
+    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning </a></li>
+    <li><a href="user_login.html"><i class="fas fa-user"></i> User Login</a></li>
+    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact </a></li>
     
   </ul>
 </nav>
@@ -268,7 +277,7 @@
         localStorage.setItem("email", data.user.email);
 
         setTimeout(() => {
-          window.location.href = "user_dashboard.html";
+          window.location.href = "after_login.html";
         }, 1000);
       } else {
         messageEl.style.color = "red";

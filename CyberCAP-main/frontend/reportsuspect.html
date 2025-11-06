@@ -5,7 +5,6 @@
   <title>Report Suspect - Cybercrime</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* Reset and Base */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -14,10 +13,73 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #5dbaf0);
-      padding: 30px 15px;
+      background: linear-gradient(to right, #6f7579, #a4d4fa);
+      padding: 100px 15px 30px; /* space for fixed navbar */
     }
 
+    /* Navbar */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 60px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+      border-bottom: 2px solid royalblue;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .logo img {
+      height: 40px;
+      width: auto;
+      border-radius: 50%;
+      margin-right: 10px;
+      filter: drop-shadow(0 0 3px cyan);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #00bfff;
+    }
+
+    /* Blue underline for active or hover */
+    .nav-links a.active::after,
+    .nav-links a:hover::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 100%;
+      height: 2px;
+      background-color: #00bfff;
+      border-radius: 2px;
+    }
+
+    /* Main container */
     .container {
       max-width: 720px;
       margin: auto;
@@ -109,29 +171,45 @@
       background: linear-gradient(to right, #0056b3, #004494);
     }
 
-    @media (max-width: 600px) {
-      .container {
-        padding: 25px 20px;
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
       }
-
-      h1 {
-        font-size: 24px;
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
       }
     }
   </style>
 </head>
 <body>
 
+  <!-- NAVBAR -->
+  <nav>
+    <div class="logo">
+      <img src="logo.png" alt="CyberCAP Logo"> CyberCAP
+    </div>
+    <div class="nav-links">
+      <a href="home.html">Home</a>
+      <a href="complaint.html">Register Complaint</a>
+      <a href="trackcomplaint.html">Track Complaint</a>
+      <a href="reportsuspect.html" class="active">Report Suspect</a>
+      <a href="#" onclick="logoutUser()">Logout</a>
+    </div>
+  </nav>
+
+  <!-- PAGE CONTENT -->
   <div class="container">
     <h1>Report Suspect</h1>
     <p>Help us fight cybercrime by reporting suspicious online activities.</p>
 
     <form id="suspectForm">
-      <!-- State -->
       <label for="state">State/UT:</label>
       <input type="text" id="state" name="state" required placeholder="Enter your State or UT">
 
-      <!-- Type of Suspect -->
       <label for="suspectType">Type of Suspect Identifier:</label>
       <select id="suspectType" name="suspectType" required>
         <option value="">-- Select --</option>
@@ -143,27 +221,36 @@
         <option value="other">Other</option>
       </select>
 
-      <!-- Platform -->
       <label for="platform">Platform Involved:</label>
       <input type="text" id="platform" name="platform" placeholder="e.g., Facebook, WhatsApp, Instagram">
 
-      <!-- Identifier -->
       <label for="identifier">Suspect Identifier:</label>
       <input type="text" id="identifier" name="identifier" required placeholder="Enter email/number/link/etc.">
 
-      <!-- Evidence Upload -->
       <label for="evidence">Upload Evidence (Max 5MB, JPG/PNG/PDF):</label>
       <input type="file" id="evidence" name="evidence" accept=".jpg,.jpeg,.png,.pdf">
       <span class="note">Optional but recommended</span>
 
-      <!-- Description -->
       <label for="description">Description:</label>
-      <textarea id="description" name="description" rows="3" ></textarea>
+      <textarea id="description" name="description" rows="3"></textarea>
 
-      <!-- Submit Button -->
       <button type="submit">Submit Report</button>
     </form>
   </div>
+
+  <script>
+    function logoutUser() {
+      window.location.href = "dashboard.html";
+    }
+
+    // Highlight active link dynamically
+    const currentPage = window.location.pathname.split("/").pop();
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      if (link.getAttribute("href") === currentPage) {
+        link.classList.add("active");
+      }
+    });
+  </script>
 
 </body>
 </html>
