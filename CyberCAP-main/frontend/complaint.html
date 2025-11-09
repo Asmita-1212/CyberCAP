@@ -149,68 +149,64 @@ document.addEventListener("DOMContentLoaded", function() {
       return;
     }
 
-    // Handle attachments safely
+    // ✅ Prepare FormData instead of separate upload
+    const formData = new FormData(form);
+
+    // Append logged-in user's email manually
+    formData.append("victim_email", userEmail);
+
+    // ✅ Remove old manual upload logic — integrate file directly
     const attachmentInput = form.querySelector('input[name="attachments[]"]');
-    let attachments = [];
-if (attachmentInput && attachmentInput.files.length > 0) {
-  const formData = new FormData();
-  Array.from(attachmentInput.files).forEach(file => formData.append("files", file));
+    if (attachmentInput && attachmentInput.files.length > 0) {
+      // Add first file (for single-file backend handler)
+      formData.append("attachment", attachmentInput.files[0]);
+    }
 
-  // Upload the files to backend
-  const uploadRes = await fetch("http://127.0.0.1:8000/upload", {
-    method: "POST",
-    body: formData
-  });
+    // ✅ Append structured JSON fields (still needed for backend)
+    formData.append("incident_type", form.incident_type.value);
+    formData.append("incident_date", form.incident_date.value);
+    formData.append("incident_time", form.incident_time.value);
+    formData.append("platform", form.platform.value);
+    formData.append("description", form.description.value);
 
-  const uploadData = await uploadRes.json();
-  attachments = uploadData.filenames;  // store uploaded file names
-}
-
-
-    // Prepare complaint data
-    const data = {
-      incident_type: form.incident_type.value,
-      incident_date: form.incident_date.value,
-      incident_time: form.incident_time.value,
-      platform: form.platform.value,
-      description: form.description.value,
-      attachments: attachments,
-      victim: {
-        full_name: form.victim_name.value,
-        gender: form.victim_gender.value,
-        dob: form.victim_dob.value,
-        address: form.victim_address.value,
-        state: form.victim_state.value,
-        district: form.victim_district.value,
-        email: userEmail, // Use logged-in user's email here
-        mobile: form.victim_mobile.value
-      },
-      suspect: {
-        phone: form.suspect_phone.value || null,
-        email: form.suspect_email.value || null,
-        social_handle: form.suspect_handle.value || null,
-        bank_account: form.suspect_bank.value || null
-      }
+    // Victim and suspect details as JSON strings
+    const victimData = {
+      full_name: form.victim_name.value,
+      gender: form.victim_gender.value,
+      dob: form.victim_dob.value,
+      address: form.victim_address.value,
+      state: form.victim_state.value,
+      district: form.victim_district.value,
+      email: userEmail,
+      mobile: form.victim_mobile.value
+    };
+    const suspectData = {
+      phone: form.suspect_phone.value || null,
+      email: form.suspect_email.value || null,
+      social_handle: form.suspect_handle.value || null,
+      bank_account: form.suspect_bank.value || null
     };
 
+    formData.append("victim", JSON.stringify(victimData));
+    formData.append("suspect", JSON.stringify(suspectData));
+
     try {
-      // Send complaint to backend
+      // ✅ Directly send multipart/form-data to /complaint
       const res = await fetch("http://127.0.0.1:8000/complaint", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        body: formData,
       });
 
       const result = await res.json();
       console.log(result);
 
-      if(res.ok){
+      if (res.ok) {
         alert(`✅ ${result.message}\nYour Complaint ID: ${result.complaint_id || "N/A"}`);
         form.reset();
       } else {
         alert(result.detail || "Something went wrong!");
       }
-    } catch(err){
+    } catch (err) {
       console.error(err);
       alert("Error submitting complaint. Check console for details.");
     }
@@ -219,6 +215,7 @@ if (attachmentInput && attachmentInput.files.length > 0) {
 
 
 </script>
+
 
 </body>
 </html>

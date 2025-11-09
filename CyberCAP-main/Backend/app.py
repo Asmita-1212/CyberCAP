@@ -2,7 +2,7 @@ import joblib
 import os
 from fastapi import HTTPException
 
-from fastapi import FastAPI, HTTPException, UploadFile, File, Body, Form
+from fastapi import FastAPI, HTTPException, UploadFile, File, Body, Form ,Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from datetime import datetime
@@ -18,6 +18,7 @@ from deep_translator import GoogleTranslator
 from Backend.models import User, LoginUser, Complaint, AdminLogin, AdminMFA, Volunteers
 from Backend.forgot_password_api import send_otp
 from Backend.database import users_collection, complaints_collection, admins_collection, password_resets, volunteers,contact_collection
+from typing import List, Optional
 
 # ---------------- Initialize App ----------------
 app = FastAPI(title="CyberCAP Backend")
@@ -146,13 +147,14 @@ def complaint_helper(complaint) -> dict:
     return {
         "id": str(complaint["_id"]),
         "complaint_id": complaint.get("complaint_id"),
-        "incident_type": complaint["incident_type"],
-        "incident_date": complaint["incident_date"],
+        "incident_type": complaint.get("incident_type"),
+        "incident_date": complaint.get("incident_date"),
         "incident_time": complaint.get("incident_time"),
-        "platform": complaint["platform"],
-        "description": complaint["description"],
+        "platform": complaint.get("platform"),
+        "description": complaint.get("description"),
+        "translated_description": complaint.get("translated_description", ""),  # ✅ Added
         "suspect": complaint.get("suspect"),
-        "victim": complaint["victim"],
+        "victim": complaint.get("victim"),
         "attachments": complaint.get("attachments", []),
         "status": complaint.get("status", "Pending"),
         "priority": complaint.get("priority"),
@@ -182,67 +184,97 @@ def login(user: LoginUser):
     return {"message": "Login successful", "user": user_helper(db_user)}
 
 # ---------------- Complaint Endpoints ----------------
+from fastapi import Request, HTTPException
+
+from fastapi import Request, UploadFile, File
+import base64, json
+
 @app.post("/complaint")
-def create_complaint(complaint: Complaint):
-    # Convert incoming Pydantic model to dict
-    complaint_data = complaint.dict()
-    complaint_data["created_at"] = datetime.utcnow().isoformat()
+async def create_complaint(request: Request, attachment: UploadFile = File(None)):
+    form = await request.form()
+    data = dict(form)
 
-    # ------------------ HANDLE ATTACHMENTS ------------------
-    attachments = complaint_data.get("attachments", [])
-    if attachments and isinstance(attachments, list):
-        saved_files = []
-        for file_data in attachments:
-            if hasattr(file_data, "filename"):
-                file_path = os.path.join(UPLOAD_FOLDER, file_data.filename)
-                with open(file_path, "wb") as buffer:
-                    shutil.copyfileobj(file_data.file, buffer)
-                saved_files.append(f"/uploads/{file_data.filename}")
-            else:
-                saved_files.append(file_data)
-        complaint_data["attachments"] = saved_files
+    # Parse victim/suspect JSON strings
+    if "victim" in data:
+        data["victim"] = json.loads(data["victim"])
+    if "suspect" in data:
+        data["suspect"] = json.loads(data["suspect"])
+
+    # Handle file attachment (convert to base64)
+    attachment_data = None
+    if attachment:
+        file_bytes = await attachment.read()
+        attachment_data = {
+            "filename": attachment.filename,
+            "content_type": attachment.content_type,
+            "data": base64.b64encode(file_bytes).decode("utf-8"),
+        }
+        data["attachments"] = [attachment_data]
     else:
-        complaint_data["attachments"] = []
-    # ---------------------------------------------------------
+        data["attachments"] = []
 
-    # ------------------ TRANSLATE DESCRIPTION ------------------
-    original_description = complaint_data.get("description", "")
-    translated_description = translate_to_english(original_description)
-    complaint_data["description"] = translated_description
-    complaint_data["original_description"] = original_description
-    # -----------------------------------------------------------
+    # Extract fields safely
+    incident_type = data.get("incident_type")
+    incident_date = data.get("incident_date")
+    incident_time = data.get("incident_time")
+    platform = data.get("platform")
+    description = data.get("description", "")
+    suspect = data.get("suspect", {})
+    victim = data.get("victim", {})
 
-    # ------------------ ML MODEL PREDICTION ------------------
+    if not (incident_type and incident_date and platform and description and victim):
+        raise HTTPException(status_code=400, detail="Missing required fields")
+
+    # Prepare data for DB
+    complaint_data = {
+        "incident_type": incident_type,
+        "incident_date": incident_date,
+        "incident_time": incident_time,
+        "platform": platform,
+        "description": description,
+        "attachments": data["attachments"],
+        "suspect": suspect,
+        "victim": victim,
+        "created_at": datetime.utcnow().isoformat(),
+    }
+
+    # Translate + classify (reuse your existing helper functions)
     try:
-        predictions = classify_complaint(translated_description)
+        translated = translate_to_english(description)
+        complaint_data["translated_description"] = translated
+    except Exception:
+        complaint_data["translated_description"] = description
+
+    try:
+        predictions = classify_complaint(complaint_data["translated_description"])
         complaint_data["category"] = predictions["category"]
         complaint_data["priority"] = predictions["priority"]
-        print(f"🔍 Predicted -> Category: {predictions['category']}, Priority: {predictions['priority']}")
-    except Exception as e:
-        print(f"⚠️ Prediction error: {e}")
+    except Exception:
         complaint_data["category"] = "Unknown"
         complaint_data["priority"] = "Normal"
-    # -----------------------------------------------------------
 
-    # Generate unique complaint ID
-    next_id = get_next_sequence("complaintid")
-    complaint_data["complaint_id"] = f"CC-{next_id:05d}"
+    # Generate Complaint ID
+    try:
+        next_id = get_next_sequence("complaintid")
+        complaint_data["complaint_id"] = f"CC-{next_id:05d}"
+    except Exception:
+        complaint_data["complaint_id"] = "CC-ERROR"
+
     complaint_data["status"] = "Pending"
+    complaint_data["registered_by"] = victim.get("email")
 
-    # Link to logged-in user if applicable
-    complaint_data["registered_by"] = complaint_data.get("victim", {}).get("email")
-
-    # Save in MongoDB
+    # Insert into MongoDB
     result = complaints_collection.insert_one(complaint_data)
 
-    # Return success response
     return {
         "id": str(result.inserted_id),
         "complaint_id": complaint_data["complaint_id"],
         "message": "Complaint submitted successfully",
         "assigned_category": complaint_data["category"],
-        "assigned_priority": complaint_data["priority"]
+        "assigned_priority": complaint_data["priority"],
+        "attachments": data["attachments"],
     }
+
 
 @app.get("/complaints")
 def get_all_complaints():
@@ -399,64 +431,50 @@ def get_complaint(complaint_id: str):
     complaint["_id"] = str(complaint["_id"])
     return complaint
 
-
-
-from bson import ObjectId
-
-from bson import ObjectId
-
 @app.patch("/complaint/{c_id}/status")
-async def update_status(c_id: str, data: dict):
+async def update_complaint_status(c_id: str, data: dict):
     new_status = data.get("status")
-    print(f"🟡 Incoming PATCH request for complaint_id={c_id}")
-    print(f"🟢 New status received: {new_status}")
+    if not new_status:
+        raise HTTPException(status_code=400, detail="Status is required")
 
-    # Convert string to ObjectId
-    try:
-        obj_id = ObjectId(c_id)
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid complaint ID format")
-
-    # Find complaint by ObjectId
-    complaint = complaints_collection.find_one({"_id": obj_id})
-    print(f"🔍 Found complaint: {complaint}")
-
-    if not complaint:
-        raise HTTPException(status_code=404, detail="Complaint not found")
-
-    # Perform update
-    result = complaints_collection.update_one(
-        {"_id": obj_id},
-        {"$set": {"status": new_status}}
+    updated = complaints_collection.find_one_and_update(
+        {"_id": ObjectId(c_id)},
+        {"$set": {"status": new_status}},
+        return_document=ReturnDocument.AFTER
     )
 
-    print(f"✅ Matched {result.matched_count}, Modified {result.modified_count}")
-    return {"message": "Status updated successfully"}
+    if not updated:
+        raise HTTPException(status_code=404, detail="Complaint not found")
 
-@app.post("/contact")
-async def save_contact(
-    name: str = Form(...),
-    email: str = Form(...),
-    subject: str = Form(""),
-    message: str = Form(...)
-):
-    contact_data = {
-        "name": name,
-        "email": email,
-        "subject": subject,
-        "message": message,
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
-    contact_collection.insert_one(contact_data)
-    return {"status": "success", "message": "Your message has been received!"}
-
-@app.get("/contact_messages")
-async def get_contact_messages():
-    messages = list(contact_collection.find({}, {"_id": 0}))
-    return {"messages": messages}
+    return {"message": "Status updated", "status": new_status}
 @app.get("/feedback")
-def get_feedback():
-    feedbacks = list(contact_collection.find({}))
-    for f in feedbacks:
-        f["_id"] = str(f["_id"])
+async def get_feedback():
+    feedbacks = list(contact_collection.find({}, {"_id": 0}))
     return feedbacks
+
+#User dashboard
+@app.get("/api/dashboard")
+def get_dashboard(registered_by: str = Query(...)):
+    """
+    Fetch actual dashboard data by email (registered_by)
+    """
+
+    total = complaints_collection.count_documents({"registered_by": registered_by})
+    pending = complaints_collection.count_documents({"registered_by": registered_by, "status": "Pending"})
+    resolved = complaints_collection.count_documents({"registered_by": registered_by, "status": "Resolved"})
+
+    # Recent complaints — last 5 by created date
+    recent = list(
+        complaints_collection.find(
+            {"registered_by": registered_by},
+            {"_id": 0, "complaint_id": 1, "status": 1, "created_at": 1}
+        ).sort("created_at", -1).limit(5)
+    )
+
+    return {
+        "email": registered_by,
+        "total": total,
+        "pending": pending,
+        "resolved": resolved,
+        "recent": recent
+    }

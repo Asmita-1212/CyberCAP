@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CyberCAP — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b4ce2;
+      --secondary: #6de1ff;
+      --light: #ffffff;
+      --muted: #6b7a99;
+      --bg1: #eef2ff;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+      transition: all 0.25s ease;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top right, #dce6ff, #f6f8ff 60%);
+      color: #0f1b3a;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 1300px;
+      padding: 40px 20px 60px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(14px);
+      padding: 20px 30px;
+      border-radius: var(--radius);
+      box-shadow: 0 6px 30px rgba(0,0,0,0.08);
+    }
+
+    .title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .top-right {
+      display: flex;
+      gap: 14px;
+    }
+
+    .btn {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(59, 76, 226, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(59, 76, 226, 0.35);
+    }
+
+    /* MAIN BODY */
+    .hero {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 28px;
+      margin-top: 32px;
+    }
+
+    .left, .right {
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(16px);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      padding: 24px;
+    }
+
+    .big-action {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(59, 76, 226, 0.25);
+    }
+
+    .big-action button {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .25s;
+    }
+
+    .big-action button:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+    }
+
+    /* ACTION CARDS */
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .action {
+      background: rgba(255,255,255,0.7);
+      border-radius: var(--radius);
+      padding: 22px;
+      border: 1px solid rgba(59, 76, 226, 0.08);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      cursor: pointer;
+      transform: translateY(0);
+    }
+
+    .action:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 25px rgba(59,76,226,0.15);
+      background: rgba(255,255,255,0.85);
+    }
+
+    .action h3 {
+      margin: 0;
+      color: var(--primary);
+      font-size: 16px;
+    }
+
+    .action p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* STATS */
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      flex: 1;
+      min-width: 180px;
+      background: linear-gradient(180deg, #ffffff, #f9faff);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    }
+
+    .stat h4 {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .num {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 22px;
+      margin-top: 6px;
+    }
+
+    /* ACTIVITY */
+    .activity {
+      margin-top: 24px;
+    }
+
+    .activity h4 {
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .activity ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .activity li {
+      background: rgba(255,255,255,0.7);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    /* RIGHT PANEL */
+    .right strong {
+      font-size: 18px;
+      color: var(--primary);
+    }
+
+    .right h4 {
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    a {
+      text-decoration: none;
+      color: var(--primary);
+    }
+
+    /* Responsive */
+    @media(max-width: 950px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <div class="title">⚡ CyberCAP Dashboard</div>
+        <div class="subtitle" id="welcome">Welcome back —</div>
+      </div>
+      <div class="top-right">
+        <button class="btn" onclick="location.href='complaint.html'">New Complaint</button>
+        <button class="btn" style="background: linear-gradient(90deg,#ff6b6b,#ffa3a3)" onclick="logoutUser()">Logout</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="left">
+        <div class="big-action">
+          <div>
+            <strong style="font-size:20px;">Need to report something?</strong>
+            <div style="font-size:14px;opacity:0.9;margin-top:6px;">Quick and secure complaint filing</div>
+          </div>
+          <div><button onclick="location.href='complaint.html'">Report Now</button></div>
+        </div>
+
+        <div class="grid-cards">
+          <div class="action" onclick="location.href='trackcomplaint.html'">
+            <h3>🔍 Track Complaint</h3>
+            <p>See status & updates for your reports.</p>
+          </div>
+          <div class="action" onclick="location.href='reportsuspect.html'">
+            <h3>🚨 Report Suspect</h3>
+            <p>Flag suspicious accounts or behaviour.</p>
+          </div>
+          <div class="action" onclick="location.href='all_complaints.html'">
+            <h3>📋 All Complaints</h3>
+            <p>View all submitted complaint IDs & details.</p>
+          </div>
+          <div class="action">
+            <h3>📣 Support</h3>
+            <p>Contact support for help with your case.</p>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat"><h4>Total Complaints</h4><div class="num" id="tot">—</div></div>
+          <div class="stat"><h4>Pending</h4><div class="num" id="pend">—</div></div>
+          <div class="stat"><h4>Resolved</h4><div class="num" id="res">—</div></div>
+        </div>
+
+        <div class="activity">
+          <h4>Recent Activity</h4>
+          <ul id="recentList">
+            <li><span>CC-00012 submitted</span><small style="color:var(--muted)">2 hours ago</small></li>
+            <li><span>CC-00011 updated</span><small style="color:var(--muted)">1 day ago</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <aside class="right">
+        <div>
+          <strong>Profile</strong>
+          <div id="userSmall" style="color:var(--muted);margin-top:6px;">User</div>
+        </div>
+
+        <div style="margin-top:24px;">
+          <h4>Security Tip</h4>
+          <p style="color:var(--muted);font-size:14px;">Never share OTP or passwords. Report suspicious messages immediately.</p>
+        </div>
+
+        <div style="margin-top:28px;">
+          <h4>Quick Links</h4>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="complaint.html">• File complaint</a>
+            <a href="trackcomplaint.html">• Track complaint</a>
+            <a href="all_complaints.html">• All complaints</a>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+ <script>
+  const email = localStorage.getItem('email');
+  const username = localStorage.getItem('username') || 'User';
+
+  document.getElementById('welcome').innerText = `Welcome back, ${username} 👋`;
+  document.getElementById('userSmall').innerText = username;
+
+  // ✅ Fetch dashboard data using email (registered_by)
+  async function loadDashboard() {
+    if (!email) {
+      console.warn("No email found in localStorage.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/api/dashboard?registered_by=${encodeURIComponent(email)}`);
+      const data = await res.json();
+
+      // Update counts
+      document.getElementById('tot').innerText = data.total || 0;
+      document.getElementById('pend').innerText = data.pending || 0;
+      document.getElementById('res').innerText = data.resolved || 0;
+
+      // Update recent complaints
+      const recentList = document.getElementById('recentList');
+      recentList.innerHTML = "";
+
+      if (!data.recent || data.recent.length === 0) {
+        recentList.innerHTML = "<li><span>No recent activity</span></li>";
+      } else {
+        data.recent.forEach(item => {
+          const li = document.createElement("li");
+          const updated = new Date(item.created_at).toLocaleString();
+          li.innerHTML = `<span>${item.complaint_id} — ${item.status}</span>
+                          <small style="color:var(--muted)">${updated}</small>`;
+          recentList.appendChild(li);
+        });
+      }
+    } catch (error) {
+      console.error("Error loading dashboard data:", error);
+    }
+  }
+
+  // Auto-refresh every 15 seconds
+  setInterval(loadDashboard, 15000);
+
+  // Load immediately
+  loadDashboard();
+
+  // Refresh after complaint submission
+  if (localStorage.getItem("refreshDashboard") === "true") {
+    loadDashboard();
+    localStorage.removeItem("refreshDashboard");
+  }
+
+  // Logout function
+  function logoutUser() {
+    localStorage.removeItem('email');
+    localStorage.removeItem('username');
+    window.location.href = 'user_login.html';
+  }
+</script>
+
+</body>
+</html>

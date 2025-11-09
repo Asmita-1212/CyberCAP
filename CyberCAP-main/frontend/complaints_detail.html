@@ -71,6 +71,12 @@
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
+
+   .attachment-item img {
+  transition: all 0.3s ease;
+  cursor: zoom-in;
+}
+
   </style>
 </head>
 <body>
@@ -95,20 +101,36 @@
         const container = document.getElementById("complaintDetail");
 
         // Display attachments as clickable thumbnails or links
-        let attachmentHTML = "None";
-        if (c.attachments?.length > 0) {
-          attachmentHTML = `<div class="attachments">` +
-            c.attachments.map(a => `
-              <div class="attachment-item">
-                ${
-                  a.match(/\.(jpg|jpeg|png|gif)$/i)
-                    ? `<img src="http://127.0.0.1:8000/uploads/${a}" alt="Attachment" onclick="window.open('http://127.0.0.1:8000/uploads/${a}', '_blank')">`
-                    : `<a href="http://127.0.0.1:8000/uploads/${a}" target="_blank">${a}</a>`
-                }
-              </div>
-            `).join('') +
-            `</div>`;
-        }
+       // Display attachments as clickable thumbnails or links
+let attachmentHTML = "None";
+if (c.attachments?.length > 0) {
+  attachmentHTML = `<div class="attachments">` +
+    c.attachments.map(a => {
+      // Ensure a is an object
+      const filename = a.filename || "attachment";
+      const contentType = a.content_type || "";
+      const base64Data = a.data || "";
+
+      if (contentType.startsWith("image/")) {
+        return `
+          <div class="attachment-item">
+            <img src="data:${contentType};base64,${base64Data}"
+                 alt="${filename}"
+                 title="${filename}">
+          </div>`;
+      } else {
+        return `
+          <div class="attachment-item">
+            <a href="data:${contentType};base64,${base64Data}"
+               download="${filename}">
+               📎 ${filename}
+            </a>
+          </div>`;
+      }
+    }).join('') +
+    `</div>`;
+}
+
 
         container.innerHTML = `
           <div class="field"><span class="label">User:</span> ${c.victim?.email || c.registered_by || "N/A"}</div>
@@ -158,6 +180,48 @@
     }
 
     window.addEventListener("DOMContentLoaded", loadComplaintDetail);
+
+    // 🔹 Toggle image fullscreen on click (perfect revert)
+document.addEventListener("click", function (e) {
+  const img = e.target;
+  if (img.tagName === "IMG" && img.closest(".attachment-item")) {
+    if (img.classList.contains("enlarged")) {
+      // Shrink back to original state
+      img.classList.remove("enlarged");
+      Object.assign(img.style, {
+        position: "",
+        top: "",
+        left: "",
+        width: "",
+        height: "",
+        zIndex: "",
+        objectFit: "",
+        cursor: "zoom-in",
+        backgroundColor: "",
+        transform: "", // ✅ important reset
+        boxShadow: ""  // ✅ removes glow/overlay
+      });
+      document.body.style.backgroundColor = ""; // ✅ reset background if modified
+    } else {
+      // Enlarge fullscreen
+      img.classList.add("enlarged");
+      Object.assign(img.style, {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: "90vw",
+        height: "90vh",
+        objectFit: "contain",
+        zIndex: "9999",
+        cursor: "zoom-out",
+        boxShadow: "0 0 20px rgba(0,0,0,0.5)"
+      });
+      document.body.style.backgroundColor = "rgba(0,0,0,0.7)"; // ✅ soft dark backdrop
+    }
+  }
+});
+
   </script>
 </body>
 </html>
