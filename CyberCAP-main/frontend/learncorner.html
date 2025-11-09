@@ -2,73 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Learning Corner - Cyber Safety</title>
+  <title>Learning Corner - CyberCAP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background-color: #7eb8f1;
-      padding: 20px;
-      color: #333;
-    }
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    .container {
-      max-width: 960px;
-      margin: auto;
-    }
-    /* Base Styles */
+  <style>
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      background-color: #7eb8f1;
+      background-color: #a6b3a8;
       color: #333;
-      padding: 0;
     }
 
-    /* Navbar */
-    nav {
+    /* Navbar Styling */
+    .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #000;
-      color: white;
-      padding: 15px 50px;
+      background: #000;
+      padding: 10px 40px;
+      border-bottom: 2px solid cyan;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .navbar .logo img {
+      height: 40px;
+      width: auto;
+      border-radius: 40px;
+      margin-right: 10px;
+      filter: drop-shadow(0 0 3px cyan);
+    }
+
+    .navbar .logo span {
+      color: #00eaff;
+      font-size: 22px;
       font-weight: bold;
     }
 
-    .logo {
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    .nav-links {
+    .navbar ul {
+      list-style: none;
       display: flex;
-      gap: 30px;
+      gap: 25px;
     }
 
-    .nav-links a {
-      color: white;
+    .navbar ul li a {
       text-decoration: none;
-      font-size: 15px;
+      color: #f0f0f0;
+      font-weight: 500;
+      transition: 0.3s;
     }
 
-    .nav-links a.active {
-      color: #56c5f8;
-      border-bottom: 2px solid #56c5f8;
-      padding-bottom: 2px;
+    .navbar ul li a:hover {
+      color: cyan;
     }
 
-    /* Container */
+    /* Page Container */
     .container {
       max-width: 960px;
-      margin: 40px auto;
+      margin: 60px auto;
       background: white;
       padding: 40px;
       border-radius: 12px;
@@ -79,7 +83,6 @@
       text-align: center;
       color: #2c3e50;
       font-size: 32px;
-      margin-bottom: 10px;
     }
 
     p.description {
@@ -107,6 +110,7 @@
       margin-bottom: 8px;
     }
 
+    /* Video Grid */
     .video-grid {
       display: flex;
       gap: 20px;
@@ -122,6 +126,29 @@
       border: none;
     }
 
+    /* Media Gallery */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .gallery-grid img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .gallery-grid img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* FAQ Section */
     details {
       background-color: #f9f9f9;
       padding: 15px 20px;
@@ -161,6 +188,18 @@
     }
 
     @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        padding: 10px 20px;
+        text-align: center;
+      }
+
+      .navbar ul {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
       .container {
         padding: 25px;
       }
@@ -182,18 +221,22 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Navbar -->
-  <nav>
-    <div class="logo">CyberCAP</div>
-    <div class="nav-links">
-      <a href="dashboard.html"><i class="fas fa-home"></i> Home</a>
-      <a href="user_login.html"><i class="fas fa-sign-in-alt"></i> Register</button>
-      <a href="cybervoluteer.html">👥 Cyber Volunteers</a>
-      <a href="learncorner.html" class="active">📘 Learning Corner</a>
-      <a href="contactus.html">✉️ Contact Us</a>
-    </div>
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <img src="logo.png" alt="CyberCAP Logo">
+      <span>CyberCAP</span>
+    </a>
+    <ul>
+       <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Volunteers</a></li>
+      <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning</a></li>
+      <li><a href="user_login.html"><i class="fas fa-user"></i> User Login</a></li>
+      <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact</a></li>
+    </ul>
   </nav>
 
   <!-- Main Content -->
@@ -222,6 +265,18 @@
       </div>
     </section>
 
+    <!-- Media Gallery -->
+    <section>
+      <h2>🖼️ Media Gallery</h2>
+      <div class="gallery-grid">
+        <img src="images/cyber1.jpg" alt="Cyber Awareness Poster 1">
+        <img src="images/cyber2.jpg" alt="Cyber Awareness Poster 2">
+        <img src="images/cyber3.jpg" alt="Cyber Awareness Poster 3">
+        <img src="images/cyber4.jpg" alt="Cyber Awareness Poster 4">
+      </div>
+      <p style="text-align:center; margin-top:10px; color:#555;">*Click on images to enlarge (optional: can add lightbox feature later)</p>
+    </section>
+
     <!-- FAQs -->
     <section>
       <h2>❓ Frequently Asked Questions</h2>
@@ -232,6 +287,18 @@
       <details>
         <summary>How do I report a cybercrime?</summary>
         <p>You can report cybercrimes online at <a href="https://cybercrime.gov.in" target="_blank">cybercrime.gov.in</a> or call the helpline 1930.</p>
+      </details>
+      <details>
+        <summary>What is ransomware?</summary>
+        <p>Ransomware is malicious software that locks your files or system until a ransom is paid. Avoid downloading unknown files and back up your data regularly.</p>
+      </details>
+      <details>
+        <summary>How can I stay safe on social media?</summary>
+        <p>Keep accounts private, don’t overshare personal details, and report any abusive or fake profiles immediately.</p>
+      </details>
+      <details>
+        <summary>What should I do if I receive a suspicious email?</summary>
+        <p>Do not click on any links or attachments. Verify the sender’s address and report the email as phishing to your email provider.</p>
       </details>
     </section>
   </div>

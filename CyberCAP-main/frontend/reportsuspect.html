@@ -2,81 +2,137 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Report Suspect - Cybercrime</title>
+  <title>CyberCAP — Report Suspect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    /* Reset and Base */
+    :root {
+      --primary: #3b4ce2;
+      --secondary: #6de1ff;
+      --light: #ffffff;
+      --muted: #6b7a99;
+      --radius: 16px;
+    }
+
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      font-family: "Poppins", sans-serif;
+      transition: all 0.25s ease;
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #5dbaf0);
-      padding: 30px 15px;
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top right, #dce6ff, #f6f8ff 60%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
     }
 
+    /* Top bar */
+    .topbar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(12px);
+      padding: 10px 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      max-width: 1000px;
+      z-index: 100;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-section img {
+      height: 50px;
+      width: 50px;
+      border-radius: 8px;
+    }
+
+    .logo-section h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0;
+    }
+
+    .back-btn {
+      background: linear-gradient(90deg,#ff6b6b,#ffa3a3);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .back-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    /* Form container */
     .container {
-      max-width: 720px;
-      margin: auto;
-      background: white;
-      padding: 40px 30px;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-      transition: transform 0.3s ease;
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(18px);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 600px;
+      padding: 40px 35px;
+      margin-top: 100px;
     }
 
-    .container:hover {
-      transform: translateY(-3px);
-    }
-
-    h1 {
+    header {
       text-align: center;
-      color: #2c3e50;
-      margin-bottom: 5px;
-      font-size: 28px;
-    }
-
-    h1::before {
-      content: '🚨';
-      margin-right: 10px;
-    }
-
-    p {
-      text-align: center;
-      color: #555;
-      font-size: 15px;
       margin-bottom: 25px;
+    }
+
+    header h2 {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 14px;
     }
 
     label {
       display: block;
       margin-top: 18px;
       font-weight: 600;
-      color: #333;
-      font-size: 15px;
+      color: #0f1b3a;
     }
 
-    input,
-    select,
-    textarea {
+    input, select, textarea {
       width: 100%;
       padding: 12px;
-      margin-top: 8px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      margin-top: 6px;
+      border: 1px solid rgba(59, 76, 226, 0.1);
+      border-radius: 10px;
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.7);
     }
 
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #007bff;
-      box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
       outline: none;
+      box-shadow: 0 0 6px rgba(59, 76, 226, 0.25);
+      background: #fff;
     }
 
     textarea {
@@ -84,54 +140,96 @@
       min-height: 100px;
     }
 
-    .note {
-      font-size: 13px;
-      color: #888;
-      margin-top: 5px;
-      display: block;
-    }
-
-    button {
+    button[type="submit"] {
+      margin-top: 28px;
       width: 100%;
-      margin-top: 30px;
-      background: linear-gradient(to right, #007bff, #0056b3);
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
       color: white;
       padding: 14px;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       font-size: 16px;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s ease;
+      box-shadow: 0 8px 18px rgba(59, 76, 226, 0.25);
     }
 
-    button:hover {
-      background: linear-gradient(to right, #0056b3, #004494);
+    button[type="submit"]:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(59, 76, 226, 0.3);
     }
 
-    @media (max-width: 600px) {
-      .container {
-        padding: 25px 20px;
-      }
+    .note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+      display: block;
+    }
 
-      h1 {
-        font-size: 24px;
-      }
+    .loading {
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .spinner {
+      border: 4px solid #e0e7ff;
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .success-msg {
+      display: none;
+      text-align: center;
+      color: var(--primary);
+      margin-top: 20px;
+      font-weight: 600;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media(max-width: 768px) {
+      .container { padding: 30px 22px; }
+      .logo-section h1 { font-size: 18px; }
     }
   </style>
 </head>
-<body>
 
+<body>
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="logo-section">
+      <img src="logo.png" alt="CyberCAP Logo">
+      <h1>CyberCAP | Report Suspect</h1>
+    </div>
+    <a href="user_dashboard.html" class="back-btn">Back</a>
+  </div>
+
+  <!-- Form -->
   <div class="container">
-    <h1>Report Suspect</h1>
-    <p>Help us fight cybercrime by reporting suspicious online activities.</p>
+    <header>
+      <h2>🚨 Report Suspect</h2>
+      <p>Help us combat cybercrime by reporting any suspicious activity.</p>
+    </header>
 
     <form id="suspectForm">
-      <!-- State -->
       <label for="state">State/UT:</label>
-      <input type="text" id="state" name="state" required placeholder="Enter your State or UT">
+      <input type="text" id="state" name="state" placeholder="Enter your State or UT" required>
 
-      <!-- Type of Suspect -->
       <label for="suspectType">Type of Suspect Identifier:</label>
       <select id="suspectType" name="suspectType" required>
         <option value="">-- Select --</option>
@@ -143,27 +241,72 @@
         <option value="other">Other</option>
       </select>
 
-      <!-- Platform -->
       <label for="platform">Platform Involved:</label>
-      <input type="text" id="platform" name="platform" placeholder="e.g., Facebook, WhatsApp, Instagram">
+      <input type="text" id="platform" name="platform" placeholder="e.g. WhatsApp, Instagram, Telegram">
 
-      <!-- Identifier -->
       <label for="identifier">Suspect Identifier:</label>
-      <input type="text" id="identifier" name="identifier" required placeholder="Enter email/number/link/etc.">
+      <input type="text" id="identifier" name="identifier" placeholder="Enter suspect email/number/link" required>
 
-      <!-- Evidence Upload -->
-      <label for="evidence">Upload Evidence (Max 5MB, JPG/PNG/PDF):</label>
+      <label for="evidence">Upload Evidence (Max 5MB):</label>
       <input type="file" id="evidence" name="evidence" accept=".jpg,.jpeg,.png,.pdf">
       <span class="note">Optional but recommended</span>
 
-      <!-- Description -->
       <label for="description">Description:</label>
-      <textarea id="description" name="description" rows="3" ></textarea>
+      <textarea id="description" name="description" placeholder="Describe suspicious activity..."></textarea>
 
-      <!-- Submit Button -->
       <button type="submit">Submit Report</button>
     </form>
+
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      Submitting your report...
+    </div>
+
+    <div class="success-msg" id="successMsg">✅ Thank you! Your report has been submitted.</div>
   </div>
 
+  <script>
+    const form = document.getElementById('suspectForm');
+    const loading = document.getElementById('loading');
+    const successMsg = document.getElementById('successMsg');
+
+    document.getElementById("evidence").addEventListener("change", function() {
+      const file = this.files[0];
+      if (file && file.size > 5 * 1024 * 1024) {
+        alert("File too large! Please upload a file smaller than 5MB.");
+        this.value = "";
+      }
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loading.style.display = "block";
+      successMsg.style.display = "none";
+
+      const formData = new FormData(form);
+      const email = localStorage.getItem("email") || "anonymous@user.com";
+      formData.append("reported_by", email);
+
+      try {
+        const res = await fetch("http://127.0.0.1:8000/api/report_suspect", {
+          method: "POST",
+          body: formData
+        });
+
+        loading.style.display = "none";
+        if (res.ok) {
+          successMsg.style.display = "block";
+          form.reset();
+          setTimeout(() => (successMsg.style.display = "none"), 4000);
+        } else {
+          alert("❌ Failed to submit report. Please try again.");
+        }
+      } catch (err) {
+        loading.style.display = "none";
+        alert("⚠️ Error connecting to server. Please try again later.");
+        console.error(err);
+      }
+    });
+  </script>
 </body>
 </html>

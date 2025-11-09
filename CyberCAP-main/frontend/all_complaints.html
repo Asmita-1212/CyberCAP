@@ -3,35 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Complaints</title>
+<title>CyberCAP — My Complaints</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  /* Reset and global styles */
+  :root {
+    --primary: #3b4ce2;
+    --secondary: #6de1ff;
+    --light: #ffffff;
+    --muted: #6b7a99;
+    --radius: 16px;
+  }
+
   * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
   }
 
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f8;
-    color: #333;
+    margin: 0;
+    background: radial-gradient(circle at top right, #dce6ff, #f6f8ff 60%);
+    color: #1f2a44;
     min-height: 100vh;
+    padding-top: 90px;
   }
 
-  /* Container for full screen */
+  /* Top Bar */
+  .topbar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(14px);
+    width: 90%;
+    max-width: 1200px;
+    padding: 10px 25px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    z-index: 10;
+  }
+
+  .logo-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-section img {
+    height: 38px;
+    width: 38px;
+    border-radius: 8px;
+  }
+
+  .logo-section h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+  }
+
+  .back-btn {
+    background: linear-gradient(90deg, #ff6b6b, #ffa3a3);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .back-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+
+  /* Main container */
   .container {
-    width: 95%;
-    max-width: 1400px;
+    width: 90%;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 30px 0;
   }
 
-  /* Page title */
-  h1 {
+  h2 {
     text-align: center;
-    font-size: 2.5em;
-    color: #2c3e50;
+    font-size: 2em;
+    color: var(--primary);
     margin-bottom: 20px;
   }
 
@@ -43,25 +101,26 @@
     margin: 0 auto 30px auto;
     padding: 12px 20px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: none;
     border-radius: 30px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.7);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     transition: all 0.3s ease;
   }
 
   #searchInput:focus {
     outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+    box-shadow: 0 0 10px rgba(59,76,226,0.3);
   }
 
   /* Table styling */
   .table-wrapper {
     overflow-x: auto;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(16px);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
   }
 
   table {
@@ -71,25 +130,25 @@
   }
 
   thead th {
-    background-color: #3498db;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
     color: white;
     padding: 15px;
+    border-radius: 8px;
     text-align: left;
-   font-weight: bold;
-    font-size: 16px;
+    font-weight: 600;
   }
 
   tbody tr {
-    background-color: #fdfdfd;
+    background-color: rgba(255,255,255,0.9);
     border-radius: 8px;
-    font-weight: bold;
+    font-weight: 500;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     transition: transform 0.2s, box-shadow 0.2s;
   }
 
   tbody tr:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   }
 
   td {
@@ -97,15 +156,14 @@
     vertical-align: middle;
   }
 
-  /* Status color coding */
   .status-pending {
-    color: #e67e22;
-    font-weight: bold;
+    color: #f39c12;
+    font-weight: 600;
   }
 
   .status-resolved {
-    color: #27ae60;
-    font-weight: bold;
+    color: #2ecc71;
+    font-weight: 600;
   }
 
   /* Responsive */
@@ -119,21 +177,18 @@
     tbody tr {
       margin-bottom: 20px;
       padding: 15px;
-      background-color: #fff;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
     }
     td {
       text-align: right;
       padding-left: 50%;
       position: relative;
-      border: none;
     }
     td::before {
       content: attr(data-label);
       position: absolute;
       left: 15px;
       width: 45%;
-      font-weight: bold;
+      font-weight: 600;
       text-align: left;
     }
   }
@@ -141,8 +196,16 @@
 </head>
 <body>
 
+<div class="topbar">
+  <div class="logo-section">
+    <img src="logo.png" alt="CyberCAP Logo">
+    <h1>CyberCAP | My Complaints</h1>
+  </div>
+  <a href="user_dashboard.html" class="back-btn">Back</a>
+</div>
+
 <div class="container">
-  <h1>My Complaints</h1>
+  <h2>My Complaints</h2>
   <input type="text" id="searchInput" placeholder="Search complaints...">
   
   <div class="table-wrapper">
@@ -158,16 +221,14 @@
           <th>Status</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Complaints inserted here -->
-      </tbody>
+      <tbody></tbody>
     </table>
   </div>
 </div>
 
 <script>
 const userEmail = localStorage.getItem("email");
-const apiURL = "http://localhost:8000/complaints"; // replace with your backend
+const apiURL = "http://localhost:8000/complaints";
 
 async function loadComplaints() {
   try {
@@ -197,14 +258,10 @@ async function loadComplaints() {
         <td data-label="Description">${complaint.description}</td>
         <td data-label="Status" class="status-${complaint.status.toLowerCase()}">${complaint.status}</td>
       `;
-
-      // ✅ Make each row clickable
       tr.addEventListener("click", () => {
         localStorage.setItem("selectedComplaintId", complaint.complaint_id);
-        console.log("Saved Complaint ID:", complaint.complaint_id);
-        window.location.href = "complaints_detail.html"; // redirect to details page
+        window.location.href = "complaints_detail.html";
       });
-
       tbody.appendChild(tr);
     });
   } catch (err) {
@@ -213,7 +270,6 @@ async function loadComplaints() {
   }
 }
 
-// 🔍 Search/filter
 document.getElementById("searchInput").addEventListener("keyup", function() {
   const filter = this.value.toLowerCase();
   const rows = document.querySelectorAll("#complaintsTable tbody tr");

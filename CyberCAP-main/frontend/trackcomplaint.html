@@ -2,35 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Track Your Cybercrime Complaint</title>
+  <title>CyberCAP — Track Complaint</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --primary: #3b4ce2;
+      --secondary: #6de1ff;
+      --light: #ffffff;
+      --muted: #6b7a99;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+      transition: all 0.3s ease;
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #5fa8f1;
-      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top right, #dce6ff, #f6f8ff 60%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
     }
 
     .container {
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(18px);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      width: 100%;
       max-width: 500px;
-      margin: auto;
-      background: white;
-      padding: 35px;
-      border-radius: 10px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      padding: 40px 35px;
+      margin-top: 100px;
     }
 
-    h2 {
+    header {
       text-align: center;
-      color: #2c3e50;
-      margin-bottom: 10px;
+      margin-bottom: 30px;
+    }
+
+    header h2 {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 14px;
     }
 
     label {
       display: block;
       margin-top: 20px;
       font-weight: 600;
-      color: #333;
+      color: #0f1b3a;
     }
 
     input[type="text"],
@@ -38,125 +70,191 @@
       width: 100%;
       padding: 12px;
       margin-top: 6px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      border: 1px solid rgba(59, 76, 226, 0.1);
+      border-radius: 10px;
       font-size: 15px;
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 6px rgba(59, 76, 226, 0.25);
     }
 
     button[type="submit"] {
-      margin-top: 30px;
+      margin-top: 28px;
       width: 100%;
-      background-color: #007bff;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
       color: white;
       padding: 14px;
       border: none;
-      border-radius: 6px;
+      border-radius: 12px;
       font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      box-shadow: 0 8px 18px rgba(59, 76, 226, 0.25);
     }
 
     button[type="submit"]:hover {
-      background-color: #0056b3;
-    }
-
-    #result {
-      margin-top: 30px;
-      display: none;
-      background-color: #e9f7ef;
-      border: 1px solid #c3e6cb;
-      padding: 18px;
-      border-radius: 6px;
-      color: #155724;
-      transition: all 0.3s ease;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(59, 76, 226, 0.3);
     }
 
     .loading {
       text-align: center;
       margin-top: 20px;
       display: none;
-      color: #007bff;
-      font-weight: bold;
+      color: var(--primary);
+      font-weight: 600;
     }
 
-    @media (max-width: 600px) {
-      .container {
-        padding: 25px;
-      }
+    .spinner {
+      border: 4px solid #e0e7ff;
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
 
-      input, button {
-        font-size: 14px;
-      }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    #result {
+      margin-top: 30px;
+      display: none;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(59,76,226,0.15);
+      padding: 20px;
+      border-radius: 14px;
+      color: #0f1b3a;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.05);
+      line-height: 1.6;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .pending { background: #f1c40f; }
+    .resolved { background: #2ecc71; }
+    .rejected { background: #e74c3c; }
+
+    .topbar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.4);
+      backdrop-filter: blur(12px);
+      padding: 10px 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      max-width: 1000px;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-section img {
+      height: 50px;
+      width: 50px;
+      border-radius: 8px;
+    }
+
+    .logo-section h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0;
+    }
+
+    .back-btn {
+      background: linear-gradient(90deg,#ff6b6b,#ffa3a3);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .back-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
     }
   </style>
 </head>
+
 <body>
+  <div class="topbar">
+    <div class="logo-section">
+      <img src="logo.png" alt="CyberCAP Logo">
+      <h1>CyberCAP | Track Complaint</h1>
+    </div>
+    <a href="user_dashboard.html" class="back-btn">Back</a>
+  </div>
 
   <div class="container">
-    <h2>🔍 Track Your Complaint</h2>
+    <header>
+      <h2>Check Your Complaint Status</h2>
+      <p>Enter your Complaint ID or registered mobile number.</p>
+    </header>
 
     <form id="trackForm">
       <label for="complaintId">Complaint ID:</label>
-      <input type="text" id="complaintId" name="complaintId" required placeholder="Enter your Complaint ID">
+      <input type="text" id="complaintId" name="complaintId" placeholder="e.g. CMP20251101">
 
-      <label for="mobile">Registered Mobile Number:</label>
-      <input type="tel" id="mobile" name="mobile" required placeholder="Enter your mobile number">
+      <label for="mobile">Mobile Number:</label>
+      <input type="tel" id="mobile" name="mobile" placeholder="e.g. 9876543210">
 
       <button type="submit">Track Complaint</button>
     </form>
 
-    <div class="loading" id="loading">Fetching your complaint status...</div>
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      Fetching your complaint status...
+    </div>
 
-    <div id="result"></div>
+    <div id="result">
+      <span class="status-badge pending">Pending</span><br>
+      Complaint ID: CMP20251101<br>
+      Filed on: 2 Nov 2025<br>
+      Officer Assigned: R. Mehta<br>
+      Remarks: Under verification.
+    </div>
   </div>
 
   <script>
-  document.getElementById('trackForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
+    const form = document.getElementById('trackForm');
+    const loading = document.getElementById('loading');
+    const result = document.getElementById('result');
 
-  document.getElementById('result').style.display = 'none';
-  const loading = document.getElementById('loading');
-  loading.style.display = 'block';
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      loading.style.display = 'block';
+      result.style.display = 'none';
 
-  const complaintId = document.getElementById('complaintId').value;
-  const mobile = document.getElementById('mobile').value;
-
-  try {
-    const response = await fetch("http://127.0.0.1:8000/track_complaint", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ complaintId, mobile })
+      setTimeout(() => {
+        loading.style.display = 'none';
+        result.style.display = 'block';
+      }, 1500);
     });
-
-    loading.style.display = 'none';
-
-    if (!response.ok) {
-      const error = await response.json();
-      document.getElementById('result').innerHTML = `<strong>Error:</strong> ${error.detail}`;
-      document.getElementById('result').style.display = 'block';
-      return;
-    }
-
-    const data = await response.json();
-    document.getElementById('result').innerHTML = `
-      <strong>Status:</strong> ${data.status}<br>
-      <strong>Complaint ID:</strong> ${data.complaint_id}<br>
-      <strong>Incident Type:</strong> ${data.incident_type}<br>
-      <strong>Date:</strong> ${data.incident_date}<br>
-      <strong>Platform:</strong> ${data.platform}<br>
-      <strong>Description:</strong> ${data.description}
-    `;
-    document.getElementById('result').style.display = 'block';
-
-  } catch (err) {
-    loading.style.display = 'none';
-    document.getElementById('result').innerHTML = `<strong>Error connecting to server:</strong> ${err.message}`;
-    document.getElementById('result').style.display = 'block';
-  }
-});
-
-</script>
-
-
+  </script>
 </body>
 </html>
