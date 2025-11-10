@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register - CyberCAP</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #a6b3a8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: linear-gradient(90deg, #000000, #131212);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 30px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      width: 100%;
+    }
+    .navbar .logo {
+      color: #ecf3f5;
+      font-size: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+    .navbar .logo img {
+      height: 45px;
+      width: auto;
+      vertical-align: middle;
+      filter: drop-shadow(0 0 4px cyan);
+      border-radius: 40px;
+      margin-right: 10px;
+    }
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 5px;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar ul li a {
+      color: #f5f0f0;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+    .navbar ul li a:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+
+    /* Register box */
+    .register-box {
+      background-color: #ffffff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      margin-top: 60px;
+      animation: fadeSlideDown 1s ease forwards;
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+
+    @keyframes fadeSlideDown {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .register-box h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #1f3b73;
+      font-size: 22px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      width: 100%;
+    }
+
+    input:focus {
+      border-color: #3e64ff;
+      box-shadow: 0 0 8px rgba(62, 100, 255, 0.3);
+      outline: none;
+    }
+
+    .password-container {
+      position: relative;
+    }
+    .password-container i {
+      position: absolute;
+      right: 10px;
+      top: 14px;
+      cursor: pointer;
+      color: #555;
+    }
+
+    button {
+      padding: 12px;
+      background-color: #3e64ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.1s;
+    }
+    button:hover {
+      background-color: #2b4ae0;
+    }
+
+    a {
+      text-align: center;
+      margin-top: 15px;
+      color: #3e64ff;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    #registerMessage {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 14px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="#" class="logo"><img src="logo.png">CyberCAP</a>
+  <ul>
+    <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Cyber Volunteers</a></li>
+    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning</a></li>
+    <li><a href="user_login.html"><i class="fas fa-user"></i> Login</a></li>
+    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact</a></li>
+  </ul>
+</nav>
+
+<div class="register-box">
+  <h2>Create a New Account</h2>
+
+  <p id="registerMessage"></p>
+
+  <form id="registerForm">
+    <label for="fullname">Full Name</label>
+    <input type="text" id="fullname" name="fullname" required placeholder="Enter your full name" />
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required placeholder="Enter your email" />
+
+    <label for="password">Password</label>
+    <div class="password-container">
+      <input type="password" id="password" name="password" required placeholder="Create a password" />
+      <i class="fa fa-eye" id="togglePassword"></i>
+    </div>
+
+    <button type="submit">Register</button>
+    <a href="user_login.html">Already have an account? Login</a>
+  </form>
+</div>
+
+<script>
+  const togglePassword = document.getElementById("togglePassword");
+  const passwordField = document.getElementById("password");
+
+  togglePassword.addEventListener("click", () => {
+    const type = passwordField.type === "password" ? "text" : "password";
+    passwordField.type = type;
+    togglePassword.classList.toggle("fa-eye-slash");
+  });
+
+  document.getElementById("registerForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const fullname = document.getElementById("fullname").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const messageEl = document.getElementById("registerMessage");
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullname, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        messageEl.style.color = "green";
+        messageEl.innerText = "✅ Registration successful!";
+        messageEl.style.display = "block";
+        setTimeout(() => (window.location.href = "user_login.html"), 1500);
+      } else {
+        messageEl.style.color = "red";
+        messageEl.innerText = data.detail || "Registration failed!";
+        messageEl.style.display = "block";
+      }
+    } catch (error) {
+      messageEl.style.color = "red";
+      messageEl.innerText = "⚠️ Error connecting to server.";
+      messageEl.style.display = "block";
+    }
+  });
+</script>
+
+</body>
+</html>
