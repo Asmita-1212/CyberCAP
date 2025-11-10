@@ -364,6 +364,55 @@
     display: none;
   }
 }
+/* --- Settings Layout --- */
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 400px;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.setting-item label {
+  flex: 1;
+}
+.setting-item select, 
+.setting-item input[type="range"] {
+  flex: 1;
+  margin-left: 10px;
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+/* --- Dark Mode Styles --- */
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+body.dark-mode table {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+}
+body.dark-mode a, 
+body.dark-mode button {
+  color: #fff;
+}
+/* --- Grid vs Compact View --- */
+.grid-view .card,
+.grid-view table {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+}
+.compact-view table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
   </style>
 </head>
 <body>
@@ -372,23 +421,17 @@
     <img id="adminPhoto" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Admin Photo">
     <input type="file" id="photoUpload" accept="image/jpeg, image/png" style="display:none;">
     <button onclick="document.getElementById('photoUpload').click()"><i class="fas fa-camera"></i> Add Photo</button>
-    <h3 id="adminName">Admin Name</h3>
+    <h3 id="adminName">admin1</h3>
     <p class="small" id="adminEmail">Email: admin@cybercap.com</p>
     <p class="small" id="adminPhone">Phone: +91 9876543210</p>
     <hr>
     <div class="sidebar-nav">
       <a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a>
-      <a href="#"><i class="fas fa-list"></i> All Complaints</a>
-      <a href="#" onclick="showWeeklyChart(); setActiveTab(this);">
-  <i class="fas fa-chart-bar"></i> Weekly Analysis
-</a>
-<a href="#" onclick="showMonthlyChart(); setActiveTab(this);">
-  <i class="fas fa-chart-line"></i> Monthly Analysis
-</a>
-<a href="#" onclick="showFeedback(); setActiveTab(this);">
-  <i class="fas fa-user-shield"></i> Feedback
-</a>
-      <a href="#"><i class="fas fa-cog"></i> Settings</a>
+       <a id="allComplaintsTab" onclick="showAllComplaints()"><i class="fas fa-list"></i>All Complaints</a>
+      <a href="#" onclick="showWeeklyChart(); "><i class="fas fa-chart-bar"></i> Weekly Analysis</a>
+      <a href="#" onclick="showMonthlyChart();"><i class="fas fa-chart-line"></i> Monthly Analysis</a>
+      <a href="#" onclick="showFeedback();"><i class="fas fa-user-shield"></i> Feedback</a>
+      <a id="settingsTab" onclick="showSettings()"><i class="fas fa-cog"></i>Settings</a>
     </div>
     <button class="logout" id="logoutSidebar"><i class="fas fa-sign-out-alt"></i> Logout</button>
   </div>
@@ -429,7 +472,10 @@
       <button onclick="filterCategory('Phishing')">Phishing</button>
       <button onclick="filterCategory('Financial Fraud')">Financial Fraud</button>
     </div>
+ <section id="complaintOverview">
   <h2>Complaint Overview</h2>
+
+  <div class="table-container">
     <table id="complaintTable" role="table" aria-label="Complaints table">
       <thead>
         <tr>
@@ -446,6 +492,8 @@
         <!-- dynamic rows inserted by JS -->
       </tbody>
     </table>
+  </div>
+</section>
 
     <div id="chartContainer" style="display:none; margin-top:24px;">
       <h2>Weekly Complaint Analysis</h2>
@@ -468,6 +516,38 @@
       <!-- feedback data will load here -->
     </tbody>
   </table>
+
+<!-- SETTINGS SECTION -->
+<section id="settingsSection" style="display: none; padding: 20px;">
+  <h2>Appearance & UI Preferences</h2>
+  <div class="settings-group">
+    <div class="setting-item">
+      <label for="themeToggle"><strong>Theme:</strong></label>
+      <select id="themeToggle" onchange="changeTheme()">
+        <option value="light">☀️ Light</option>
+        <option value="dark">🌙 Dark</option>
+      </select>
+    </div>
+
+    <div class="setting-item">
+      <label for="layoutView"><strong>Dashboard Layout:</strong></label>
+      <select id="layoutView" onchange="changeLayout()">
+        <option value="grid">Grid View</option>
+        <option value="compact">Compact List</option>
+      </select>
+    </div>
+
+    <div class="setting-item">
+      <label for="fontSize"><strong>Font Size:</strong></label>
+      <input type="range" id="fontSize" min="14" max="22" value="16" oninput="changeFontSize(this.value)">
+      <span id="fontSizeValue">16px</span>
+    </div>
+  </div>
+</section>
+  </div>
+</section>
+
+
   </main>
 
   <script>
@@ -554,65 +634,87 @@
     }
 
     // Fetch all complaints and render rows
-    async function fetchAllComplaints() {
-      try {
-        const res = await fetch('http://127.0.0.1:8000/complaints');
-        const complaints = await res.json();
-        const tbody = document.querySelector("#complaintTable tbody");
-        tbody.innerHTML = "";
+ // Inject CSS styles dynamically (only once)
+const style = document.createElement('style');
+style.textContent = `
+  .status-chip {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: capitalize;
+    text-align: center;
+    color: #fff;
+  }
 
-        let total = 0, resolved = 0, pending = 0, suspicious = 0, users = new Set();
+  .status-resolved { background-color: #28a745; }   /* green */
+  .status-inprogress { background-color: #007bff; } /* blue */
+  .status-pending { background-color: #ffc107; color: #212529; } /* yellow */
+`;
+document.head.appendChild(style);
 
-        (complaints || []).forEach(c => {
-          const row = document.createElement("tr");
-          row.setAttribute("data-category", c.category || "N/A");
-          row.setAttribute("data-complaint-id", c.complaint_id || (c._id || ''));
-          const dateStr = formatLocalDateTime(c.created_at || c.date || '');
-          const statusText = c.status || "Pending";
+async function fetchAllComplaints() {
+  try {
+    const res = await fetch('http://127.0.0.1:8000/complaints');
+    const complaints = await res.json();
+    const tbody = document.querySelector("#complaintTable tbody");
+    tbody.innerHTML = "";
 
-          // build status chip
-          let statusClass = 'status-pending';
-          if (statusText.toLowerCase() === 'resolved') statusClass = 'status-resolved';
-          else if (statusText.toLowerCase() === 'suspicious') statusClass = 'status-suspicious';
+    let total = 0, resolved = 0, pending = 0, inprogress = 0, users = new Set();
 
-          row.innerHTML = `
-            <td>${(c.victim && c.victim.email) || c.user || 'N/A'}</td>
-            <td>${c.description || 'N/A'}</td>
-            <td>${dateStr}</td>
-            <td>${c.category || 'N/A'}</td>
-            <td>${c.priority || 'N/A'}</td>
-            <td><span class="status-chip ${statusClass}">${statusText}</span></td>
-            <td><button class="view-btn" onclick="viewComplaint('${c.complaint_id || (c._id || '')}')">View</button></td>
-          `;
+    (complaints || []).forEach(c => {
+      const row = document.createElement("tr");
+      row.setAttribute("data-category", c.category || "N/A");
+      row.setAttribute("data-complaint-id", c.complaint_id || (c._id || ''));
 
-          // optional color row background for quick visual (kept but subtle)
-          if (statusText === "Resolved") row.style.backgroundColor = "rgba(40,167,69,0.04)";
-          else if (statusText === "Pending") row.style.backgroundColor = "rgba(253,126,20,0.03)";
-          else if (statusText === "Suspicious") row.style.backgroundColor = "rgba(255,193,7,0.03)";
+      const dateStr = formatLocalDateTime(c.created_at || c.date || '');
+      const statusText = (c.status || "Pending").trim();
+      const translatedText = c.translated_description || c.description || 'N/A';
 
-          tbody.appendChild(row);
+      // Choose class based on status
+      let statusClass = 'status-pending';
+      if (statusText.toLowerCase() === 'resolved') statusClass = 'status-resolved';
+      else if (statusText.toLowerCase() === 'in progress') statusClass = 'status-inprogress';
 
-          total++;
-          if (statusText === "Resolved") resolved++;
-          else if (statusText === "Pending") pending++;
-          else if (statusText === "Suspicious") suspicious++;
-          if (c.user) users.add(c.user);
-          if (c.victim && c.victim.email) users.add(c.victim.email);
-        });
+      // Build table row
+      row.innerHTML = `
+        <td>${(c.victim && c.victim.email) || c.user || 'N/A'}</td>
+        <td>${translatedText}</td>
+        <td>${dateStr}</td>
+        <td>${c.category || 'N/A'}</td>
+        <td>${c.priority || 'N/A'}</td>
+        <td><span class="status-chip ${statusClass}">${statusText}</span></td>
+        <td><button class="view-btn" onclick="viewComplaint('${c.complaint_id || (c._id || '')}')">View</button></td>
+      `;
 
-        document.getElementById("totalComplaints").textContent = total;
-        document.getElementById("resolvedComplaints").textContent = resolved;
-        document.getElementById("pendingComplaints").textContent = pending;
-        document.getElementById("suspiciousReports").textContent = suspicious;
-        document.getElementById("activeUsers").textContent = users.size;
-      } catch (err) {
-        console.error("Error fetching complaints:", err);
-      }
-    }
+      tbody.appendChild(row);
 
-    // call once on load
-    fetchAdminInfo();
-    fetchAllComplaints();
+      // Count for dashboard stats
+      total++;
+      if (statusText.toLowerCase() === "resolved") resolved++;
+      else if (statusText.toLowerCase() === "pending") pending++;
+      else if (statusText.toLowerCase() === "in progress") inprogress++;
+
+      if (c.user) users.add(c.user);
+      if (c.victim && c.victim.email) users.add(c.victim.email);
+    });
+
+    // Update dashboard stats
+    document.getElementById("totalComplaints").textContent = total;
+    document.getElementById("resolvedComplaints").textContent = resolved;
+    document.getElementById("pendingComplaints").textContent = pending;
+    document.getElementById("inProgressComplaints").textContent = inprogress;
+    document.getElementById("activeUsers").textContent = users.size;
+
+  } catch (err) {
+    console.error("Error fetching complaints:", err);
+  }
+}
+
+// Call on page load
+fetchAdminInfo();
+fetchAllComplaints();
 
     // view complaint
     function viewComplaint(id) {
@@ -786,7 +888,6 @@ document.querySelector(".category-buttons").style.display = "none";
       document.getElementById("chartContainer").style.display = "none";
       document.getElementById("complaintTable").style.display = "table";
     }
-
     // filter by category (client-side)
     function filterCategory(category) {
       const rows = document.querySelectorAll("#complaintTable tbody tr");
@@ -795,7 +896,6 @@ document.querySelector(".category-buttons").style.display = "none";
         else row.style.display = "none";
       });
     }
-
     // Logout handlers
     function logoutAdmin() {
       localStorage.removeItem("adminUser");
@@ -855,12 +955,32 @@ function showFeedback() {
   // show feedback section
   const feedbackSec = document.getElementById("feedbackSection");
   feedbackSec.style.display = "block";
-
-  // fetch data
+ // fetch data
   fetchFeedback();
 }
 
 
+function showSettings() {
+  console.log("✅ Settings section displayed");
+  document.querySelectorAll("section").forEach(s => s.style.display = "none");
+  const settings = document.getElementById("settingsSection");
+  settings.style.display = "block";
+}
+function changeTheme() {
+    const theme = document.getElementById("themeToggle").value;
+    document.body.className = theme; // toggle CSS themes
+  }
+
+  function changeLayout() {
+    const layout = document.getElementById("layoutView").value;
+    const dashboard = document.querySelector("main"); // or your grid container
+    dashboard.classList.toggle("compact-layout", layout === "compact");
+  }
+
+  function changeFontSize(size) {
+    document.documentElement.style.fontSize = size + "px";
+    document.getElementById("fontSizeValue").textContent = size + "px";
+  }
   </script>
 </body>
 </html>
