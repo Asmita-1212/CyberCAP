@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
+  <!-- Lightbox CSS and JS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -101,12 +105,12 @@
       margin-bottom: 20px;
     }
 
-    ul.tips {
+    ul.tips, ul.crime-list {
       padding-left: 20px;
       line-height: 1.8;
     }
 
-    ul.tips li {
+    ul.tips li, ul.crime-list li {
       margin-bottom: 8px;
     }
 
@@ -129,23 +133,23 @@
     /* Media Gallery */
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
       justify-content: center;
     }
 
     .gallery-grid img {
       width: 100%;
-      height: 150px;
+      height: 420px; /* Larger poster size */
       object-fit: cover;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .gallery-grid img:hover {
       transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
     }
 
     /* FAQ Section */
@@ -256,12 +260,27 @@
       </ul>
     </section>
 
+    <!-- Types of Cybercrime -->
+    <section>
+      <h2>⚠️ Types of Cybercrime</h2>
+      <ul class="crime-list">
+        <li><strong>Phishing:</strong> Fake emails or websites used to steal personal information.</li>
+        <li><strong>Identity Theft:</strong> Using someone’s personal details to commit fraud or crime.</li>
+        <li><strong>Cyberbullying:</strong> Harassment, threats, or humiliation using online platforms.</li>
+        <li><strong>Hacking:</strong> Unauthorized access to computer systems or networks.</li>
+        <li><strong>Ransomware:</strong> Malicious software that locks files until a ransom is paid.</li>
+        <li><strong>Online Fraud:</strong> Scams involving fake websites, jobs, or investments.</li>
+        <li><strong>Social Media Scams:</strong> Fake profiles, impersonation, or misleading messages.</li>
+        <li><strong>Cyberstalking:</strong> Continuous online harassment or monitoring of someone.</li>
+      </ul>
+    </section>
+
     <!-- Awareness Videos -->
     <section>
       <h2>📽️ Awareness Videos</h2>
       <div class="video-grid">
-        <iframe src="https://www.youtube.com/embed/yrln8nyVBLU" allowfullscreen></iframe>
-        <iframe src="https://www.youtube.com/embed/uV6WvLrINBM" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/yrln8nyVBLU" allowfullscreen title="Cyber Safety Video 1"></iframe>
+        <iframe src="https://www.youtube.com/embed/uV6WvLrINBM" allowfullscreen title="Cyber Safety Video 2"></iframe>
       </div>
     </section>
 
@@ -269,12 +288,17 @@
     <section>
       <h2>🖼️ Media Gallery</h2>
       <div class="gallery-grid">
-        <img src="images/cyber1.jpg" alt="Cyber Awareness Poster 1">
-        <img src="images/cyber2.jpg" alt="Cyber Awareness Poster 2">
-        <img src="images/cyber3.jpg" alt="Cyber Awareness Poster 3">
-        <img src="images/cyber4.jpg" alt="Cyber Awareness Poster 4">
+        <a href="poster1.jpg" data-lightbox="gallery" data-title="Cyber Awareness Poster 1">
+          <img src="poster1.jpg" alt="Cyber Awareness Poster 1">
+        </a>
+        <a href="poster2.jpg" data-lightbox="gallery" data-title="Cyber Awareness Poster 2">
+          <img src="poster2.jpg" alt="Cyber Awareness Poster 2">
+        </a>
+        <a href="poster3.jpg" data-lightbox="gallery" data-title="Cyber Awareness Poster 3">
+          <img src="poster3.jpg" alt="Cyber Awareness Poster 3">
+       
       </div>
-      <p style="text-align:center; margin-top:10px; color:#555;">*Click on images to enlarge (optional: can add lightbox feature later)</p>
+      <p style="text-align:center; margin-top:10px; color:#555;">Click any image to view in full size</p>
     </section>
 
     <!-- FAQs -->
@@ -302,6 +326,5 @@
       </details>
     </section>
   </div>
-
 </body>
 </html>
