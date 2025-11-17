@@ -16,7 +16,7 @@ import shutil
 from deep_translator import GoogleTranslator
 
 from Backend.models import User, LoginUser, Complaint, AdminLogin, AdminMFA, Volunteers
-from Backend.forgot_password_api import send_otp
+from Backend.forgot_password_api import send_otp,send_email_notification
 from Backend.database import users_collection, complaints_collection, admins_collection, password_resets, volunteers,contact_collection
 from typing import List, Optional
 
@@ -181,7 +181,13 @@ def login(user: LoginUser):
     if not db_user or not bcrypt.verify(user.password, db_user["password"]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
-    return {"message": "Login successful", "user": user_helper(db_user)}
+    return {
+    "message": "Login successful",
+    "user": {
+        **user_helper(db_user),
+        "role": "user"
+    }
+}
 
 # ---------------- Complaint Endpoints ----------------
 from fastapi import Request, HTTPException
@@ -290,11 +296,12 @@ def admin_login(admin: AdminLogin):
     if not db_admin or not check_password_hash(db_admin["password"], admin.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    # ✅ No new random secret needed here
+    # Step 1: Password verified → Ask for OTP
     return {
         "message": "Password verified. Please enter OTP from your Authenticator app.",
         "username": admin.username
     }
+
 
 @app.post("/admin-mfa")
 def admin_mfa(mfa: AdminMFA):
@@ -304,12 +311,18 @@ def admin_mfa(mfa: AdminMFA):
 
     totp = pyotp.TOTP(db_admin["mfa_secret"])
 
-    # ✅ Use valid_window to allow slight clock differences
+    # Step 2: Verify OTP
     if totp.verify(mfa.otp, valid_window=1):
-        return {"message": "Admin login successful"}
+        return {
+            "message": "Admin login successful",
+            "user": {
+                "username": db_admin["username"],
+                "email": db_admin["email"],
+                "role": "admin"
+            }
+        }
     else:
         raise HTTPException(status_code=401, detail="Invalid OTP")
-
 
 # ---------------- Password Reset Endpoints ----------------
 from pydantic import BaseModel
@@ -431,22 +444,55 @@ def get_complaint(complaint_id: str):
     complaint["_id"] = str(complaint["_id"])
     return complaint
 
+from fastapi import HTTPException
+from bson import ObjectId
+from pymongo import ReturnDocument
+
 @app.patch("/complaint/{c_id}/status")
-async def update_complaint_status(c_id: str, data: dict):
+def update_complaint_status(c_id: str, data: dict):
     new_status = data.get("status")
     if not new_status:
         raise HTTPException(status_code=400, detail="Status is required")
 
+    # Find the complaint
+    complaint = complaints_collection.find_one({"_id": ObjectId(c_id)})
+    if not complaint:
+        raise HTTPException(status_code=404, detail="Complaint not found")
+
+    old_status = complaint.get("status", "Pending")
+
+    # Update complaint in DB
     updated = complaints_collection.find_one_and_update(
         {"_id": ObjectId(c_id)},
         {"$set": {"status": new_status}},
         return_document=ReturnDocument.AFTER
     )
 
-    if not updated:
-        raise HTTPException(status_code=404, detail="Complaint not found")
+    # Get victim email
+    victim_email = (
+        complaint.get("victim", {}).get("email")
+        or complaint.get("registered_by")
+        or None
+    )
 
-    return {"message": "Status updated", "status": new_status}
+    # Send email notification
+    if victim_email:
+        subject = "CyberCAP: Complaint Status Update"
+        body = (
+            f"Dear User,\n\n"
+            f"Your complaint (ID: {complaint.get('complaint_id')}) status has been updated.\n"
+            f"Previous status: {old_status}\n"
+            f"New status: {new_status}\n\n"
+            f"Thank you for your patience.\n\n"
+            f"— CyberCAP Team"
+        )
+        send_email_notification(victim_email, subject, body)
+
+    return {
+        "message": "Status updated successfully and user notified",
+        "new_status": new_status
+    }
+
 @app.get("/feedback")
 async def get_feedback():
     feedbacks = list(contact_collection.find({}, {"_id": 0}))

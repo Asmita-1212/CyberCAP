@@ -5,19 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login - CyberCAP</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #a6b3a8;
+      background: linear-gradient(135deg, #3e64ff, #5edfff);
       display: flex;
-      flex-direction: column; /* Stack children vertically */
-      justify-content: flex-start; /* Align children from the top */
+      flex-direction: column;
+      justify-content: flex-start;
       align-items: center;
-      min-height: 100vh; /* Use min-height for full viewport height */
+      min-height: 100vh;
     }
 
-    /* Navbar styles copied from index.html */
+    /* NAVBAR */
     .navbar {
       position: sticky;
       top: 0;
@@ -36,260 +37,222 @@
       font-size: 30px;
       font-weight: bold;
       text-decoration: none;
-      letter-spacing: 1px;
     }
 
     .navbar ul {
       list-style: none;
       display: flex;
-      gap: 5px;
-      margin: 0;
+      gap: 25px;
       padding: 0;
+      margin: 0;
     }
 
-    .navbar ul li {
-      position: relative;
-    }
-
-    .navbar ul li a,
-    .dropbtn {
-      color: #f5f0f0;
-      font-size: 16px;
-      font-weight: 600;
+    .navbar ul li a {
+      color: white;
       text-decoration: none;
       padding: 8px 12px;
       border-radius: 6px;
-      background: none;
-      border: none;
-      cursor: pointer;
+      font-weight: 600;
     }
 
-    .navbar ul li a:hover,
-    .dropbtn:hover {
+    .navbar ul li a:hover {
       background-color: rgba(255, 255, 255, 0.2);
     }
 
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      top: 40px;
-      left: 0;
-      background-color: #545dda;
-      min-width: 160px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      border-radius: 6px;
-      overflow: hidden;
-    }
-
-    .dropdown-content a {
-      color: #000;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #e06deb;
-      color: #b9d43c;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-
-    /* Login Form Styles */
+    /* LOGIN BOX */
     .login-box {
-      background-color: #ffffff;
+      background-color: #fff;
       padding: 40px 30px;
       border-radius: 12px;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+      box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.2);
       width: 100%;
       max-width: 400px;
-      animation: fadeSlideDown 1s ease forwards;
-      opacity: 0;
-      transform: translateY(-30px);
-      margin-top: 50px; /* Adjust spacing below the navbar */
+      margin-top: 60px;
+      animation: slideDown 1s ease-out;
     }
 
-    @keyframes fadeSlideDown {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-40px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .login-box h2 {
       text-align: center;
-      margin-bottom: 25px;
       color: #1f3b73;
-      animation: fadeIn 1.5s ease;
+      margin-bottom: 25px;
+      font-size: 24px;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-
+    /* INPUT STYLE */
     label {
-      margin-bottom: 5px;
       font-weight: 600;
       color: #333;
+      margin-bottom: 5px;
+      font-size: 14px;
     }
 
-    input[type="email"],
-    input[type="password"] {
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
+   input {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  margin-bottom: 15px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
 
-    input:focus {
-      border-color: #3e64ff;
-      box-shadow: 0 0 8px rgba(62, 100, 255, 0.3);
-      outline: none;
-    }
+input:focus {
+  border-color: #3e64ff;
+  box-shadow: 0px 0px 5px rgba(62, 100, 255, 0.25);
+  outline: none;
+}
 
     button {
-      padding: 12px;
+      padding: 14px;
+      width: 100%;
       background-color: #3e64ff;
       color: white;
       border: none;
       border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
-      transition: background-color 0.3s, transform 0.1s;
+      transition: 0.3s;
+      font-weight: 600;
     }
 
     button:hover {
-      background-color: #2b4ae0;
+      background-color: #223fd1;
     }
 
-    button:active {
-      transform: scale(0.97);
-    }
-
-    a {
+    .login-box a {
+      display: block;
       text-align: center;
-      margin-top: 15px;
+      margin-top: 12px;
       color: #3e64ff;
-      font-size: 14px;
       text-decoration: none;
-      opacity: 0;
-      animation: fadeIn 1.8s ease forwards;
-      animation-delay: 0.5s;
+      font-size: 14px;
     }
 
-    a:hover {
+    .login-box a:hover {
       text-decoration: underline;
     }
 
     #loginMessage {
       text-align: center;
-      margin-bottom: 15px;
       font-size: 14px;
+      margin-bottom: 15px;
       display: none;
+      font-weight: 600;
     }
-
-    /* Responsive adjustments for the layout */
-    @media (max-width: 768px) {
-      .navbar ul {
-        flex-direction: column;
-        gap: 10px;
-        align-items: center;
-      }
-      .navbar {
-        flex-direction: column;
-      }
-    }
-    .navbar .logo img {
-  height: 45px;            /* adjust as per your logo size */
-  width: auto;
-  vertical-align: middle;
-  filter: drop-shadow(0 0 4px cyan);
-  border-radius: 40px;
-  margin-right: 10px;
-}
   </style>
 </head>
+
 <body>
 
-<!-- Persistent Navbar -->
 <nav class="navbar">
-  <a href="#" class="logo"><img src="logo.png" >CyberCAP</a>
+  <a href="#" class="logo">CyberCAP</a>
   <ul>
-     <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
-    <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Cyber Volunteers</a></li>
-    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning </a></li>
-    <li><a href="user_login.html"><i class="fas fa-user"></i> User Login</a></li>
-    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact </a></li>
-    
+    <li><a href="dashboard.html">Home</a></li>
+    <li><a href="cybervoluteer.html">Cyber Volunteers</a></li>
+    <li><a href="learncorner.html">Learning Corner</a></li>
+    <li><a href="contactus.html">Contact Us</a></li>
   </ul>
 </nav>
 
 <div class="login-box">
   <h2>Login to CyberCAP</h2>
-
   <p id="loginMessage"></p>
 
   <form id="loginForm">
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" required placeholder="Enter your email"/>
+    <label>Email or Admin Username</label><br><br>
+    <input type="text" id="email" required placeholder="Enter your email or admin username">
 
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password" required placeholder="Enter your password"/>
+    <label>Password</label><br><br>
+    <input type="password" id="password" required placeholder="Enter your password">
 
     <button type="submit">Login</button>
+
     <a href="forgot_password.html">Forgot Password?</a>
     <a href="register.html">New user? Register here</a>
   </form>
 </div>
 
 <script>
-  document.getElementById("loginForm").addEventListener("submit", async function (event) {
+document.getElementById("loginForm").addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const email = document.getElementById("email").value;
+    const inputValue = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
     const messageEl = document.getElementById("loginMessage");
 
+    const allowedAdmins = ["admin1", "admin2"];
+
     try {
-      const response = await fetch("http://127.0.0.1:8000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
 
-      const data = await response.json();
+        /* ---------------- ADMIN LOGIN ---------------- */
+        if (allowedAdmins.includes(inputValue)) {
 
-      if (response.ok) {
-        messageEl.style.color = "green";
-        messageEl.innerText = "✅ Login successful!";
-        messageEl.style.display = "block";
+            const response = await fetch("http://127.0.0.1:8000/admin-login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username: inputValue, password }),
+            });
 
-        localStorage.setItem("username", data.user.username);
-        localStorage.setItem("email", data.user.email);
+            const data = await response.json();
 
-        setTimeout(() => {
-          window.location.href = "after_login.html";
-        }, 1000);
-      } else {
-        messageEl.style.color = "red";
-        messageEl.innerText = data.detail || "Invalid credentials";
-        messageEl.style.display = "block";
-      }
+            if (response.ok) {
+                localStorage.setItem("pendingAdmin", inputValue);
+                window.location.href = "admin_otp.html";
+                return;
+            } else {
+                messageEl.style.color = "red";
+                messageEl.innerText = data.detail || "Invalid admin credentials";
+                messageEl.style.display = "block";
+                return;
+            }
+        }
+
+        /* ---------------- USER LOGIN ---------------- */
+        if (!inputValue.includes("@")) {
+            messageEl.style.color = "red";
+            messageEl.innerText = "Please enter a valid email.";
+            messageEl.style.display = "block";
+            return;
+        }
+
+        const response = await fetch("http://127.0.0.1:8000/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: inputValue, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            messageEl.style.color = "green";
+            messageEl.innerText = "Login successful!";
+            messageEl.style.display = "block";
+
+            localStorage.setItem("username", data.user.username);
+            localStorage.setItem("email", data.user.email);
+
+            setTimeout(() => {
+                window.location.href = "user_dashboard.html";
+            }, 800);
+
+        } else {
+            messageEl.style.color = "red";
+            messageEl.innerText = data.detail || "Invalid login";
+            messageEl.style.display = "block";
+        }
+
     } catch (error) {
-      messageEl.style.color = "red";
-      messageEl.innerText = "⚠️ Error connecting to server.";
-      messageEl.style.display = "block";
+        messageEl.style.color = "red";
+        messageEl.innerText = "⚠ Server error";
+        messageEl.style.display = "block";
     }
-  });
+});
 </script>
+
 </body>
 </html>
