@@ -431,7 +431,7 @@ body.dark-mode button {
       <a href="#" onclick="showWeeklyChart(); "><i class="fas fa-chart-bar"></i> Weekly Analysis</a>
       <a href="#" onclick="showMonthlyChart();"><i class="fas fa-chart-line"></i> Monthly Analysis</a>
       <a href="#" onclick="showFeedback();"><i class="fas fa-user-shield"></i> Feedback</a>
-      <a id="settingsTab" onclick="showSettings()"><i class="fas fa-cog"></i>Settings</a>
+      
     </div>
     <button class="logout" id="logoutSidebar"><i class="fas fa-sign-out-alt"></i> Logout</button>
   </div>
@@ -444,7 +444,7 @@ body.dark-mode button {
     </div>
 
     <div class="right-section">
-      <a href="admin_login.html" title="Home"><i class="fas fa-home"></i></a>
+      <a href="user_login.html" title="Home"><i class="fas fa-home"></i></a>
       <div class="notification-container">
         <i class="fas fa-bell" id="notifIcon" title="Notifications"></i>
         <div class="notifications" id="notifications">
@@ -518,34 +518,7 @@ body.dark-mode button {
   </table>
 
 <!-- SETTINGS SECTION -->
-<section id="settingsSection" style="display: none; padding: 20px;">
-  <h2>Appearance & UI Preferences</h2>
-  <div class="settings-group">
-    <div class="setting-item">
-      <label for="themeToggle"><strong>Theme:</strong></label>
-      <select id="themeToggle" onchange="changeTheme()">
-        <option value="light">☀️ Light</option>
-        <option value="dark">🌙 Dark</option>
-      </select>
-    </div>
 
-    <div class="setting-item">
-      <label for="layoutView"><strong>Dashboard Layout:</strong></label>
-      <select id="layoutView" onchange="changeLayout()">
-        <option value="grid">Grid View</option>
-        <option value="compact">Compact List</option>
-      </select>
-    </div>
-
-    <div class="setting-item">
-      <label for="fontSize"><strong>Font Size:</strong></label>
-      <input type="range" id="fontSize" min="14" max="22" value="16" oninput="changeFontSize(this.value)">
-      <span id="fontSizeValue">16px</span>
-    </div>
-  </div>
-</section>
-  </div>
-</section>
 
 
   </main>
@@ -900,7 +873,7 @@ document.querySelector(".category-buttons").style.display = "none";
     function logoutAdmin() {
       localStorage.removeItem("adminUser");
       localStorage.removeItem("adminPhoto");
-      window.location.href = "admin_login.html";
+      window.location.href = "user_login.html";
     }
     const logoutNavbar = document.getElementById("logoutNavbar");
     const logoutSidebar = document.getElementById("logoutSidebar");
@@ -959,13 +932,6 @@ function showFeedback() {
   fetchFeedback();
 }
 
-
-function showSettings() {
-  console.log("✅ Settings section displayed");
-  document.querySelectorAll("section").forEach(s => s.style.display = "none");
-  const settings = document.getElementById("settingsSection");
-  settings.style.display = "block";
-}
 function changeTheme() {
     const theme = document.getElementById("themeToggle").value;
     document.body.className = theme; // toggle CSS themes
