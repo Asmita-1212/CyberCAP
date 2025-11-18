@@ -1,9 +1,10 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Register - CyberCAP</title>
+
   <style>
     * {
       margin: 0;
@@ -11,16 +12,70 @@
       box-sizing: border-box;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 
-    body {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #3e64ff, #5edfff);
+  background: linear-gradient(
+    to bottom,
+    #4d7bff 0%,
+    #55a0ff 50%,
+    #4d7bff 100%
+  );
+  background-attachment: fixed; /* smooth, non-cut gradient */
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  background: linear-gradient(90deg, #000000, #131212);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 40px;  /* reduced padding */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+    .navbar .logo {
+      color: #ecf3f5;
+      font-size: 30px;
+      font-weight: bold;
+      text-decoration: none;
       display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 20px;
+      gap: 10px;
     }
 
+    .navbar .logo img {
+      height: 45px;
+      border-radius: 40px;
+      filter: drop-shadow(0 0 4px cyan);
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .navbar ul li a {
+      color: #f5f0f0;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+
+    .navbar ul li a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Register Box */
     .register-container {
       background-color: #ffffff;
       padding: 40px 30px;
@@ -28,6 +83,7 @@
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
       width: 100%;
       max-width: 450px;
+      margin: 40px auto;
       animation: fadeSlideIn 1s ease forwards;
       opacity: 0;
       transform: translateY(-30px);
@@ -57,20 +113,18 @@
       color: #333;
     }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
+    input {
       padding: 12px;
       margin-bottom: 20px;
       border: 1px solid #ccc;
       border-radius: 8px;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      transition: 0.3s;
       width: 100%;
     }
 
     input:focus {
       border-color: #3e64ff;
-      box-shadow: 0 0 8px rgba(62, 100, 255, 0.3);
+      box-shadow: 0 0 8px rgba(62,100,255,0.3);
       outline: none;
     }
 
@@ -81,12 +135,11 @@
     .toggle-password {
       position: absolute;
       right: 12px;
-      top: 30%;
+      top: 50%;
       transform: translateY(-50%);
       cursor: pointer;
       font-size: 18px;
       color: #666;
-      user-select: none;
     }
 
     button {
@@ -97,15 +150,11 @@
       border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
+      transition: 0.3s;
     }
 
     button:hover {
       background-color: #2b4ae0;
-    }
-
-    button:active {
-      transform: scale(0.98);
     }
 
     #message {
@@ -115,32 +164,65 @@
       display: none;
     }
 
+    /* 📱 Mobile Navbar */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+        padding: 15px 20px;
+      }
+
+      .navbar ul {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .register-container {
+        margin-top: 60px;
+      }
+    }
+
     @media (max-width: 500px) {
       .register-container {
         padding: 30px 20px;
       }
-
-      input,
-      button {
-        font-size: 15px;
-      }
     }
+
   </style>
 </head>
+
 <body>
+
+  <!-- 🌐 Navbar -->
+  <nav class="navbar">
+    <a href="#" class="logo">
+      <img src="logo.png"> CyberCAP
+    </a>
+
+    <ul>
+      <li><a href="dashboard.html">Home</a></li>
+      <li><a href="cybervoluteer.html">Cyber Volunteers</a></li>
+      <li><a href="learncorner.html">Learning</a></li>
+      <li><a href="user_login.html">User Login</a></li>
+      <li><a href="contactus.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Register Form -->
   <div class="register-container">
     <h2>Create a New Account</h2>
 
     <form id="registerForm">
       <label for="username">Full Name</label>
-      <input type="text" id="username" name="username" required placeholder="Enter your full name" />
+      <input type="text" id="username" required placeholder="Enter your full name" />
 
       <label for="email">Email</label>
-      <input type="email" id="email" name="email" required placeholder="Enter your email" />
+      <input type="email" id="email" required placeholder="Enter your email" />
 
       <label for="password">Password</label>
       <div class="password-wrapper">
-        <input type="password" id="password" name="password" required placeholder="Create a password" />
+        <input type="password" id="password" required placeholder="Create a password" />
         <span class="toggle-password" onclick="togglePassword()">👁️</span>
       </div>
 
@@ -151,14 +233,13 @@
   </div>
 
   <script>
-    // Toggle password visibility
     function togglePassword() {
       const passInput = document.getElementById("password");
       passInput.type = passInput.type === "password" ? "text" : "password";
     }
 
     document.getElementById("registerForm").addEventListener("submit", async function (event) {
-      event.preventDefault();  // prevent default form submission
+      event.preventDefault();
 
       const username = document.getElementById("username").value;
       const email = document.getElementById("email").value;
@@ -190,7 +271,6 @@
       }
     });
   </script>
+
 </body>
 </html>
-
-

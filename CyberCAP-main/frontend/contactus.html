@@ -2,38 +2,94 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Contact Us - Cybercrime Support</title>
+  <title>Contact Us - CyberCAP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
+    /* ======= CYBERCAP NAVBAR (same as homepage) ======= */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #000;
+      padding: 10px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .navbar .logo img {
+      height: 40px;
+      width: auto;
+      border-radius: 40px;
+      margin-right: 10px;
+      filter: drop-shadow(0 0 3px cyan);
+    }
+
+    .navbar .logo span {
+      color: #ecf2f3;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    .navbar ul li a {
+      text-decoration: none;
+      color: #f0f0f0;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .navbar ul li a:hover {
+      color: cyan;
+    }
+
+    /* ======= CONTACT PAGE BODY ======= */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #a6b3a8;
+      background-color: #f4f6f8;
       color: #333;
+      margin: 0;
     }
 
     .container {
-      max-width: 800px;
-      margin: auto;
-      background: rgb(251, 251, 252);
+      max-width: 850px;
+      margin: 50px auto;
+      background: #fff;
       padding: 40px;
       border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
       text-align: center;
-      color: #2c3e50;
+      color: #0d1b2a;
       margin-bottom: 10px;
     }
 
     p.description {
       text-align: center;
-      color: #666;
+      color: #555;
       margin-bottom: 30px;
     }
 
     section {
-      margin-bottom: 40px;
+      margin-bottom: 35px;
     }
 
     section h2 {
@@ -100,62 +156,13 @@
       .container { padding: 25px; }
       h1 { font-size: 24px; }
       section h2 { font-size: 18px; }
-    }
-    /* Navbar */
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #000;
-      padding: 10px 40px;
-      border-bottom: 2px solid cyan;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    .navbar .logo {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-    }
-
-    .navbar .logo img {
-      height: 40px;
-      width: auto;
-      border-radius: 40px;
-      margin-right: 10px; /* space between logo and text */
-      filter: drop-shadow(0 0 3px cyan);
-    }
-
-    .navbar .logo span {
-      color: #00eaff;
-      font-size: 22px;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-    }
-
-    .navbar ul {
-      list-style: none;
-      display: flex;
-      gap: 25px;
-    }
-
-    .navbar ul li a {
-      text-decoration: none;
-      color: #f0f0f0;
-      font-weight: 500;
-      transition: 0.3s;
-    }
-
-    .navbar ul li a:hover {
-      color: cyan;
+      .navbar ul { flex-wrap: wrap; gap: 10px; justify-content: center; }
     }
   </style>
 </head>
 <body>
 
-    <!-- Navbar -->
+  <!-- NAVBAR -->
   <nav class="navbar">
     <a href="index.html" class="logo">
       <img src="logo.png" alt="CyberCAP Logo">
@@ -163,13 +170,14 @@
     </a>
     <ul>
       <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
-      <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Volunteers</a></li>
+      <li><a href="cybervolunteer.html"><i class="fas fa-users"></i> Volunteers</a></li>
       <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning</a></li>
       <li><a href="user_login.html"><i class="fas fa-user"></i> User Login</a></li>
       <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact</a></li>
     </ul>
   </nav>
 
+  <!-- CONTACT CONTENT -->
   <div class="container">
     <h1>Contact Us</h1>
     <p class="description">Need help or want to report something directly? We’re here for you.</p>
@@ -186,17 +194,17 @@
     <section>
       <h2>📬 Send Us a Message</h2>
       <form id="contactForm">
-        <label>Your Name:</label>
+        <label for="name">Your Name:</label>
         <input type="text" id="name" name="name" required placeholder="Enter your full name">
 
-        <label>Email Address:</label>
+        <label for="email">Email Address:</label>
         <input type="email" id="email" name="email" required placeholder="your@example.com">
 
-        <label>Subject:</label>
+        <label for="subject">Subject:</label>
         <input type="text" id="subject" name="subject" placeholder="Subject (optional)">
 
-        <label>Message:</label>
-        <textarea id="message" name="message" rows="3" required placeholder="Write your message here..."></textarea>
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="4" required placeholder="Write your message here..."></textarea>
 
         <button type="submit">Submit</button>
       </form>
@@ -208,17 +216,14 @@
   <script>
     document.getElementById("contactForm").addEventListener("submit", async function(e) {
       e.preventDefault();
-
       const formData = new FormData(this);
-
       try {
         const response = await fetch("http://127.0.0.1:8000/contact", {
           method: "POST",
           body: formData
         });
-
         if (response.ok) {
-          document.getElementById("contactForm").reset();
+          this.reset();
           document.getElementById("successMessage").style.display = "block";
         } else {
           alert("❌ Failed to submit message. Please try again later.");
