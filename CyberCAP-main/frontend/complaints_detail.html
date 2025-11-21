@@ -130,11 +130,9 @@ if (c.attachments?.length > 0) {
     }).join('') +
     `</div>`;
 }
-
-
         container.innerHTML = `
           <div class="field"><span class="label">User:</span> ${c.victim?.email || c.registered_by || "N/A"}</div>
-          <div class="field"><span class="label">Description:</span> ${c.description || "N/A"}</div>
+          <div class="field"><span class="label">Description:</span> ${c.translated_description || "N/A"}</div>
           <div class="field"><span class="label">Category:</span> ${c.category || "N/A"}</div>
           <div class="field"><span class="label">Priority:</span> ${c.priority || "N/A"}</div>
           <div class="field"><span class="label">Status:</span> <span id="statusValue">${c.status || "Pending"}</span></div>
@@ -157,7 +155,6 @@ if (c.attachments?.length > 0) {
           "Failed to load complaint: " + err.message;
       }
     }
-
     async function updateStatus(id) {
       const newStatus = document.getElementById("statusSelect").value;
 

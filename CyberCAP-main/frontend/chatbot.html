@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CyberCAP — Smart Chatbot</title>
+  <style>
+    :root{
+      --bg:#f5f7ff;
+      --card:#ffffff;
+      --accent:#3c6ef6;
+      --muted:#6b7280;
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
+      margin:0;
+      background:var(--bg);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      padding:18px;
+    }
+    .card{
+      width:100%;
+      max-width:480px;
+      border-radius:12px;
+      background:var(--card);
+      box-shadow:0 10px 30px rgba(20,20,40,0.08);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+    .top{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:14px;
+      border-bottom:1px solid #eef2ff;
+    }
+    .logo{
+      width:46px;
+      height:46px;
+      border-radius:10px;
+      overflow:hidden;
+      flex:0 0 46px;
+      background:#fff;
+      border:1px solid #eef2ff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .logo img{width:100%;height:100%;object-fit:cover;display:block}
+    .title{font-weight:700;color:#0f172a}
+    .subtitle{font-size:12px;color:var(--muted)}
+    .body{padding:14px;display:flex;flex-direction:column;height:64vh;min-height:520px}
+    .messages{flex:1;overflow:auto;padding-right:6px}
+    .msg{max-width:78%;padding:10px;border-radius:10px;margin:8px 0;line-height:1.4;word-break:break-word}
+    .bot{background:#eef2ff;color:#031025;border-bottom-left-radius:2px}
+    .user{background:#dcfce7;margin-left:auto;color:#031025}
+    .suggestions{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+    .chip{
+      background:#f1f5f9;padding:8px 10px;border-radius:999px;font-size:13px;
+      cursor:pointer;border:1px solid #e6eefc;
+    }
+    .input-row{display:flex;gap:8px;padding-top:8px}
+    input[type="text"]{
+      flex:1;padding:10px 12px;border-radius:10px;border:1px solid #e6eefc;font-size:14px;
+    }
+    button{
+      padding:10px 14px;border-radius:10px;border:none;background:var(--accent);
+      color:white;cursor:pointer;font-weight:600;
+    }
+    .meta{font-size:12px;color:var(--muted);padding:10px 14px;border-top:1px solid #f3f5ff}
+    @media (max-width:520px){.body{height:70vh;min-height:460px}}
+  </style>
+</head>
+<body>
+  <div class="card" role="application" aria-label="CyberCAP smart chatbot">
+    <div class="top">
+      <div class="logo">
+        <!-- Use your local logo file -->
+        <img src="logo.png" alt="CyberCAP"/>
+      </div>
+      <div>
+        <div class="title">CyberCAP Assistant</div>
+        <div class="subtitle">Ask anything about complaints, tracking, volunteers & more</div>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="messages" id="messages" aria-live="polite"></div>
+
+      <div class="suggestions" id="suggestions">
+        <div class="chip" data-q="How do I register a complaint?">How do I register a complaint?</div>
+        <div class="chip" data-q="I forgot my complaint id">I forgot my complaint id</div>
+        <div class="chip" data-q="Can I write description in any language?">Any language for description?</div>
+        <div class="chip" data-q="How to track complaint">How to track complaint</div>
+        <div class="chip" data-q="How to become a volunteer">Register as a volunteer</div>
+      </div>
+
+      <div class="input-row">
+        <input id="userInput" type="text" placeholder="Type your question... (press Enter to send)" aria-label="Chat input" />
+        <button id="sendBtn" aria-label="Send message">Send</button>
+      </div>
+
+      
+  </div>
+
+  <script>
+  // -----------------------------
+  // Smart rule-based chatbot
+  // - fuzzy matching (Levenshtein)
+  // - normalized keyword groups
+  // - suggestions (chips)
+  // - Enter key + Send button
+  // -----------------------------
+
+  const messagesEl = document.getElementById('messages');
+  const inputEl = document.getElementById('userInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const suggestionsEl = document.getElementById('suggestions');
+
+  // Knowledge bank
+  const faqBank = [
+    {k: ['register complaint','file complaint','how to register','register a complaint','lodge complaint'],
+     a: "create an account by registering or log in if already have an account To register a complaint: open 'File Complaint' → fill victim & incident details → attach evidence (optional) → submit."},
+
+    {k: ['forgot complaint id','lost complaint id','lost id','complaint id missing'],
+     a: "If you lost your complaint ID: 1) Check your submitted complaint details tab you will find the respective complaint id.2) If still not found, contact Support with your name and registered contact details."},
+
+    {k: ['track complaint','how to track','track case','check status','complaint status','complaint progress'],
+     a: "To track a complaint: open 'Track Complaint' → enter your Complaint ID or registered email/phone → view the current status and updates."},
+
+    {k: ['language','any language','multilingual','can i write in','description in'],
+     a: "Yes — you can provide the description in many languages. The system attempts to auto-translate descriptions for processing. For best results, also include key points in English if possible."},
+
+    {k: ['change password','forgot password','reset password','recover password'],
+     a: "If you forgot your password, click 'Forgot Password' on the login page. Enter your registered email or phone to receive an OTP or reset link, then set a new password to log in."},
+
+    {k: ['report suspect','report user','report suspicious','report account','report person'],
+     a: "To report a suspect: use 'Report Suspect' in the dashboard, provide details and any evidence/screenshots. Our team will review and take action. Your identity can remain confidential."},
+
+    {k: ['upload evidence','attach file','add screenshot','upload screenshot','upload proof','evidence upload'],
+     a: "You can upload images (jpg/png), PDFs or short videos as evidence when filing a complaint. Keep each file size reasonable; multiple attachments are allowed."},
+
+    {k: ['all complaints','view complaints','see all complaints','my complaints','list of complaints'],
+     a: "The 'All Complaints' tab lists complaints with filters for category, status and priority. Access depends on your role; admins see everything while users see their own cases."},
+
+    {k: ['volunteer','register as a volunteer','become volunteer','join volunteer'],
+     a: "To register as a volunteer: open 'Volunteer Registration', enter your name, contact info, skills and area of interest. The admin will review your request."},
+
+    {k: ['what is cybercap','about cybercap','what does cybercap do'],
+     a: "CyberCAP helps users file, manage and track cybercrime complaints, provides reporting tools and support, and helps coordinate with cyber cells for action."}
+  ];
+
+  // Small talk
+  const smallTalk = [
+    {k:['hi','hello','hey','hii','helo'], a: 'Hello! 👋 How can I assist you with CyberCAP today?'},
+    {k:['good morning','morning'], a: 'Good morning! ☀ How may I help?'},
+    {k:['good evening','evening'], a: 'Good evening! 🌙 Need any help?'},
+    {k:['thanks','thank you','thx'], a: "You're welcome! 🙂 Anything else I can help with?"}
+  ];
+
+  // Levenshtein distance
+  function levenshtein(a,b){
+    if(a===b) return 0;
+    const al = a.length, bl = b.length;
+    if(al===0) return bl; if(bl===0) return al;
+    let v0 = new Array(bl+1), v1 = new Array(bl+1);
+    for(let j=0;j<=bl;j++) v0[j]=j;
+    for(let i=0;i<al;i++){
+      v1[0]=i+1;
+      for(let j=0;j<bl;j++){
+        const cost = a[i]===b[j] ? 0 : 1;
+        v1[j+1]=Math.min(v1[j]+1, v0[j+1]+1, v0[j]+cost);
+      }
+      for(let j=0;j<=bl;j++) v0[j]=v1[j];
+    }
+    return v1[bl];
+  }
+
+  function normalizeText(s){
+    return s.replace(/[\u2000-\u206F\u2E00-\u2E7F\'\".,!?;:()\[\]{}<>`~@#$%^&*+=\\/\\\\|-]/g,'')
+            .replace(/\s+/g,' ').trim().toLowerCase();
+  }
+
+  function isSimilar(userText, phrase){
+    userText = normalizeText(userText);
+    phrase = normalizeText(phrase);
+    if(userText.includes(phrase) || phrase.includes(userText)) return true;
+    const dist = levenshtein(userText, phrase);
+    const maxLen = Math.max(userText.length, phrase.length);
+    const ratio = dist / (maxLen || 1);
+    return ratio <= 0.35;
+  }
+
+  function findAnswer(userText){
+    const text = normalizeText(userText);
+    for(const item of smallTalk){
+      for(const key of item.k){ if(isSimilar(text,key)) return item.a; }
+    }
+    for(const item of faqBank){
+      for(const key of item.k){ if(isSimilar(text,key)) return item.a; }
+    }
+    if(/\b(id|complaint id|complaintnumber|ref number|reference)\b/.test(text)){
+      return "If you don't have the complaint ID, try searching in all complaints tab or contact Support with your registered details.";
+    }
+    if(/\b(language|translate|multilingual|any language)\b/.test(text)){
+      return "Yes, descriptions in many languages are accepted. The system may auto-translate for processing. If unsure, provide a brief in English too.";
+    }
+    return null;
+  }
+
+  function addBot(text){
+    const el = document.createElement('div');
+    el.className = 'msg bot';
+    el.textContent = text;
+    messagesEl.appendChild(el);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function addUser(text){
+    const el = document.createElement('div');
+    el.className = 'msg user';
+    el.textContent = text;
+    messagesEl.appendChild(el);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function handleSend(){
+    const raw = inputEl.value.trim();
+    if(!raw) return;
+    addUser(raw);
+    inputEl.value = '';
+    addBot('⏳ Thinking...');
+
+    setTimeout(()=>{
+      const last = messagesEl.querySelector('.msg.bot:last-child');
+      if(last && last.textContent === '⏳ Thinking...') last.remove();
+      const found = findAnswer(raw);
+      if(found){
+        addBot(found);
+        setTimeout(()=>addBot('Do you need any further information? 🙂'),350);
+      } else {
+        // try best fuzzy match
+        let best = {score:1.0,answer:null};
+        const norm = normalizeText(raw);
+        for(const item of faqBank){
+          for(const key of item.k){
+            const dist = levenshtein(norm, normalizeText(key));
+            const score = dist / Math.max(norm.length, key.length,1);
+            if(score < best.score){ best = {score:score, answer:item.a}; }
+          }
+        }
+        if(best.answer && best.score <= 0.45){
+          addBot(best.answer + ' (matched similar question)');
+          setTimeout(()=>addBot('Do you need any further information? 🙂'),350);
+        } else {
+          addBot("I couldn't find an exact answer. I can help with filing, tracking, reporting, evidence upload and profile issues. Reply 'support' to get contact steps.");
+        }
+      }
+    },450);
+  }
+
+  sendBtn.addEventListener('click', handleSend);
+  inputEl.addEventListener('keydown', function(e){ if(e.key === 'Enter') handleSend(); });
+
+  suggestionsEl.addEventListener('click', (ev)=>{
+    const chip = ev.target.closest('.chip'); if(!chip) return;
+    inputEl.value = chip.dataset.q; inputEl.focus(); handleSend();
+  });
+
+  // initial greeting
+  setTimeout(()=>addBot('Hi — I am CyberCAP assistant. Ask me about filing, tracking, reporting or volunteering.'),200);
+  </script>
+</body>
+</html>

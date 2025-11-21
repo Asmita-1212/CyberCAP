@@ -258,7 +258,7 @@ async function loadComplaints() {
       `;
       tr.addEventListener("click", () => {
         localStorage.setItem("selectedComplaintId", complaint.complaint_id);
-        window.location.href = "complaints_detail.html";
+       
       });
       tbody.appendChild(tr);
     });

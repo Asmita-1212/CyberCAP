@@ -163,6 +163,25 @@ body {
       font-size: 14px;
       display: none;
     }
+    .register-container a {
+      display: block;
+      text-align: center;
+      margin-top: 12px;
+      color: #3e64ff;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .register-container a:hover {
+      text-decoration: underline;
+    }
+    .chatbot-nav i {
+  margin-right: 6px;
+  color: #2563eb;   /* Blue highlight */
+}
+.chatbot-nav:hover {
+  color: #1e40af;
+}
 
     /* 📱 Mobile Navbar */
     @media (max-width: 768px) {
@@ -206,6 +225,8 @@ body {
       <li><a href="learncorner.html">Learning</a></li>
       <li><a href="user_login.html">User Login</a></li>
       <li><a href="contactus.html">Contact</a></li>
+         <li class="nav-item"><a href="chatbot.html" class="nav-link chatbot-nav">
+    <i class="fas fa-comment-dots"></i> Chatbot</a></li>
     </ul>
   </nav>
 
@@ -227,6 +248,7 @@ body {
       </div>
 
       <button type="submit">Register</button>
+      <a href="user_login.html">sign in</a>
     </form>
 
     <p id="message"></p>

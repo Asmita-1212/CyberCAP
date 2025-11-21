@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>CyberCAP — Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     :root {
       --primary: #3b4ce2;
@@ -234,7 +236,17 @@
       text-decoration: none;
       color: var(--primary);
     }
-
+.option-card .icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+   .chatbot-nav i {
+  margin-right: 6px;
+  color: #2563eb;   /* Blue highlight */
+}
+.chatbot-nav:hover {
+  color: #1e40af;
+}
     /* Responsive */
     @media(max-width: 950px) {
       .hero {
@@ -251,6 +263,7 @@
         <div class="subtitle" id="welcome">Welcome back —</div>
       </div>
       <div class="top-right">
+    <button class="btn" class="nav-link chatbot-nav" onclick="location.href='chatbot.html'"><i class="fas fa-comment-dots"></i> Chatbot</button>
         <button class="btn" onclick="location.href='complaint.html'">New Complaint</button>
         <button class="btn" style="background: linear-gradient(90deg,#ff6b6b,#ffa3a3)" onclick="logoutUser()">Logout</button>
       </div>
@@ -279,7 +292,7 @@
             <h3>📋 All Complaints</h3>
             <p>View all submitted complaint IDs & details.</p>
           </div>
-          <div class="action">
+          <div class="action" onclick="location.href='contactus.html'">
             <h3>📣 Support</h3>
             <p>Contact support for help with your case.</p>
           </div>
@@ -322,6 +335,8 @@
       </aside>
     </section>
   </div>
+
+</div>
 
  <script>
   const email = localStorage.getItem('email');

@@ -241,20 +241,75 @@
   </div>
 
   <script>
-    const form = document.getElementById('trackForm');
-    const loading = document.getElementById('loading');
-    const result = document.getElementById('result');
+document.getElementById('trackForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      loading.style.display = 'block';
-      result.style.display = 'none';
+  const result = document.getElementById('result');
+  const loading = document.getElementById('loading');
 
-      setTimeout(() => {
-        loading.style.display = 'none';
-        result.style.display = 'block';
-      }, 1500);
+  result.style.display = 'none';
+  loading.style.display = 'block';
+
+  const complaintId = document.getElementById('complaintId').value;
+  const mobile = document.getElementById('mobile').value;
+
+  try {
+    const response = await fetch("http://127.0.0.1:8000/track_complaint", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ complaintId, mobile })
     });
-  </script>
+
+    loading.style.display = 'none';
+
+    if (!response.ok) {
+      const error = await response.json();
+      result.innerHTML = `<strong>Error:</strong> ${error.detail}`;
+      result.style.display = 'block';
+      return;
+    }
+
+    const data = await response.json();
+
+    // Convert date format: 2025-02-01 → 01 Feb 2025
+    const dateObj = new Date(data.incident_date);
+    const formattedDate = dateObj.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+
+    // Convert time 15:22 → 3:22 PM
+    let formattedTime = "";
+    if (data.incident_time) {
+      const [hours, minutes] = data.incident_time.split(':');
+      const date = new Date();
+      date.setHours(hours, minutes);
+      formattedTime = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit'
+      });
+    }
+
+    // FINAL UI
+    result.innerHTML = `
+      <h4>Complaint Details</h4>
+      <strong>Assigned to: A.R.Mehta</strong><br>
+      <strong>Complaint id:</strong> ${data.complaint_id}<br>
+       <strong>Description:</strong> ${data.description}<br>
+      <strong>Incident Type:</strong> ${data.incident_type}<br>
+      <strong>Platform:</strong> ${data.platform}<br>
+      <strong>Status:</strong> ${data.status}<br><br>
+
+    `;
+    result.style.display = 'block';
+  } catch (err) {
+    loading.style.display = 'none';
+    result.innerHTML = `<strong>Error connecting to server:</strong> ${err.message}`;
+    result.style.display = 'block';
+  }
+});
+</script>
+
 </body>
 </html>
