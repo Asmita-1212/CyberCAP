@@ -10,7 +10,7 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #3e64ff, #5edfff);
+       background-color: #a6b3a8;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -19,45 +19,92 @@
     }
 
     /* NAVBAR */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: linear-gradient(90deg, #000000, #131212);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 30px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-      width: 100%;
-    }
+    /* ================= NAVBAR (UPDATED TO MATCH VOLUNTEER PAGE) ================= */
+nav {
+  background: #000;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 40px;
+  border-bottom: 2px solid cyan;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
 
-    .navbar .logo {
-      color: #ecf3f5;
-      font-size: 30px;
-      font-weight: bold;
-      text-decoration: none;
-    }
+nav .logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
 
-    .navbar ul {
-      list-style: none;
-      display: flex;
-      gap: 25px;
-      padding: 0;
-      margin: 0;
-    }
+nav .logo img {
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 40px;
+  filter: drop-shadow(0 0 3px cyan);
+}
 
-    .navbar ul li a {
-      color: white;
-      text-decoration: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-weight: 600;
-    }
+nav .logo span {
+  color: cyan;
+  font-size: 22px;
+  font-weight: bold;
+}
 
-    .navbar ul li a:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+nav ul li a {
+  color: #f0f0f0;
+  text-decoration: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: cyan;
+}
+
+/* Chatbot Icon Style */
+.chatbot-nav i {
+  margin-right: 6px;
+  color: #1e90ff;
+}
+
+.chatbot-nav:hover {
+  color: #1e40af;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px 25px;
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+    gap: 15px;
+  }
+}
+
+/* Add space so login box does not hide behind navbar */
+body {
+  padding-top: 80px;
+}
+
 
     /* LOGIN BOX */
     .login-box {
@@ -145,28 +192,32 @@ input:focus {
       font-weight: 600;
     }
     .chatbot-nav i {
-  margin-right: 6px;
+  margin: right 10px;
   color: #2563eb;   /* Blue highlight */
 }
 .chatbot-nav:hover {
-  color: #1e40af;
+  color: #c1eef7;
 }
   </style>
 </head>
 
 <body>
 
-<nav class="navbar">
-  <a href="#" class="logo">CyberCAP</a>
+<nav>
+  <a href="index.html" class="logo">
+    <img src="logo.png" alt="CyberCAP Logo">
+    <span>CyberCAP</span>
+  </a>
+
   <ul>
-    <li><a href="dashboard.html">Home</a></li>
-    <li><a href="cybervoluteer.html">Cyber Volunteers</a></li>
-    <li><a href="learncorner.html">Learning Corner</a></li>
-    <li><a href="contactus.html">Contact Us</a></li>
-       <li class="nav-item"><a href="chatbot.html" class="nav-link chatbot-nav">
-    <i class="fas fa-comment-dots"></i> Chatbot</a>
+    <li><a href="dashboard.html"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Volunteers</a></li>
+    <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning</a></li>
+    <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact</a></li>
+    <li><a href="chatbot.html" class="chatbot-nav"><i class="fas fa-comment-dots"></i> Chatbot</a></li>
   </ul>
 </nav>
+
 
 <div class="login-box">
   <h2>Login to CyberCAP</h2>
