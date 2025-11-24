@@ -223,9 +223,33 @@
           <option>Other</option>
         </select>
 
-        <label>Description of Incident:</label>
-        <textarea name="description" rows="4" required></textarea>
-      </fieldset>
+       <label>Description of Incident:</label>
+
+<div style="position: relative; width: 100%; max-width: 500px;">
+    
+    <textarea name="description" rows="4" required
+        style="width: 100%; padding-right: 50px; box-sizing: border-box;">
+    </textarea>
+
+    <!-- Mic Button -->
+    <div id="micBtn" style="
+        width:40px;
+        height:40px;
+        background-color: rgb(138, 180, 218);
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        position: absolute;
+        right: 5px;
+        top: 5px;
+    ">
+        🎤
+    </div>
+
+</div>
+<p id="micStatus" style="color:#007bff; font-weight:bold; margin-top:10px;"></p>
 
       <fieldset>
         <legend>Suspect Details (if known)</legend>
@@ -293,6 +317,82 @@
 
   <script>
   
+  let recognition;
+let isListening = false;
+
+document.addEventListener("DOMContentLoaded", () => {
+    const micBtn = document.getElementById("micBtn");
+    const micStatus = document.getElementById("micStatus");
+    const descriptionField = document.querySelector("textarea[name='description']");
+
+    // Add language selector dynamically
+    const langSelectorHTML = `
+        <label style="margin-top:15px; font-weight:600;">Voice Typing Language:</label>
+        <select id="voiceLang" style="padding:10px;width:100%;margin-top:5px;border-radius:6px;border:1px solid #ccd6e0;">
+            <option value="en-IN">English</option>
+            <option value="mr-IN">Marathi (मराठी)</option>
+            <option value="hi-IN">Hindi (हिंदी)</option>
+            <option value="ta-IN">Tamil (தமிழ்)</option>
+            <option value="te-IN">Telugu (తెలుగు)</option>
+            <option value="gu-IN">Gujarati (ગુજરાતी)</option>
+            <option value="kn-IN">Kannada (ಕನ್ನಡ)</option>
+            <option value="ml-IN">Malayalam (മലയാളം)</option>
+        </select>
+    `;
+    micBtn.insertAdjacentHTML("beforebegin", langSelectorHTML);
+
+    const langDropdown = document.getElementById("voiceLang");
+
+    // Check browser support
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        alert("⚠ Speech recognition not supported. Please use Chrome Browser.");
+        return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    // 🔥 Mic starts listening
+    recognition.onstart = () => {
+        isListening = true;
+        micStatus.textContent = "🎙 Listening...";
+
+        // Change icon color + pulse effect
+        micBtn.style.background = "#6c757d";
+        micBtn.style.boxShadow = "0 0 15px rgba(0,0,0,0.5)";
+    };
+
+    // 🛑 Mic stops listening
+    recognition.onend = () => {
+        isListening = false;
+        micStatus.textContent = "⏹ Voice typing stopped";
+
+        // Reset icon style
+        micBtn.style.background = "#dc3545";
+        micBtn.style.boxShadow = "none";
+    };
+
+    // 🎤 Write transcript inside textarea
+    recognition.onresult = (event) => {
+        let transcript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+        }
+        descriptionField.value = transcript;
+    };
+
+    // 🎯 CLICK on ICON → start/stop mic
+    micBtn.addEventListener("click", () => {
+        if (!isListening) {
+            recognition.lang = langDropdown.value;
+            recognition.start();
+        } else {
+            recognition.stop();
+        }
+    });
+});
 document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("complaintForm");
 

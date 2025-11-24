@@ -76,12 +76,41 @@
   transition: all 0.3s ease;
   cursor: zoom-in;
 }
+.email-section {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
 
   </style>
 </head>
 <body>
   <h2>Complaint Details</h2>
   <div id="complaintDetail">Loading...</div>
+<div class="email-section">
+  <h3>Send Official Email</h3>
+  <button onclick="toggleEmailBox()">Send Official Email to User</button>
+
+  <div id="emailBox" style="display:none; margin-top:15px;">
+    <label><b>User Email:</b></label><br>
+    <input type="email" id="emailToUser" value="${c.victim?.email || c.registered_by}" readonly 
+           style="padding:8px; width:300px; border-radius:6px; border:1px solid #ccc;">
+
+    <br><br>
+
+    <label><b>Message:</b></label><br>
+    <textarea id="adminEmailMsg" 
+              placeholder="Type your message here..." 
+              style="padding:8px; width:100%; height:120px; border-radius:6px; border:1px solid #ccc;"></textarea>
+
+    <br><br>
+    <button onclick="sendOfficialEmail()">Send</button>
+  </div>
+</div>
+<br><br>
 
   <script>
     async function loadComplaintDetail() {
@@ -149,6 +178,9 @@ if (c.attachments?.length > 0) {
             <button onclick="updateStatus('${c._id}')">Update</button>
           </div>
         `;
+
+        document.getElementById("emailToUser").value =
+  c.victim?.email || c.registered_by || "";
       } catch (err) {
         console.error(err);
         document.getElementById("complaintDetail").innerHTML =
@@ -218,6 +250,38 @@ document.addEventListener("click", function (e) {
     }
   }
 });
+ 
+function toggleEmailBox() {
+  const box = document.getElementById("emailBox");
+  box.style.display = box.style.display === "none" ? "block" : "none";
+}
+async function sendOfficialEmail() {
+  const userEmail = document.getElementById("emailToUser").value;
+  const adminMsg = document.getElementById("adminEmailMsg").value;
+
+  if (!adminMsg.trim()) {
+    alert("Please type a message.");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/send_mail", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: userEmail,
+        msg: adminMsg
+      })
+    });
+
+    if (!res.ok) throw new Error("Failed to send email");
+
+    alert("Official Email Sent Successfully!");
+
+  } catch (err) {
+    alert("Error: " + err.message);
+  }
+}
 
   </script>
 </body>

@@ -15,7 +15,8 @@ import os
 import shutil
 from deep_translator import GoogleTranslator
 
-from Backend.models import User, LoginUser, Complaint, AdminLogin, AdminMFA, Volunteers
+from Backend.models import User, LoginUser, Complaint, AdminLogin, AdminMFA, Volunteers,SendMailModel;
+
 from Backend.forgot_password_api import send_otp,send_email_notification
 from Backend.database import users_collection, complaints_collection, admins_collection, password_resets, volunteers,contact_collection
 from typing import List, Optional
@@ -524,3 +525,25 @@ def get_dashboard(registered_by: str = Query(...)):
         "resolved": resolved,
         "recent": recent
     }
+
+@app.post("/send_mail")
+def send_mail_to_user(data:SendMailModel):
+    subject = "cyberCAP complaint update"
+    body = f"""
+Dear Citizen,
+
+This is an official update from the CyberCAP Team regarding your registered cyber complaint.
+Our team has initiated the review process of your complaint.
+
+{data.msg}
+
+Regards,
+CyberCAP Support Team
+Helpline: 1930
+
+"""
+    sent = send_email_notification(data.email, subject, body)
+    if sent:
+        return {"success": True, "message": "Email sent successfully"}
+    else:
+        raise HTTPException(status_code=500, detail="Failed to send email")

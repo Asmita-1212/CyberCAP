@@ -71,3 +71,7 @@ class ContactMessage(BaseModel):
     email: str
     subject: str | None = None
     message: str
+    
+class SendMailModel(BaseModel):
+    email: str
+    msg: str
