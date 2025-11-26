@@ -6,7 +6,30 @@
   <title>CyberCAP | Cyber Awareness & Protection</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
+    /* 📰 News Ticker */
+.news-ticker {
+  background: rgba(0,0,0,0.6);
+  padding: 8px 15px;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  font-weight: 500;
+  color: #00ffff;
+}
+
+.news-ticker span {
+  display: inline-block;
+  padding-right: 50px;
+  animation: ticker 20s linear infinite;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
     /* 🌌 General */
     body {
       margin: 0;
@@ -35,6 +58,15 @@
       font-weight: bold;
       text-decoration: none;
       letter-spacing: 1px;
+    }
+
+    .navbar .logo img {
+      height: 45px;
+      width: auto;
+      vertical-align: middle;
+      filter: drop-shadow(0 0 4px cyan);
+      border-radius: 40px;
+      margin-right: 10px;
     }
 
     .navbar ul {
@@ -66,6 +98,15 @@
 
     .navbar ul li a:hover::after {
       width: 100%;
+    }
+
+    .chatbot-nav i {
+      margin-right: 6px;
+      color: #2563eb;
+    }
+
+    .chatbot-nav:hover {
+      color: #1e40af;
     }
 
     /* 🖼️ Carousel */
@@ -254,42 +295,57 @@
         text-align: center;
       }
     }
-    .navbar .logo img {
-  height: 45px;            /* adjust as per your logo size */
-  width: auto;
-  vertical-align: middle;
-  filter: drop-shadow(0 0 4px cyan);
-  border-radius: 40px;
-  margin-right: 10px;
-}
-.chatbot-nav i {
-  margin-right: 6px;
-  color: #2563eb;   /* Blue highlight */
-}
-.chatbot-nav:hover {
-  color: #1e40af;
-}
+
+    /* 🌐 Floating Chatbot Button */
+    .chatbot-float {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #00eaff;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #000;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 2000;
+      box-shadow: 0 0 10px #00eaff, 0 0 20px #00eaff;
+      transition: 0.3s;
+    }
+
+    .chatbot-float:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 15px #00eaff, 0 0 30px #00eaff;
+    }
   </style>
 </head>
+
 <body>
 
 <!-- 🌐 Navbar -->
 <nav class="navbar">
-  <a href="#" class="logo"><img src="logo.png" >CyberCAP</a>
+  <a href="#" class="logo"><img src="logo.png">CyberCAP</a>
   <ul>
     <li><a href="cybervoluteer.html"><i class="fas fa-users"></i> Volunteers</a></li>
     <li><a href="learncorner.html"><i class="fas fa-book"></i> Learning</a></li>
     <li><a href="user_login.html"><i class="fas fa-user"></i> User Login</a></li>
     <li><a href="contactus.html"><i class="fas fa-envelope"></i> Contact</a></li>
-    <li class="nav-item"><a href="chatbot.html" class="nav-link chatbot-nav">
-    <i class="fas fa-comment-dots"></i> Chatbot</a>
-</li>
-
- 
-
-
+    <li><a href="chatbot.html" class="chatbot-nav"><i class="fas fa-comment-dots"></i> Chatbot</a></li>
   </ul>
 </nav>
+<!-- 📰 News Ticker -->
+<div class="news-ticker">
+  <span>
+    Phishing attacks increase by 30% in Nov 2025! &nbsp; | &nbsp;
+    CyberCAP resolves 500 complaints this month! &nbsp; | &nbsp;
+    New volunteers joined our platform! &nbsp; | &nbsp;
+    Stay alert against malware and ransomware attacks!
+  </span>
+</div>
+
 
 <!-- 🎞️ Carousel -->
 <div class="carousel">
@@ -372,6 +428,11 @@
     © 2025 CyberCAP | All Rights Reserved
   </div>
 </footer>
+
+<!-- 🌐 Floating Chatbot Button -->
+<a href="chatbot.html" class="chatbot-float">
+  <i class="fas fa-robot"></i>
+</a>
 
 <script>
   const images = document.querySelectorAll('.carousel img');
